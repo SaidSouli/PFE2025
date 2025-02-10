@@ -1,0 +1,44 @@
+<div class="container">
+    <h2>Edit User</h2>
+  
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+  
+    <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" class="form-control" id="username" formControlName="username">
+        <div *ngIf="editForm.get('username')?.invalid && (editForm.get('username')?.dirty || editForm.get('username')?.touched)"
+             class="text-danger">
+          <div *ngIf="editForm.get('username')?.errors?.['required']">Username is required.</div>
+        </div>
+      </div>
+  
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" formControlName="email">
+        <div *ngIf="editForm.get('email')?.invalid && (editForm.get('email')?.dirty || editForm.get('email')?.touched)"
+             class="text-danger">
+          <div *ngIf="editForm.get('email')?.errors?.['required']">Email is required.</div>
+          <div *ngIf="editForm.get('email')?.errors?.['email']">Email must be a valid email address.</div>
+        </div>
+      </div>
+  
+      <div class="mb-3">
+        <label for="role" class="form-label">Role</label>
+        <select class="form-select" id="role" formControlName="role">
+          <option value="" disabled>Select Role</option>
+          <option value="admin">admin</option>
+          <option value="user">user</option>
+          <option value = "Technician">Technician</option>
+        </select>
+        <div *ngIf="editForm.get('role')?.invalid && (editForm.get('role')?.dirty || editForm.get('role')?.touched)"
+             class="text-danger">
+          <div *ngIf="editForm.get('role')?.errors?.['required']">Role is required.</div>
+        </div>
+      </div>
+  
+      <button type="submit" class="btn btn-primary" [disabled]="editForm.invalid">Save Changes</button>
+      <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancel</button>
+    </form>
+  </div>

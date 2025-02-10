@@ -1,0 +1,264 @@
+// Variables
+$primary-color: #2563eb;
+$secondary-color: #4f46e5;
+$danger-color: #dc2626;
+$background-dark: #1a1f2e;
+$text-light: #f3f4f6;
+$accent-color: #10b981;
+
+// Global styles
+:host {
+  display: block;
+  min-height: 100vh;
+  background: $background-dark;
+  background-image:
+    linear-gradient(125deg, rgba($secondary-color, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 100% 0%, rgba($primary-color, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 0% 100%, rgba($secondary-color, 0.08) 0%, transparent 50%);
+  color: $text-light;
+  position: relative;
+}
+
+// Navbar styles
+.navbar {
+  background: rgba(26, 31, 46, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem 1rem;
+
+  .navbar-nav {
+    align-items: center;
+  }
+
+  .nav-link {
+    color: rgba(255, 255, 255, 0.7) !important;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+
+    i {
+      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.6);
+      transition: color 0.3s ease;
+    }
+
+    &:hover {
+      color: $text-light !important;
+
+      i {
+        color: $accent-color;
+      }
+    }
+
+    &.active {
+      color: $text-light !important;
+
+      i {
+        color: $accent-color;
+      }
+    }
+  }
+
+  .btn-logout {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: rgba($danger-color, 0.2);
+    color: $text-light;
+    border: 1px solid rgba($danger-color, 0.3);
+    transition: all 0.3s ease;
+
+    i {
+      color: $danger-color;
+      transition: transform 0.3s ease;
+    }
+
+    &:hover {
+      background-color: rgba($danger-color, 0.3);
+
+      i {
+        transform: scale(1.1);
+      }
+    }
+  }
+}
+
+// Search container styles
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem 0;
+  position: relative;
+
+  .search-wrapper {
+    position: relative;
+    width: 50%;
+    max-width: 400px;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.5);
+    z-index: 2;
+    transition: color 0.3s ease;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 12px 20px 12px 45px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.05);
+    color: $text-light;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    &:focus {
+      outline: none;
+      border-color: rgba($primary-color, 0.5);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+
+      + .search-icon {
+        color: $primary-color;
+      }
+    }
+  }
+}
+
+// Title styles
+h2 {
+  position: relative;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: $text-light;
+  margin: 2rem 0 3rem;
+  padding-bottom: 1rem;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+
+  &::before {
+    content: '👥';
+    font-size: 2.8rem;
+    margin-right: 0.5rem;
+    animation: bounce 2s infinite;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(to right, $primary-color, $secondary-color);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+  }
+
+  &:hover::after {
+    width: 150px;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+// Animated background pattern
+:host::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    repeating-linear-gradient(45deg,
+      rgba(255, 255, 255, 0.02) 0px,
+      rgba(255, 255, 255, 0.02) 1px,
+      transparent 1px,
+      transparent 10px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+// Table styles
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 2;
+
+  th, td {
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: $text-light;
+  }
+
+  th {
+    background: rgba(255, 255, 255, 0.05);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+  }
+
+  tr:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .btn-edit {
+    background-color: rgba($primary-color, 0.2);
+    color: $text-light;
+    border: 1px solid rgba($primary-color, 0.3);
+    padding: 8px 16px;
+    border-radius: 6px;
+    margin-right: 8px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: rgba($primary-color, 0.3);
+      border-color: rgba($primary-color, 0.4);
+    }
+  }
+
+  button:last-child {
+    background-color: rgba($danger-color, 0.2);
+    color: $text-light;
+    border: 1px solid rgba($danger-color, 0.3);
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: rgba($danger-color, 0.3);
+      border-color: rgba($danger-color, 0.4);
+    }
+  }
+}
