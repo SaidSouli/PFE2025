@@ -7,10 +7,10 @@ import com.saiph.incident_management.model.Technician;
 import com.saiph.incident_management.service.JWTService;
 import com.saiph.incident_management.service.UserService;
 
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +33,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
+   
     @PostMapping
 public ResponseEntity<?> createUser(@RequestBody Map<String, Object> userData) {
     try {
@@ -41,29 +42,50 @@ public ResponseEntity<?> createUser(@RequestBody Map<String, Object> userData) {
             user = new Technician();
             Technician technician = (Technician) user;
             
-            // Handle specializations conversion
+            // Handle specializations with proper enum validation
             if (userData.containsKey("specializations")) {
-                List<String> specs = (List<String>) userData.get("specializations");
-                technician.setSpecializations(specs.stream()
-                    .map(String::toUpperCase)
-                    .map(Specialization::valueOf)
-                    .collect(Collectors.toList()));
+                Object specsObj = userData.get("specializations");
+                if (specsObj instanceof List<?>) {
+                    List<?> specsList = (List<?>) specsObj;
+                    List<Specialization> specs = new ArrayList<>();
+                    
+                    // Safely convert each element to Specialization enum
+                    for (Object item : specsList) {
+                        if (item instanceof String) {
+                            try {
+                                Specialization spec = Specialization.valueOf(((String) item).toUpperCase());
+                                specs.add(spec);
+                            } catch (IllegalArgumentException e) {
+                                return ResponseEntity.badRequest()
+                                    .body("Invalid specialization value: " + item);
+                            }
+                        } else {
+                            return ResponseEntity.badRequest()
+                                .body("Specialization values must be strings");
+                        }
+                    }
+                    
+                    technician.setSpecializations(specs);
+                } else {
+                    return ResponseEntity.badRequest()
+                        .body("Specializations must be a list");
+                }
             }
         } else {
             user = new User();
         }
-
+        
         // Common field mapping
         user.setUsername((String) userData.get("username"));
         user.setPassword((String) userData.get("password"));
         user.setEmail((String) userData.get("email"));
         user.setRole((String) userData.get("role"));
-
+        
         User savedUser = userService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
         
     } catch (IllegalArgumentException e) {
-        return ResponseEntity.badRequest().body("Invalid specialization value");
+        return ResponseEntity.badRequest().body("Invalid input: " + e.getMessage());
     } catch (Exception e) {
         return ResponseEntity.internalServerError().body("Server error: " + e.getMessage());
     }
