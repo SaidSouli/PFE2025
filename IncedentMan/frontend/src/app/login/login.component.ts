@@ -34,6 +34,9 @@ export class LoginComponent {
             case 'admin':
               this.router.navigate(['/admin']);
               break;
+            case 'user':
+              this.router.navigate(['/report-incident'])
+              break;
             default:
               this.router.navigate(['/home']); // Redirect to a default route
           }
