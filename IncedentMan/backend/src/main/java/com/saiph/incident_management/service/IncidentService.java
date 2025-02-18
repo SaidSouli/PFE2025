@@ -5,10 +5,16 @@ import com.saiph.incident_management.model.Technician;
 import com.saiph.incident_management.model.User;
 import com.saiph.incident_management.repository.IncidentRepository;
 import com.saiph.incident_management.repository.UserRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -18,7 +24,11 @@ public class IncidentService {
     private IncidentRepository incidentRepository;
     @Autowired
     private UserRepository userRepository;
+    @Value("${ai.service.url}")
+    private String aiServiceUrl;
     
+    @Autowired
+    private RestTemplate restTemplate;
     public List<Incident> getAllIncidents() {
         List<Incident> incidents = incidentRepository.findAll();
         for (Incident incident : incidents) {
@@ -37,6 +47,29 @@ public class IncidentService {
     }
     
     public Incident createIncident(Incident incident) {
+        // Call AI service for predictions
+        try {
+            Map<String, String> request = new HashMap<>();
+            request.put("description", incident.getDescription());
+            
+            ResponseEntity<Map> aiResponse = restTemplate.postForEntity(
+                aiServiceUrl + "/predict",
+                request,
+                Map.class
+            );
+            
+            if (aiResponse.getBody() != null) {
+                Map<String, Object> predictions = aiResponse.getBody();
+                incident.setCategory((String) predictions.get("category"));
+                incident.setPriority(((Number) predictions.get("priority")).intValue());
+            }
+        } catch (Exception e) {
+            // Log error but continue with default values
+            System.err.println("Error calling AI service: " + e.getMessage());
+            // Set default values if AI service fails
+            if (incident.getCategory() == null) incident.setCategory("GENERAL");
+            if (incident.getPriority() == 0) incident.setPriority(2);
+        }
         
         loadUserData(incident);
         return incidentRepository.save(incident);

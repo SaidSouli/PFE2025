@@ -44,7 +44,19 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
             Please select a category
           </div>
         </div>
-
+        <div class="mb-4">
+  <label class="block mb-2">Priority</label>
+  <select formControlName="priority" class="w-full p-2 border rounded">
+    <option value="">Select a priority</option>
+    <option value="1">Low</option>
+    <option value="2">Medium</option>
+    <option value="3">High</option>
+    <option value="4">Critical</option>
+  </select>
+  <div *ngIf="isFieldInvalid('priority')" class="text-red-500 mt-1">
+    Please select a priority
+  </div>
+</div>
         <!-- Description Field -->
         <div class="mb-4">
           <label class="block mb-2">Description</label>
@@ -90,7 +102,6 @@ export class IncidentReportComponent {
   ) {
     this.incidentForm = this.fb.group({
       title: ['', Validators.required],
-      category: ['', Validators.required],
       description: ['', Validators.required]
     });
   }
@@ -109,12 +120,11 @@ export class IncidentReportComponent {
     this.submitSuccess = false;
     this.errorMessage = '';
 
-    // Add default values that would normally be set by AI
     const incident = {
       ...this.incidentForm.value,
       status: 'Open',
-      priority: 3,  // Default medium priority
       creationDate: new Date()
+      // Category and priority will be set by backend AI integration
     };
 
     this.http.post('http://localhost:8080/api/incidents', incident)

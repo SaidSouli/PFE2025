@@ -26,7 +26,7 @@ services:
     networks:
       - user-network
 
-  user-service:  # Add your Spring Boot app
+  user-service:
     build: .
     container_name: user-service
     ports:
@@ -37,6 +37,15 @@ services:
       - user-network
     environment:
       SPRING_DATA_MONGODB_URI: mongodb://root:example@mongo:27017/usersdb?authSource=admin
+      AI_SERVICE_URL: http://ai-service:5000
+
+  ai-service:
+    image: ai-service  # Replace with your AI service image name
+    container_name: ai-service
+    ports:
+      - "5000:5000"
+    networks:
+      - user-network
 
 networks:
   user-network:

@@ -15,9 +15,9 @@ public class Incident {
     private String title;
     private String description;
     private Date creationDate = new Date();
-    private String status; // Open, In Progress, Resolved
-    private int priority;
-    private String category;
+    private String status = "Open";  // Default status
+    private int priority = 2;        // Default priority
+    private String category = "GENERAL"; // Default category
     @DBRef
     private User reporter;
     @DBRef
