@@ -1,12 +1,16 @@
 package com.saiph.incident_management.Controller;
 
 import com.saiph.incident_management.model.Incident;
+
 import com.saiph.incident_management.service.IncidentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/incidents")
@@ -14,6 +18,7 @@ public class IncidentController {
     
     @Autowired
     private IncidentService incidentService;
+   
     
     @GetMapping
     public ResponseEntity<List<Incident>> getAllIncidents() {
@@ -71,4 +76,13 @@ public class IncidentController {
     public ResponseEntity<List<Incident>> getIncidentsByReporter(@PathVariable String reporterId) {
         return new ResponseEntity<>(incidentService.findByReporter(reporterId), HttpStatus.OK);
     }
+    
+    @PostMapping("/by-specialization")
+    public ResponseEntity<List<Incident>> getIncidentsBySpecialization(@RequestBody Map<String, List<String>> request) {
+        List<String> specializations = request.get("specializations");
+        List<Incident> incidents = incidentService.findByCategoryIn(specializations);
+        return ResponseEntity.ok(incidents);
+    }
+
+
 }

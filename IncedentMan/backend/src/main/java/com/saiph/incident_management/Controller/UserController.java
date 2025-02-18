@@ -42,14 +42,14 @@ public ResponseEntity<?> createUser(@RequestBody Map<String, Object> userData) {
             user = new Technician();
             Technician technician = (Technician) user;
             
-            // Handle specializations with proper enum validation
+            
             if (userData.containsKey("specializations")) {
                 Object specsObj = userData.get("specializations");
                 if (specsObj instanceof List<?>) {
                     List<?> specsList = (List<?>) specsObj;
                     List<Specialization> specs = new ArrayList<>();
                     
-                    // Safely convert each element to Specialization enum
+                    //convert each element to Specialization enum
                     for (Object item : specsList) {
                         if (item instanceof String) {
                             try {
@@ -75,7 +75,7 @@ public ResponseEntity<?> createUser(@RequestBody Map<String, Object> userData) {
             user = new User();
         }
         
-        // Common field mapping
+        // field mapping
         user.setUsername((String) userData.get("username"));
         user.setPassword((String) userData.get("password"));
         user.setEmail((String) userData.get("email"));

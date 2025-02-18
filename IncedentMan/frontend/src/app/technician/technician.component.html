@@ -1,0 +1,48 @@
+<div class="incidents-container">
+    <div class="page-header">
+      <h1 class="display-6">Incident ready according to your specialization</h1>
+      <button class="btn btn-outline-danger logout-btn" (click)="logout()">
+        <i class="bi bi-box-arrow-right me-2"></i>Logout
+      </button>
+    </div>
+  
+    <div class="table-responsive">
+      <table class="table table-hover table-bordered">
+        <thead class="table-light">
+          <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Description</th>
+            <th scope="col">Status</th>
+            <th scope="col">Priority</th>
+            <th scope="col">Category</th>
+            <th scope="col">action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let incident of openIncidents">
+            <td>{{ incident.title }}</td>
+            <td>{{ incident.description }}</td>
+            <td>
+              <span >
+                {{ incident.status }}
+              </span>
+            </td>
+            <td>
+              <span >
+                {{ incident.priority || 'not assigned' }}
+              </span>
+            </td>
+            <td>
+              <span class="badge bg-secondary">{{incident.category}}</span>
+            </td>
+            <td>
+              <button class="btn btn-primary" >take in charge</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="mt-3">
+      <a routerLink="/incidents-en-cours" class="btn btn-secondary">Voir les incidents en cours</a>
+    </div>
+  </div>

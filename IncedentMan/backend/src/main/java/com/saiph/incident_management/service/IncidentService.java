@@ -7,7 +7,6 @@ import com.saiph.incident_management.repository.IncidentRepository;
 import com.saiph.incident_management.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -16,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class IncidentService {
@@ -46,8 +46,9 @@ public class IncidentService {
         return incidentOpt;
     }
     
+    @SuppressWarnings({ "null", "unchecked" })
     public Incident createIncident(Incident incident) {
-        // Call AI service for predictions
+       
         try {
             Map<String, String> request = new HashMap<>();
             request.put("description", incident.getDescription());
@@ -59,7 +60,9 @@ public class IncidentService {
             );
             
             if (aiResponse.getBody() != null) {
+                
                 Map<String, Object> predictions = aiResponse.getBody();
+                
                 incident.setCategory((String) predictions.get("category"));
                 incident.setPriority(((Number) predictions.get("priority")).intValue());
             }
@@ -121,5 +124,21 @@ public class IncidentService {
                 incident.setAssignedTechnician((Technician) technician.get());
             }
         }
+    }
+
+
+     public List<Incident> findByCategoryIn(List<String> specializations) {
+        // Convertir les spécialisations en minuscules
+        List<String> lowerCaseSpecializations = specializations.stream()
+            .map(String::toLowerCase)
+            .collect(Collectors.toList());
+
+        // Récupérer les incidents dont la catégorie correspond à une spécialisation (en ignorant la casse)
+        return incidentRepository.findAll().stream()
+            .filter(incident -> {
+                String lowerCaseCategory = incident.getCategory().toLowerCase();
+                return lowerCaseSpecializations.contains(lowerCaseCategory);
+            })
+            .collect(Collectors.toList());
     }
 }

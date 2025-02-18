@@ -6,6 +6,8 @@ import { EditUserComponent } from './edit-user/edit-user.component';
 import { AddUserComponent } from './add-user/add-user.component';
 import { IncidentReportComponent } from './features/incident-report/incident-report.component';
 
+import { TechnicianComponent } from './technician/technician.component';
+
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
@@ -13,5 +15,7 @@ export const routes: Routes = [
   {path : 'admin',component:AdminComponent},
   {path: 'edit-user/:id', component: EditUserComponent},
   { path: 'add-user', component: AddUserComponent },
-  {path: 'report-incident', component:IncidentReportComponent }
+  {path: 'report-incident', component:IncidentReportComponent },
+  {path: 'technician', component:TechnicianComponent },
+  
 ];

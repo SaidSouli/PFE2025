@@ -12,7 +12,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
       <h2 class="text-2xl font-bold mb-6">Report an Incident</h2>
       
       <form [formGroup]="incidentForm" (ngSubmit)="onSubmit()" class="max-w-2xl">
-        <!-- Title Field -->
+        
         <div class="mb-4">
           <label class="block mb-2">Title</label>
           <input
@@ -124,7 +124,7 @@ export class IncidentReportComponent {
       ...this.incidentForm.value,
       status: 'Open',
       creationDate: new Date()
-      // Category and priority will be set by backend AI integration
+      
     };
 
     this.http.post('http://localhost:8080/api/incidents', incident)
