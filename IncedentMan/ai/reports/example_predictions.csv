@@ -1,0 +1,12 @@
+description,actual_category,predicted_category,category_correct,actual_priority,predicted_priority,priority_correct,top_category_confidence,top_priority_confidence
+"Branch Office, 1st Floor - Account Compromise: session hijacking - impacting 1 endpoints (sudden onset) - IP: 10.64.83.98",SECURITY,SECURITY,True,4,4,True,0.5348814895643265,0.6425287572268333
+User reported suspicious activity - account may have been hijacked,SECURITY,SECURITY,True,4,4,True,0.42444261859845334,0.406393621871749
+API token suspected hijacked - excessive request rate,SECURITY,COMPLIANCE,False,4,4,True,0.1929085203986013,0.2720707725500201
+Incident: persistent authentication failure with Cloud Service reported from Warehouse,SOFTWARE,SOFTWARE,True,4,2,False,0.4158292800332482,0.29894254845066165
+"Incident: problem with Point-of-Sale Hardware noticed from Distribution Center, Basement",HARDWARE,HARDWARE,True,3,2,False,0.6637520972104223,0.2768490207296915
+"Supply Chain Building B, 2nd Floor: 1 workstations facing Router error",NETWORK,NETWORK,True,4,2,False,0.2769232081624502,0.26076535293687797
+"Branch Office, Operations Center - Azure: minor VM not available - impacting several users in Procurement",CLOUD,CLOUD,True,3,1,False,0.33673775249510746,0.2726388421341767
+"Facilities Building B, Executive Floor: business operations experiencing User Management error",IDENTITY,IDENTITY,True,4,4,True,0.3618720097640276,0.4394548182812168
+default credentials in Vulnerability system impacting business services at R&D Lab,SECURITY,SECURITY,True,3,4,False,0.35411481239823484,0.32947996760721276
+"Incident: critical transaction log full with Database reported from Data Center, Basement",DATA,DATA,True,4,4,True,0.3070956749890712,0.3818665318331595
+"Incident: cross-border transfer with Privacy reported from Building A, Mezzanine",COMPLIANCE,COMPLIANCE,True,3,1,False,0.3180822138954327,0.2545848623410958

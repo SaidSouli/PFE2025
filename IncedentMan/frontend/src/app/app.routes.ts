@@ -5,7 +5,6 @@ import { AdminComponent } from './admin/admin.component';
 import { EditUserComponent } from './edit-user/edit-user.component';
 import { AddUserComponent } from './add-user/add-user.component';
 import { IncidentReportComponent } from './features/incident-report/incident-report.component';
-
 import { TechnicianComponent } from './technician/technician.component';
 
 export const routes: Routes = [

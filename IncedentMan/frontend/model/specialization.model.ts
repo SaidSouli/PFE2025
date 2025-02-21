@@ -4,5 +4,7 @@ export enum Specialization {
     HARDWARE = 'HARDWARE',
     SOFTWARE = 'SOFTWARE',
     DATABASE = 'DATABASE',
-    SECURITY = 'SECURITY'
+    SECURITY = 'SECURITY',
+    CLOUD = 'CLOUD'
+
   }

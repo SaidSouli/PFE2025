@@ -1,0 +1,62 @@
+{
+  "training_date": "2025-02-21 16:35:38",
+  "dataset_stats": {
+    "total_incidents": 5000,
+    "category_counts": {
+      "HIJACKING": 1289,
+      "MALWARE": 1262,
+      "ACCESS_CONTROL": 1244,
+      "SPOOFING": 1205
+    },
+    "priority_counts": {
+      "4": 2662,
+      "3": 1672,
+      "2": 552,
+      "1": 114
+    },
+    "subcategory_counts": {
+      "Account Hijacking": 282,
+      "Session Hijacking": 272,
+      "MFA Compromise": 267,
+      "Authorization Bypass": 266,
+      "Click Hijacking": 252,
+      "Authentication Bypass": 247,
+      "Browser Hijacking": 246,
+      "Network Hijacking": 237,
+      "Privilege Escalation": 234,
+      "Access Bypass": 230,
+      "ARP Spoofing": 188,
+      "DHCP Spoofing": 181,
+      "Rootkit": 180,
+      "DNS Spoofing": 178,
+      "MAC Spoofing": 178,
+      "Ransomware": 173,
+      "Spyware": 171,
+      "IP Spoofing": 162,
+      "Email Spoofing": 160,
+      "GPS Spoofing": 158,
+      "Keylogger": 158,
+      "Trojan": 153,
+      "Worm": 147,
+      "Adware": 145,
+      "Cryptominer": 135
+    }
+  },
+  "performance_metrics": {
+    "category": {
+      "accuracy": 0.65,
+      "macro_avg_f1": 0.6642750530858943,
+      "weighted_avg_f1": 0.6640804243060409
+    },
+    "subcategory": {
+      "accuracy": 0.544,
+      "macro_avg_f1": 0.5168511236274678,
+      "weighted_avg_f1": 0.54514714130155
+    },
+    "priority": {
+      "accuracy": 0.401,
+      "macro_avg_f1": 0.2640683965134873,
+      "weighted_avg_f1": 0.4084524866701732
+    }
+  }
+}
