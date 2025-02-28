@@ -83,6 +83,10 @@ public class IncidentController {
         List<Incident> incidents = incidentService.findByCategoryIn(specializations);
         return ResponseEntity.ok(incidents);
     }
-
+    @PutMapping("/{incidentId}/take-charge")
+    public ResponseEntity<?> takeChargeIncident(@PathVariable String incidentId, @RequestParam String username) {
+        incidentService.takeChargeIncident(incidentId, username);
+        return ResponseEntity.ok().build();
+    }
 
 }

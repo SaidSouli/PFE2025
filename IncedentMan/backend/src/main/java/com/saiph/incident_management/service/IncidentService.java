@@ -4,6 +4,7 @@ import com.saiph.incident_management.model.Incident;
 import com.saiph.incident_management.model.Technician;
 import com.saiph.incident_management.model.User;
 import com.saiph.incident_management.repository.IncidentRepository;
+import com.saiph.incident_management.repository.TechnicianRepository;
 import com.saiph.incident_management.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +23,8 @@ public class IncidentService {
     
     @Autowired
     private IncidentRepository incidentRepository;
+    @Autowired
+    private TechnicianRepository technicianRepository;
     @Autowired
     private UserRepository userRepository;
     @Value("${ai.service.url}")
@@ -140,5 +143,32 @@ public class IncidentService {
                 return lowerCaseSpecializations.contains(lowerCaseCategory);
             })
             .collect(Collectors.toList());
+    }
+    public void takeChargeIncident(String incidentId, String username) {
+        // Récupérer l'incident
+        Incident incident = incidentRepository.findById(incidentId)
+                .orElseThrow(() -> new RuntimeException("Incident not found"));
+
+        // Récupérer l'utilisateur (technicien) par ID
+        User user = technicianRepository.findByUsername(username);
+
+
+        // Vérifier si l'utilisateur est un technicien
+        if (!(user instanceof Technician)) {
+            throw new RuntimeException("User  is not a technician");
+        }
+
+        Technician technician = (Technician) user;
+
+        // Mettre à jour le statut de l'incident
+        incident.setStatus("En cours");
+        incident.setAssignedTechnician(technician);
+
+        // Ajouter l'incident à la liste des incidents assignés au technicien
+        technician.getAssignedIncidents().add(incident);
+
+        // Sauvegarder les modifications
+        incidentRepository.save(incident);
+        technicianRepository.save(technician);
     }
 }

@@ -1,144 +1,75 @@
 from flask import Flask, request, jsonify
 import joblib
-import numpy as np
-from typing import Dict, Any
-import nltk
-from nltk.tokenize import RegexpTokenizer
-from nltk.corpus import stopwords
-from nltk.stem import WordNetLemmatizer
+from incident_classifier import IncidentClassifier
+import json
 
 app = Flask(__name__)
 
-# Download required NLTK resources
-def download_nltk_resources():
-    """Download required NLTK resources with error handling"""
-    resources = ['stopwords', 'wordnet', 'punkt']
-    for resource in resources:
-        try:
-            nltk.download(resource, quiet=True)
-        except Exception as e:
-            print(f"Warning: Could not download {resource}: {str(e)}")
-
-# Initialize preprocessing components
-download_nltk_resources()
-lemmatizer = WordNetLemmatizer()
-stop_words = set(stopwords.words('english'))
-tokenizer = RegexpTokenizer(r'\w+')
-
-def preprocess_text(text):
-    """Preprocess text using the same steps as the training pipeline"""
-    if not text:
-        return ""
-    text = str(text).lower()
-    tokens = tokenizer.tokenize(text)
-    tokens = [lemmatizer.lemmatize(token) for token in tokens 
-             if token not in stop_words and len(token) > 1]
-    return ' '.join(tokens)
-
-# Load models
+# Load the trained models
 try:
-    category_model = joblib.load('models/enhanced_category_classifier.joblib')
-    priority_model = joblib.load('models/enhanced_priority_classifier.joblib')
-    # Try to load subcategory model if it exists
-    try:
-        subcategory_model = joblib.load('models/enhanced_subcategory_classifier.joblib')
-        has_subcategory = True
-    except FileNotFoundError:
-        has_subcategory = False
-except FileNotFoundError as e:
-    print(f"Error loading models: {e}")
-    raise
+    classifier = IncidentClassifier()
+    # Fix: Updated attribute names to match the IncidentClassifier class
+    classifier.category_pipeline = joblib.load('models/category_classifier.joblib')
+    classifier.priority_pipeline = joblib.load('models/priority_classifier.joblib')
 
-def check_security_terms(text: str) -> Dict[str, Any]:
-    """Check for security-related terms in the incident description"""
-    security_terms = ['breach', 'hack', 'malware', 'ransom', 'phish', 'compromise', 
-                     'unauthor', 'hijack', 'suspicious', 'threat']
-    
-    text_lower = text.lower()
-    detected_terms = [term for term in security_terms if term in text_lower]
-    
-    result = {}
-    if 'hijack' in text_lower or len(detected_terms) >= 2:
-        result['security_alert'] = True
-        result['detected_security_terms'] = detected_terms
-        
-        # Override priority to high if security issue detected
-        if 'hijack' in text_lower or len(detected_terms) >= 3:
-            result['priority_override'] = 4
-            result['override_reason'] = "Security keywords detected, priority elevated"
-    
-    return result
+    with open('models/model_metadata.json', 'r') as f:
+        model_metadata = json.load(f)
+except Exception as e:
+    print(f"Error loading models: {type(e).__name__}: {str(e)}")
+    import os
+    print(f"Current working directory: {os.getcwd()}")
+    print("Please ensure models are trained before running the API.")
+    exit(1)
+
+@app.route('/health', methods=['GET'])
+def health_check():
+    """Basic health check endpoint"""
+    return jsonify({
+        'status': 'healthy',
+        'model_training_date': model_metadata['training_date']
+    })
 
 @app.route('/predict', methods=['POST'])
-def predict() -> Dict[str, Any]:
+def predict_incident():
+    """Endpoint for incident classification"""
     try:
-        data = request.get_json() 
+        data = request.get_json()
+        
         if not data or 'description' not in data:
             return jsonify({
-                'error': 'Missing description in request'
+                'error': 'Missing incident description',
+                'required_format': {
+                    'description': 'text description of the security incident'
+                }
             }), 400
-            
-        description = data['description']
         
-        if not isinstance(description, str) or not description.strip():
-            return jsonify({
-                'error': 'Description must be a non-empty string'
-            }), 400
-
-        # Preprocess the input text
-        processed_description = preprocess_text(description)
+        prediction = classifier.predict(data['description'])
         
-        # Get predictions with confidence scores
-        category_probs = category_model.predict_proba([processed_description])[0]
-        priority_probs = priority_model.predict_proba([processed_description])[0]
-        
-        predicted_category = category_model.predict([processed_description])[0]
-        predicted_priority = int(priority_model.predict([processed_description])[0])
-        
-        # Create confidence score dictionaries
-        category_scores = {
-            str(cat): float(prob) 
-            for cat, prob in zip(category_model.classes_, category_probs)
-        }
-        
-        priority_scores = {
-            str(pri): float(prob)
-            for pri, prob in zip(priority_model.classes_, priority_probs)
-        }
-        
-        # Initialize response
-        response = {
-            'category': predicted_category,
-            'category_confidence': category_scores,
-            'priority': predicted_priority,
-            'priority_confidence': priority_scores,
-            'processed_text': processed_description
-        }
-        
-        # Add subcategory prediction if model exists
-        if has_subcategory:
-            subcategory_probs = subcategory_model.predict_proba([processed_description])[0]
-            predicted_subcategory = subcategory_model.predict([processed_description])[0]
-            subcategory_scores = {
-                str(subcat): float(prob)
-                for subcat, prob in zip(subcategory_model.classes_, subcategory_probs)
+        return jsonify({
+            'input_description': data['description'],
+            'prediction': prediction,
+            'model_info': {
+                'training_date': model_metadata['training_date'],
+                'performance_metrics': model_metadata['performance_metrics']
             }
-            response['subcategory'] = predicted_subcategory
-            response['subcategory_confidence'] = subcategory_scores
-            
-        # Check for security terms and add to response
-        security_info = check_security_terms(description)
-        if security_info:
-            response.update(security_info)
-            if 'priority_override' in security_info:
-                response['priority'] = security_info['priority_override']
-        
-        return jsonify(response)
+        })
         
     except Exception as e:
         return jsonify({
             'error': f'Prediction error: {str(e)}'
         }), 500
 
+@app.route('/metrics', methods=['GET'])
+def get_metrics():
+    """Endpoint to get model performance metrics"""
+    return jsonify({
+        'training_date': model_metadata['training_date'],
+        'dataset_stats': model_metadata['dataset_stats'],
+        'performance_metrics': model_metadata['performance_metrics']
+    })
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    app.run(host='0.0.0.0', port=5000, debug=True)
+
+
+

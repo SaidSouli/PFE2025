@@ -6,6 +6,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 
 
 @Document(collection = "incidents")
@@ -21,6 +23,7 @@ public class Incident {
     @DBRef
     private User reporter;
     @DBRef
+    @JsonBackReference
     private Technician assignedTechnician;
     public String getId() {
         return id;
