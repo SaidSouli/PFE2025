@@ -8,6 +8,7 @@ import { Incident } from '../../../model/incident.model';
 })
 export class TechnicianService {
   private apiUrl = 'http://localhost:8080/api/technicians';
+  private apiUrl2 = 'http://localhost:8080/api'
 
   constructor(private http: HttpClient) {}
 
@@ -19,5 +20,8 @@ export class TechnicianService {
   getIncidentsBySpecialization(specializations: string[]): Observable<Incident[]> {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem('token')}`);
     return this.http.post<Incident[]>(`http://localhost:8080/api/incidents/by-specialization`, { specializations }, { headers });
+  }
+  takeChargeIncident (incidentId: string , username:string): Observable<any>{
+    return this.http.put(`${this.apiUrl2}/incidents/${incidentId}/take-charge?username=${username}`,{});
   }
 }

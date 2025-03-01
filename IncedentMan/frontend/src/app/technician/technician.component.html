@@ -36,7 +36,7 @@
               <span class="badge bg-secondary">{{incident.category}}</span>
             </td>
             <td>
-              <button class="btn btn-primary" >take in charge</button>
+              <button class="btn btn-primary" (click)="takeCharge(incident.id!)" >take in charge</button>
             </td>
           </tr>
         </tbody>

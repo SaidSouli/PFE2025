@@ -63,11 +63,14 @@ public class IncidentService {
             );
             
             if (aiResponse.getBody() != null) {
-                
-                Map<String, Object> predictions = aiResponse.getBody();
-                
-                incident.setCategory((String) predictions.get("category"));
-                incident.setPriority(((Number) predictions.get("priority")).intValue());
+                Map<String,Object> responseBody = aiResponse.getBody();
+                if (responseBody !=null && responseBody.containsKey("prediction")){
+                    Map<String,Object> predictions = (Map<String,Object>) responseBody.get("prediction");
+                    if (predictions !=null){
+                        incident.setCategory((String)predictions.get("category"));
+                        incident.setPriority(((Number) predictions.get("priority")).intValue());
+                    }
+                }
             }
         } catch (Exception e) {
             // Log error but continue with default values

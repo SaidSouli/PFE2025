@@ -4,6 +4,7 @@ import { Incident } from '../../../model/incident.model';
 import { Specialization } from '../../../model/specialization.model';
 import { TechnicianService } from '../services/technician-service.service';
 import { Router } from '@angular/router';
+import { error } from 'node:console';
 
 
 @Component({
@@ -53,9 +54,37 @@ export class TechnicianComponent implements OnInit {
       }
     );
   }
+  takeCharge(IncidentId:string):void{
+    const username = localStorage.getItem('username');
+    if (!username){
+      console.error('username not found in the local storage');
+      return;
+    }
+    this.technicianService.takeChargeIncident(IncidentId,username).subscribe(
+      () =>{
+          const incident =this.incidents.find(inc => inc.id === IncidentId);
+          if (incident){
+            incident.status='in progress';
+            incident.assignedTechnician = {username:username} as any;
+          }
+          this.fetchIncidents(this.specializations.map(spec => spec.toString()))
+          alert ('Incident successfully taken in charge');
+        
+
+      },
+      (error) =>{
+        console.error('Error taking charge of incident ',error);
+        alert('Failed to take charge of incident :' +(error.message ||'unknown error'));
+      }
+    );
+  }
+  
+  
   get openIncidents() {
     return this.incidents.filter(incident => incident.status === 'Open');
   }
+  
+  
   logout() {
     this.router.navigate(['/login']);
     localStorage.removeItem('jwtToken');
