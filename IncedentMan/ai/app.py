@@ -1,10 +1,17 @@
+
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import joblib
+
 from incident_classifier import IncidentClassifier
 import json
 
 app = Flask(__name__)
-
+CORS(app,resources={r"/*": {
+    "origins": ["http://localhost:4200"],
+    "methods": ["GET", "POST", "OPTIONS"],
+    "allow_headers": ["Content-Type", "Authorization"]
+}})
 # Load the trained models
 try:
     classifier = IncidentClassifier()
@@ -59,6 +66,8 @@ def predict_incident():
             'error': f'Prediction error: {str(e)}'
         }), 500
 
+
+    
 @app.route('/metrics', methods=['GET'])
 def get_metrics():
     """Endpoint to get model performance metrics"""

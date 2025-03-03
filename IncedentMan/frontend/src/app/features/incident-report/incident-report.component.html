@@ -3,7 +3,7 @@
   <header class="header">
     <div class="container">
       <div class="header-content">
-        <img src="https://raw.githubusercontent.com/yourusername/project/main/src/assets/saiph-logo.png" 
+        <img src="saiph-logo.jpg" 
              alt="Saiph Logo" 
              class="logo">
         <h1 class="title">Incident Management System</h1>
@@ -14,7 +14,7 @@
   <main class="content-area">
     <div class="container">
       <div class="form-container">
-        <h2 class="form-title">Report an Incident</h2>
+        <h2 class="form-title">Report Incident</h2>
         
         <form [formGroup]="incidentForm" (ngSubmit)="onSubmit()">
           <div class="form-group">
@@ -37,16 +37,18 @@
                 formControlName="category"
                 class="form-select"
               >
-                <option value="">Select a category</option>
-                <option value="NETWORK">Network</option>
-                <option value="HARDWARE">Hardware</option>
-                <option value="SOFTWARE">Software</option>
-                <option value="DATABASE">Database</option>
-                <option value="SECURITY">Security</option>
+              <option value="" disabled>Select a category</option>
+              @for (option of categoryOptions; track option) {
+                <option [value]="option">{{option}}</option>
+              }
               </select>
               <div *ngIf="isFieldInvalid('category')" class="error-message">
                 Please select a category
               </div>
+            <div class ="ai-suggestion" *ngIf="showCategoryPrediction && aiPrediction">
+              <span class = "ai-icon">🤖</span> AI suggests: <strong>{{aiPrediction.category}}</strong>
+              <button type="button" class="suggestion-btn" (click)="useAiCategory()">Use this</button>
+            </div>
             </div>
 
             <div class="form-group">
@@ -55,17 +57,22 @@
                 formControlName="priority" 
                 class="form-select"
               >
-                <option value="">Select a priority</option>
-                <option value="1">Low</option>
-                <option value="2">Medium</option>
-                <option value="3">High</option>
-                <option value="4">Critical</option>
+              <option value="" disabled>Select a priority</option>
+              @for (option of priorityOptions; track option) {
+                <option [value]="option.label">{{option.label}}</option>
+              }
               </select>
               <div *ngIf="isFieldInvalid('priority')" class="error-message">
                 Please select a priority
               </div>
+              <div class="ai-suggestion" *ngIf="showPriorityPrediction && aiPrediction">
+                <span class="ai-icon" >🤖</span> AI suggests <strong>{{getPriorityDisplay()}}</strong>
+                <button type="button" class="suggestion-btn" (click)="useAiPriority()">Use this</button>
+              </div>
             </div>
+            
           </div>
+       
 
           <div class="form-group">
             <label class="form-label">Description</label>

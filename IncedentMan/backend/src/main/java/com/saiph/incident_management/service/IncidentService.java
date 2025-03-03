@@ -50,39 +50,43 @@ public class IncidentService {
     }
     
     @SuppressWarnings({ "null", "unchecked" })
-    public Incident createIncident(Incident incident) {
-       
-        try {
+public Incident createIncident(Incident incident) {
+
+    try {
+        if(incident.getCategory() == null || incident.getCategory().isEmpty() || incident.getPriority() == 0){
             Map<String, String> request = new HashMap<>();
             request.put("description", incident.getDescription());
-            
+
             ResponseEntity<Map> aiResponse = restTemplate.postForEntity(
-                aiServiceUrl + "/predict",
-                request,
-                Map.class
+                    aiServiceUrl + "/predict",
+                    request,
+                    Map.class
             );
-            
+
             if (aiResponse.getBody() != null) {
                 Map<String,Object> responseBody = aiResponse.getBody();
-                if (responseBody !=null && responseBody.containsKey("prediction")){
+                if (responseBody != null && responseBody.containsKey("prediction")) {
                     Map<String,Object> predictions = (Map<String,Object>) responseBody.get("prediction");
-                    if (predictions !=null){
-                        incident.setCategory((String)predictions.get("category"));
-                        incident.setPriority(((Number) predictions.get("priority")).intValue());
+                    if (predictions != null) {
+                        if (incident.getCategory() == null || incident.getCategory().isEmpty()) {
+                            incident.setCategory((String)predictions.get("category"));
+                        }
+                        if (incident.getPriority() == 0) {
+                            incident.setPriority(((Number) predictions.get("priority")).intValue());
+                        }
                     }
                 }
             }
-        } catch (Exception e) {
-            // Log error but continue with default values
-            System.err.println("Error calling AI service: " + e.getMessage());
-            // Set default values if AI service fails
-            if (incident.getCategory() == null) incident.setCategory("GENERAL");
-            if (incident.getPriority() == 0) incident.setPriority(2);
         }
-        
-        loadUserData(incident);
-        return incidentRepository.save(incident);
+    } catch (Exception e) {
+        System.err.println("Error calling AI service: " + e.getMessage());
+        if (incident.getCategory() == null || incident.getCategory().isEmpty()) incident.setCategory("GENERAL");
+        if (incident.getPriority() == 0) incident.setPriority(2);
     }
+
+    loadUserData(incident);
+    return incidentRepository.save(incident);
+}
     
     public Incident updateIncident(String id, Incident incident) {
         if (incidentRepository.existsById(id)) {
