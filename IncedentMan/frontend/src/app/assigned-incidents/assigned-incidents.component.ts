@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Incident } from '../../../model/incident.model';
 import { IncidentService } from '../services/incident.service';
-import { NgFor } from '@angular/common';
+import { NgFor,NgIf ,NgClass } from '@angular/common';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-assigned-incidents',
-  imports: [NgFor],
+  imports: [NgFor,NgIf,NgClass],
   templateUrl: './assigned-incidents.component.html',
   styleUrl: './assigned-incidents.component.scss'
 })
@@ -53,4 +53,26 @@ export class AssignedIncidentsComponent implements OnInit {
     localStorage.removeItem('username')
   }
 
+  getPriorityClass(priority: number | undefined): string {
+    if (priority === undefined) return 'priority-medium';
+    
+    switch(priority) {
+      case 1: return 'priority-low';
+      case 2: return 'priority-medium';
+      case 3: return 'priority-high';
+      case 4: return 'priority-Critical'
+      default: return 'priority-medium';
+    }
+  }
+
+  getPriorityLabel(priority: number | undefined): string {
+    if (priority === undefined) return 'Medium';
+    
+    switch(priority) {
+      case 1: return 'High';
+      case 2: return 'Medium';
+      case 3: return 'Low';
+      default: return 'Medium';
+    }
+  }
 }

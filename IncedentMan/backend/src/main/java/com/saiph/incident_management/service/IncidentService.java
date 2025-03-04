@@ -168,7 +168,7 @@ public Incident createIncident(Incident incident) {
         Technician technician = (Technician) user;
 
         // Mettre à jour le statut de l'incident
-        incident.setStatus("En cours");
+        incident.setStatus("In progress");
         incident.setAssignedTechnician(technician);
 
         // Ajouter l'incident à la liste des incidents assignés au technicien

@@ -1,27 +1,78 @@
-<div class="incident-list">
-    <h2>Incidents Assigned to {{ username }}</h2>
-
-    <!-- Logout and Back Buttons -->
-    <div class="button-group">
-    <button class="back-button" (click)="back()">Back</button>
-    <button class="logout-button" (click)="logout()">Logout</button>
-
-    </div>
-
-    <ul>
-      <li *ngFor="let incident of filteredIncidents" class="incident-item">
-        <h3>{{ incident.title }}</h3>
-        <p><strong>Description:</strong> {{ incident.description }}</p>
-        <p><strong>Category:</strong> {{ incident.category }}</p>
-        <p><strong>Status:</strong> {{ incident.status }}</p>
-        <p><strong>Priority:</strong> {{ incident.priority }}</p>
-        <p><strong>Creation Date:</strong> {{ incident.creationDate }}</p>
-
-        <!-- Solution Area -->
-        <div class="solution-area">
-          <textarea placeholder="Enter your solution here..." rows="4"></textarea>
-          <button class="submit-button">Submit Solution</button>
+<div class="saiph-container">
+    <header class="saiph-header">
+      <div class="logo-container">
+        <div class="logo-star">
+          <span class="star-point star-point-1"></span>
+          <span class="star-point star-point-2"></span>
+          <span class="star-point star-point-3"></span>
+          <span class="star-point star-point-4"></span>
         </div>
-      </li>
-    </ul>
+        <h1>SAIPH</h1>
+        <p class="tagline">Laboratoire Pharmacologique Citoyen</p>
+      </div>
+      <div class="button-group">
+        <button class="back-button" (click)="back()">
+          <i class="icon-back"></i>
+          Back
+        </button>
+        <button class="logout-button" (click)="logout()">
+          <i class="icon-logout"></i>
+          Logout
+        </button>
+      </div>
+    </header>
+  
+    <div class="incident-list">
+      <h2>Incidents Assigned to {{ username }}</h2>
+  
+      <div class="incidents-container" *ngIf="filteredIncidents.length > 0">
+        <div *ngFor="let incident of filteredIncidents" class="incident-item">
+          <div class="incident-header">
+            <h3>{{ incident.title }}</h3>
+            <span class="priority-badge" [ngClass]="getPriorityClass(incident.priority)">
+              {{ getPriorityLabel(incident.priority) }}
+            </span>
+          </div>
+          
+          <div class="incident-details">
+            <div class="detail-row">
+              <span class="detail-label">Description:</span>
+              <span class="detail-value">{{ incident.description }}</span>
+            </div>
+            
+            <div class="detail-row">
+              <span class="detail-label">Category:</span>
+              <span class="detail-value category-badge">{{ incident.category }}</span>
+            </div>
+            
+            <div class="detail-row">
+              <span class="detail-label">Status:</span>
+              <span class="detail-value status-badge">{{ incident.status }}</span>
+            </div>
+            
+            <div class="detail-row">
+              <span class="detail-label">Creation Date:</span>
+              <span class="detail-value">{{ incident.creationDate }}</span>
+            </div>
+          </div>
+  
+          <!-- Solution Area -->
+          <div class="solution-area">
+            <h4>Solution</h4>
+            <textarea 
+              placeholder="Enter your solution here..." 
+              rows="4"
+              #solutionText
+            ></textarea>
+            <button class="submit-button">
+              Submit Solution
+            </button>
+          </div>
+        </div>
+      </div>
+  
+      <div class="no-incidents" *ngIf="filteredIncidents.length === 0">
+        <p>No incidents currently assigned to you.</p>
+      </div>
+    </div>
   </div>
