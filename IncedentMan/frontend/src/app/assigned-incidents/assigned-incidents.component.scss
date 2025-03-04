@@ -1,0 +1,77 @@
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .logout-button, .back-button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .logout-button {
+    background-color: #dc3545; /* Bootstrap danger color /
+    color: white;
+  }
+
+  .logout-button:hover {
+    background-color: #c82333;
+  }
+
+  .back-button {
+    background-color: #007bff; / Bootstrap primary color */
+    color: white;
+  }
+
+  .back-button:hover {
+    background-color: #0056b3;
+  }
+  .incident-list {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
+
+  .incident-item {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+  }
+
+  .incident-item h3 {
+    margin: 0;
+    color: #333;
+  }
+
+  .solution-area {
+    margin-top: 10px;
+  }
+
+  textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: none;
+  }
+
+  .submit-button {
+    margin-top: 10px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    background-color: #28a745;
+    color: white;
+    cursor: pointer;
+  }
+
+  .submit-button:hover {
+    background-color: #218838;
+  }

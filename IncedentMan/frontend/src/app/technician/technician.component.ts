@@ -4,7 +4,7 @@ import { Incident } from '../../../model/incident.model';
 import { Specialization } from '../../../model/specialization.model';
 import { TechnicianService } from '../services/technician-service.service';
 import { Router } from '@angular/router';
-import { error } from 'node:console';
+
 
 
 @Component({
@@ -83,7 +83,9 @@ export class TechnicianComponent implements OnInit {
   get openIncidents() {
     return this.incidents.filter(incident => incident.status === 'Open');
   }
-  
+  goToAssignedIncidents() {
+    this.router.navigate(['/assigned-incidents']);
+  }
   
   logout() {
     this.router.navigate(['/login']);

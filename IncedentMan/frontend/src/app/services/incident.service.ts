@@ -15,4 +15,7 @@ export class IncidentService {
   createIncident(incident: Incident): Observable<Incident> {
     return this.http.post<Incident>(this.apiUrl, incident);
   }
+  getIncidentsByTechnician(username: string): Observable<Incident[]> {
+    return this.http.get<Incident[]>(`${this.apiUrl}/assigned/${username}`);
+  }
 }

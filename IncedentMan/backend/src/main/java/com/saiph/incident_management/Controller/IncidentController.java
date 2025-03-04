@@ -88,5 +88,9 @@ public class IncidentController {
         incidentService.takeChargeIncident(incidentId, username);
         return ResponseEntity.ok().build();
     }
-
+    @GetMapping("/assigned/{username}")
+    public ResponseEntity<List<Incident>> getIncidentsByTechnicianUsername(@PathVariable String username) {
+        List<Incident> incidents = incidentService.getIncidentsByTechnicianUsername(username);
+        return ResponseEntity.ok(incidents);
+    }
 }

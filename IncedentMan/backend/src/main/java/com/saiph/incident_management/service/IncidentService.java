@@ -178,4 +178,11 @@ public Incident createIncident(Incident incident) {
         incidentRepository.save(incident);
         technicianRepository.save(technician);
     }
+    public List<Incident> getIncidentsByTechnicianUsername(String username) {
+        Technician technician = technicianRepository.findByUsername(username);
+        if (technician != null) {
+            return technician.getAssignedIncidents();
+        }
+        return List.of(); // Return an empty list if technician not found
+    }
 }
