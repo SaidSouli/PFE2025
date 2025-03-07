@@ -49,7 +49,7 @@ public class IncidentService {
         return incidentOpt;
     }
     
-    @SuppressWarnings({ "null", "unchecked" })
+    @SuppressWarnings({"unchecked" })
 public Incident createIncident(Incident incident) {
 
     try {
