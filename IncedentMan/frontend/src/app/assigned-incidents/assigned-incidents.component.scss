@@ -1,3 +1,4 @@
+@use "sass:color";
 // SAIPH Color Palette based on the logo
 $saiph-gray: #5a6872;
 $saiph-green: #8cb33f;
@@ -128,7 +129,7 @@ $priority-low: #27ae60;
       border: 1px solid $saiph-border-color;
 
       &:hover {
-        background-color: darken($saiph-light-gray, 5%);
+        background-color: color.adjust($saiph-light-gray, $lightness: -5%);
       }
     }
 
@@ -137,7 +138,7 @@ $priority-low: #27ae60;
       color: white;
 
       &:hover {
-        background-color: darken($saiph-gray, 10%);
+        background-color: color.adjust($saiph-gray, $lightness: -10%);
       }
     }
 
@@ -190,7 +191,8 @@ $priority-low: #27ae60;
     border-radius: 10px;
 
     &:hover {
-      background: darken($saiph-gray, 10%);
+      background: color.adjust($saiph-gray, $lightness: -10%);
+
     }
   }
 }
@@ -272,7 +274,7 @@ $priority-low: #27ae60;
 
 .status-badge {
   background-color: rgba($saiph-yellow, 0.1);
-  color: darken($saiph-yellow, 15%);
+  color: color.adjust($saiph-yellow, $lightness: -15%);
 }
 
 // Solution Area Styles
@@ -316,7 +318,7 @@ $priority-low: #27ae60;
     @include transition;
 
     &:hover {
-      background-color: darken($saiph-green, 10%);
+      background-color: color.adjust($saiph-green, $lightness: -10%);
     }
   }
 }

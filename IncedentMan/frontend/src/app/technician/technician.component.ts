@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NgFor } from '@angular/common';
+import { NgFor,NgClass } from '@angular/common';
 import { Incident } from '../../../model/incident.model';
 import { Specialization } from '../../../model/specialization.model';
 import { TechnicianService } from '../services/technician-service.service';
@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   selector: 'app-technicien',
   templateUrl: './technician.component.html',
   styleUrls: ['./technician.component.scss'], // Corrected from styleUrl to styleUrls
-  imports : [NgFor]
+  imports : [NgFor,NgClass]
 })
 export class TechnicianComponent implements OnInit {
   incidents: Incident[] = [];
@@ -27,7 +27,7 @@ export class TechnicianComponent implements OnInit {
       this.fetchTechnicianSpecializations(username);
   } else {
       console.error('Username not found in local storage');
-      // Rediriger vers la page de connexion ou afficher un message d'erreur
+      
   }
   }
 
@@ -91,5 +91,14 @@ export class TechnicianComponent implements OnInit {
     this.router.navigate(['/login']);
     localStorage.removeItem('jwtToken');
     localStorage.removeItem('username')
+  }
+  getPriorityLabel(priority?: number): string {
+    if (!priority) return 'Not Assigned';
+    switch(priority) {
+      case 1: return 'High';
+      case 2: return 'Medium';
+      case 3: return 'Low';
+      default: return 'Unknown';
+    }
   }
 }
