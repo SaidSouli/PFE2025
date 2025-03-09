@@ -128,13 +128,17 @@ export class EditUserComponent implements OnInit {
 
   onSubmit(): void {
     if (this.editForm.valid && this.userId) {
-      const updatedUser = { ...this.editForm.value };
+      const updatedUser = { ...this.editForm.value,
+        assignedIncidents: this.selectedSpecializations.length > 0 ? [] : undefined
+       };
       
       const roleValue = updatedUser.role?.toString().toLowerCase() || '';
       if (roleValue === 'technician') {
-        updatedUser.specializations = this.selectedSpecializations;
+        updatedUser.specializations = this.selectedSpecializations.map(spec => spec.toString());
+        updatedUser.assignedIncidents = [];
       } else {
         delete updatedUser.specializations;
+        delete updatedUser.assignedIncidents;
       }
 
       this.http.put<User>(`http://localhost:8080/api/users/${this.userId}`, updatedUser).subscribe({
@@ -173,7 +177,7 @@ export class EditUserComponent implements OnInit {
     this.router.navigate(['/admin']);
   }
 
-  // Specialization handling methods
+  
   isSpecSelected(spec: Specialization): boolean {
     return this.selectedSpecializations.includes(spec);
   }
