@@ -1,9 +1,14 @@
 package com.saiph.incident_management.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+
+import com.saiph.incident_management.model.Specialization;
+import com.saiph.incident_management.model.Technician;
 import com.saiph.incident_management.model.User;
 import com.saiph.incident_management.repository.UserRepository;
 
@@ -36,31 +41,59 @@ public class UserService {
         
         return false;
     }
-    public User updateUser(String id, User updatedUser) {
-        Optional<User> existingUserOptional = userRepository.findById(id);
+    public User updateUser(String id, Map<String, Object> userData) {
+    Optional<User> existingUserOptional = userRepository.findById(id);
+    
+    if (existingUserOptional.isPresent()) {
+        User existingUser = existingUserOptional.get();
         
-        if (existingUserOptional.isPresent()) {
-            User existingUser = existingUserOptional.get();
-            
-            // Update fields selectively
-            if (updatedUser.getUsername() != null) {
-                existingUser.setUsername(updatedUser.getUsername());
-            }
-            if (updatedUser.getPassword() != null) {
-                existingUser.setPassword(updatedUser.getPassword());
-            }
-            if (updatedUser.getEmail() != null) {
-                existingUser.setEmail(updatedUser.getEmail());
-            }
-            if (updatedUser.getRole() != null) {
-                existingUser.setRole(updatedUser.getRole());
-            }
-            
-            return userRepository.save(existingUser);
+        // Update base fields
+        if (userData.containsKey("username")) {
+            existingUser.setUsername((String) userData.get("username"));
+        }
+        if (userData.containsKey("password")) {
+            existingUser.setPassword((String) userData.get("password"));
+        }
+        if (userData.containsKey("email")) {
+            existingUser.setEmail((String) userData.get("email"));
+        }
+        if (userData.containsKey("role")) {
+            existingUser.setRole((String) userData.get("role"));
         }
         
-        return null;
+        // Handle technician specializations
+        if (existingUser instanceof Technician && userData.containsKey("specializations")) {
+            Technician technician = (Technician) existingUser;
+            Object specsObj = userData.get("specializations");
+            
+            if (specsObj instanceof List<?>) {
+                List<?> specsList = (List<?>) specsObj;
+                List<Specialization> specs = new ArrayList<>();
+                
+                for (Object item : specsList) {
+                    if (item instanceof String) {
+                        try {
+                            Specialization spec = Specialization.valueOf(((String) item).toUpperCase());
+                            specs.add(spec);
+                        } catch (IllegalArgumentException e) {
+                            throw new IllegalArgumentException("Invalid specialization value: " + item);
+                        }
+                    } else {
+                        throw new IllegalArgumentException("Specialization values must be strings");
+                    }
+                }
+                
+                technician.setSpecializations(specs);
+            } else {
+                throw new IllegalArgumentException("Specializations must be a list");
+            }
+        }
+        
+        return userRepository.save(existingUser);
     }
+    
+    return null;
+}
     public User getUserById(String id) {
         Optional<User> userOptional = userRepository.findById(id);
         return userOptional.orElse(null); // Returns the User if found, or null if not

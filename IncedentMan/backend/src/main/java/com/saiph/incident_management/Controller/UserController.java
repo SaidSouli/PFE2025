@@ -49,7 +49,7 @@ public ResponseEntity<?> createUser(@RequestBody Map<String, Object> userData) {
                     List<?> specsList = (List<?>) specsObj;
                     List<Specialization> specs = new ArrayList<>();
                     
-                    //convert each element to Specialization enum
+                    
                     for (Object item : specsList) {
                         if (item instanceof String) {
                             try {
@@ -75,7 +75,7 @@ public ResponseEntity<?> createUser(@RequestBody Map<String, Object> userData) {
             user = new User();
         }
         
-        // field mapping
+        
         user.setUsername((String) userData.get("username"));
         user.setPassword((String) userData.get("password"));
         user.setEmail((String) userData.get("email"));
@@ -129,9 +129,9 @@ public ResponseEntity<?> createUser(@RequestBody Map<String, Object> userData) {
         }
     }
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable String id, @RequestBody User user) {
-        User updatedUser = userService.updateUser(id, user);
-        
+    public ResponseEntity<?> updateUser(@PathVariable String id, @RequestBody Map<String, Object> userData) {
+        User updatedUser = userService.updateUser(id, userData);
+    
         if (updatedUser != null) {
             return ResponseEntity.ok(updatedUser);
         } else {

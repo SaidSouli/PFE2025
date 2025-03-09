@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { User } from '../../../model/user.model';
 import { Specialization } from '../../../model/specialization.model';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -13,6 +12,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-add-user',
@@ -26,16 +27,28 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatSelectModule,
     MatButtonModule,
     MatIconModule,
-    MatCardModule
+    MatCardModule,
+    MatChipsModule,
+    MatTooltipModule
   ],
   templateUrl: './add-user.component.html',
   styleUrls: ['./add-user.component.scss']
 })
 export class AddUserComponent {
   userForm: FormGroup;
-  specializations = Object.values(Specialization);
   selectedSpecializations: Specialization[] = [];
   hidePassword = true;
+  showSpecHint = false;
+  
+  
+  specializationOptions = [
+    { value: Specialization.NETWORK, label: 'Network', icon: 'router', color: 'network' },
+    { value: Specialization.HARDWARE, label: 'Hardware', icon: 'memory', color: 'hardware' },
+    { value: Specialization.SOFTWARE, label: 'Software', icon: 'code', color: 'software' },
+    { value: Specialization.DATABASE, label: 'Database', icon: 'storage', color: 'database' },
+    { value: Specialization.SECURITY, label: 'Security', icon: 'security', color: 'security' },
+    { value: Specialization.CLOUD, label: 'Cloud', icon: 'cloud', color: 'cloud' }
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -44,11 +57,77 @@ export class AddUserComponent {
     private snackBar: MatSnackBar
   ) {
     this.userForm = this.fb.group({
-      username: ['', Validators.required],
+      username: ['', [Validators.required, Validators.minLength(3)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       email: ['', [Validators.required, Validators.email]],
-      role: ['', Validators.required]
+      role: ['', Validators.required],
+      specializations: [[], this.conditionalValidator(() => 
+        this.userForm?.get('role')?.value === 'technician', 
+        Validators.required
+      )]
     });
+    
+    
+    this.userForm.get('role')?.valueChanges.subscribe(role => {
+      this.userForm.get('specializations')?.updateValueAndValidity();
+      
+      
+      if (role !== 'technician') {
+        this.selectedSpecializations = [];
+      } else {
+        
+        setTimeout(() => {
+          this.showSpecHint = true;
+        }, 300);
+      }
+    });
+  }
+
+  
+  conditionalValidator(condition: () => boolean, validator: any) {
+    return (control: any) => {
+      if (!condition()) {
+        return null;
+      }
+      return validator(control);
+    };
+  }
+
+  
+  isSpecSelected(spec: Specialization): boolean {
+    return this.selectedSpecializations.includes(spec);
+  }
+
+  
+  toggleSpecialization(spec: Specialization, selected: boolean): void {
+    if (selected) {
+      if (!this.selectedSpecializations.includes(spec)) {
+        this.selectedSpecializations.push(spec);
+      }
+    } else {
+      this.selectedSpecializations = this.selectedSpecializations.filter(s => s !== spec);
+    }
+    
+    
+    this.userForm.get('specializations')?.setValue(this.selectedSpecializations);
+  }
+
+  
+  getSpecIcon(spec: Specialization): string {
+    const option = this.specializationOptions.find(opt => opt.value === spec);
+    return option ? option.icon : 'engineering';
+  }
+  
+  
+  getSpecColor(spec: Specialization): string {
+    const option = this.specializationOptions.find(opt => opt.value === spec);
+    return option ? option.color : '';
+  }
+  
+  
+  getSpecLabel(spec: Specialization): string {
+    const option = this.specializationOptions.find(opt => opt.value === spec);
+    return option ? option.label : String(spec);
   }
 
   onSubmit() {
@@ -94,7 +173,13 @@ export class AddUserComponent {
       return 'Invalid email format';
     }
     if (control?.hasError('minlength')) {
-      return 'Password must be at least 6 characters';
+      if (controlName === 'password') {
+        return 'Password must be at least 6 characters';
+      }
+      if (controlName === 'username') {
+        return 'Username must be at least 3 characters';
+      }
+      return `${controlName} does not meet minimum length requirements`;
     }
     return '';
   }

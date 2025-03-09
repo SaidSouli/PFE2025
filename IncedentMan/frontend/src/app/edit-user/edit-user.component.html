@@ -1,44 +1,117 @@
-<div class="container">
-    <h2>Edit User</h2>
-  
-    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
-    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
-  
-    <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
-      <div class="mb-3">
-        <label for="username" class="form-label">Username</label>
-        <input type="text" class="form-control" id="username" formControlName="username">
-        <div *ngIf="editForm.get('username')?.invalid && (editForm.get('username')?.dirty || editForm.get('username')?.touched)"
-             class="text-danger">
-          <div *ngIf="editForm.get('username')?.errors?.['required']">Username is required.</div>
-        </div>
+<div class="saiph-container">
+  <header class="saiph-header">
+    <div class="logo-container">
+      <div class="logo-star">
+        <div class="star-point star-point-1"></div>
+        <div class="star-point star-point-2"></div>
+        <div class="star-point star-point-3"></div>
+        <div class="star-point star-point-4"></div>
       </div>
-  
-      <div class="mb-3">
-        <label for="email" class="form-label">Email</label>
-        <input type="email" class="form-control" id="email" formControlName="email">
-        <div *ngIf="editForm.get('email')?.invalid && (editForm.get('email')?.dirty || editForm.get('email')?.touched)"
-             class="text-danger">
-          <div *ngIf="editForm.get('email')?.errors?.['required']">Email is required.</div>
-          <div *ngIf="editForm.get('email')?.errors?.['email']">Email must be a valid email address.</div>
-        </div>
-      </div>
-  
-      <div class="mb-3">
-        <label for="role" class="form-label">Role</label>
-        <select class="form-select" id="role" formControlName="role">
-          <option value="" disabled>Select Role</option>
-          <option value="admin">admin</option>
-          <option value="user">user</option>
-          <option value = "Technician">Technician</option>
-        </select>
-        <div *ngIf="editForm.get('role')?.invalid && (editForm.get('role')?.dirty || editForm.get('role')?.touched)"
-             class="text-danger">
-          <div *ngIf="editForm.get('role')?.errors?.['required']">Role is required.</div>
-        </div>
-      </div>
-  
-      <button type="submit" class="btn btn-primary" [disabled]="editForm.invalid">Save Changes</button>
-      <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancel</button>
-    </form>
+      <h1>SAIPH</h1>
+      <p class="tagline">Incident Management System</p>
+    </div>
+
+    <div class="button-group">
+      <button mat-raised-button color="warn" class="back-button" (click)="router.navigate(['/admin'])">
+        <mat-icon class="icon-back">arrow_back</mat-icon>
+        Back
+      </button>
+      <button mat-raised-button color="primary" class="logout-button" (click)="router.navigate(['/login'])">
+        <mat-icon class="icon-logout">logout</mat-icon>
+        Logout
+      </button>
+    </div>
+  </header>
+
+  <div class="content-area">
+    <div class="form-container scrollbar-style">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>edit</mat-icon>
+            Edit User
+          </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+          <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+
+          <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+            <mat-form-field appearance="outline">
+              <mat-label>Username</mat-label>
+              <mat-icon matPrefix>account_circle</mat-icon>
+              <input matInput formControlName="username" placeholder="Enter username">
+              <mat-error *ngIf="editForm.get('username')?.invalid && (editForm.get('username')?.dirty || editForm.get('username')?.touched)">
+                Username is required
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Email</mat-label>
+              <mat-icon matPrefix>email</mat-icon>
+              <input matInput type="email" formControlName="email" placeholder="example@domain.com">
+              <mat-error *ngIf="editForm.get('email')?.invalid && (editForm.get('email')?.dirty || editForm.get('email')?.touched)">
+                Please enter a valid email address
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Role</mat-label>
+              <mat-icon matPrefix>badge</mat-icon>
+              <mat-select formControlName="role">
+                <mat-option value="">Select Role</mat-option>
+                <mat-option value="admin">Admin</mat-option>
+                <mat-option value="user">User</mat-option>
+                <mat-option value="technician">Technician</mat-option>
+              </mat-select>
+              <mat-error *ngIf="editForm.get('role')?.invalid && (editForm.get('role')?.dirty || editForm.get('role')?.touched)">
+                Role is required
+              </mat-error>
+            </mat-form-field>
+
+            <ng-container *ngIf="editForm.get('role')?.value?.toLowerCase() === 'technician'">
+              <mat-form-field appearance="outline" class="specializations-field">
+                <mat-label>Specializations</mat-label>
+                <mat-icon matPrefix>engineering</mat-icon>
+                <input matInput readonly [value]="selectedSpecializations.length ? selectedSpecializations.join(', ') : ''" 
+                      placeholder="Select at least one specialization">
+                <mat-hint align="start" class="specialization-hint" [class.visible]="showSpecHint">
+                  Select the technical areas of expertise
+                </mat-hint>
+                <mat-error *ngIf="editForm.get('specializations')?.hasError('required')">
+                  At least one specialization is required
+                </mat-error>
+              </mat-form-field>
+
+              <div class="specialization-chips-container">
+                <div class="specialization-chips">
+                  <div *ngFor="let spec of specializationOptions" 
+                      class="chip-item"
+                      [class.selected]="isSpecSelected(spec.value)"
+                      (click)="toggleSpecialization(spec.value, !isSpecSelected(spec.value))"
+                      [attr.data-color]="spec.color"
+                      matTooltip="{{spec.label}} specialist">
+                    <mat-icon>{{spec.icon}}</mat-icon>
+                    <span>{{spec.label}}</span>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+
+            <div class="button-group">
+              <button mat-raised-button color="primary" type="submit" [disabled]="!editForm.valid">
+                <mat-icon>save</mat-icon>
+                Save Changes
+              </button>
+              <button mat-raised-button color="warn" type="button" (click)="cancelEdit()">
+                <mat-icon>cancel</mat-icon>
+                Cancel
+              </button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
   </div>
+</div>

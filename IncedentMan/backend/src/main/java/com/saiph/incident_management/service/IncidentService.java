@@ -50,7 +50,7 @@ public class IncidentService {
     }
     
     @SuppressWarnings({"unchecked" })
-public Incident createIncident(Incident incident) {
+    public Incident createIncident(Incident incident) {
 
     try {
         if(incident.getCategory() == null || incident.getCategory().isEmpty() || incident.getPriority() == 0){
@@ -138,12 +138,12 @@ public Incident createIncident(Incident incident) {
 
 
      public List<Incident> findByCategoryIn(List<String> specializations) {
-        // Convertir les spécialisations en minuscules
+        
         List<String> lowerCaseSpecializations = specializations.stream()
             .map(String::toLowerCase)
             .collect(Collectors.toList());
 
-        // Récupérer les incidents dont la catégorie correspond à une spécialisation (en ignorant la casse)
+        
         return incidentRepository.findAll().stream()
             .filter(incident -> {
                 String lowerCaseCategory = incident.getCategory().toLowerCase();
@@ -152,29 +152,29 @@ public Incident createIncident(Incident incident) {
             .collect(Collectors.toList());
     }
     public void takeChargeIncident(String incidentId, String username) {
-        // Récupérer l'incident
+        
         Incident incident = incidentRepository.findById(incidentId)
                 .orElseThrow(() -> new RuntimeException("Incident not found"));
 
-        // Récupérer l'utilisateur (technicien) par ID
+        
         User user = technicianRepository.findByUsername(username);
 
 
-        // Vérifier si l'utilisateur est un technicien
+        
         if (!(user instanceof Technician)) {
             throw new RuntimeException("User  is not a technician");
         }
 
         Technician technician = (Technician) user;
 
-        // Mettre à jour le statut de l'incident
+        
         incident.setStatus("In progress");
         incident.setAssignedTechnician(technician);
 
-        // Ajouter l'incident à la liste des incidents assignés au technicien
+        
         technician.getAssignedIncidents().add(incident);
 
-        // Sauvegarder les modifications
+        
         incidentRepository.save(incident);
         technicianRepository.save(technician);
     }
@@ -183,6 +183,6 @@ public Incident createIncident(Incident incident) {
         if (technician != null) {
             return technician.getAssignedIncidents();
         }
-        return List.of(); // Return an empty list if technician not found
+        return List.of(); 
     }
 }
