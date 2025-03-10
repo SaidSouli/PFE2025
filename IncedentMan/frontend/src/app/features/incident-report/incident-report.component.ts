@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { RouterLink } from '@angular/router';
 
 @Component({
     selector: 'app-incident-report',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
+    imports: [CommonModule, ReactiveFormsModule, HttpClientModule, RouterLink],
     templateUrl: 'incident-report.component.html',
     styleUrl: 'incident-report.component.scss'
 })
@@ -89,7 +90,7 @@ export class IncidentReportComponent {
         const description = this.incidentForm.get('description')?.value;
 
         if (description && description.length > 10) {
-            this.http.post<any>('http://localhost:5000/predict', { // Corrected port to 5000
+            this.http.post<any>('http://localhost:5000/predict', {
                 description
             }).subscribe({
                 next: (response) => {
@@ -153,6 +154,7 @@ export class IncidentReportComponent {
         this.errorMessage = '';
 
         const formValues = this.incidentForm.value;
+        const username = localStorage.getItem('username') || 'anonymous'; // Get username with fallback
 
         const incident = {
             title: formValues.title,
@@ -160,10 +162,11 @@ export class IncidentReportComponent {
             category: formValues.category,
             priority: this.priorityValueMap[formValues.priority],
             status: 'Open',
-            creationDate: new Date()
+            creationDate: new Date(),
+            reporter: { username }
         };
 
-        this.http.post('http://localhost:8080/api/incidents', incident) // Corrected port to 5000
+        this.http.post('http://localhost:8080/api/incidents', incident)
             .subscribe({
                 next: (response) => {
                     this.submitSuccess = true;

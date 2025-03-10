@@ -48,51 +48,71 @@ public class IncidentService {
         }
         return incidentOpt;
     }
-    
+    //said did this 
     @SuppressWarnings({"unchecked" })
     public Incident createIncident(Incident incident) {
-
-    try {
-        if(incident.getCategory() == null || incident.getCategory().isEmpty() || incident.getPriority() == 0){
-            Map<String, String> request = new HashMap<>();
-            request.put("description", incident.getDescription());
-
-            ResponseEntity<Map> aiResponse = restTemplate.postForEntity(
-                    aiServiceUrl + "/predict",
-                    request,
-                    Map.class
-            );
-
-            if (aiResponse.getBody() != null) {
-                Map<String,Object> responseBody = aiResponse.getBody();
-                if (responseBody != null && responseBody.containsKey("prediction")) {
-                    Map<String,Object> predictions = (Map<String,Object>) responseBody.get("prediction");
-                    if (predictions != null) {
-                        if (incident.getCategory() == null || incident.getCategory().isEmpty()) {
-                            incident.setCategory((String)predictions.get("category"));
-                        }
-                        if (incident.getPriority() == 0) {
-                            incident.setPriority(((Number) predictions.get("priority")).intValue());
+        try {
+            
+            if (incident.getCategory() == null || incident.getCategory().isEmpty() || incident.getPriority() == 0) {
+                Map<String, String> request = new HashMap<>();
+                request.put("description", incident.getDescription());
+    
+                ResponseEntity<Map> aiResponse = restTemplate.postForEntity(
+                        aiServiceUrl + "/predict",
+                        request,
+                        Map.class
+                );
+    
+                if (aiResponse.getBody() != null) {
+                    Map<String, Object> responseBody = aiResponse.getBody();
+                    if (responseBody != null && responseBody.containsKey("prediction")) {
+                        Map<String, Object> predictions = (Map<String, Object>) responseBody.get("prediction");
+                        if (predictions != null) {
+                            if (incident.getCategory() == null || incident.getCategory().isEmpty()) {
+                                incident.setCategory((String) predictions.get("category"));
+                            }
+                            if (incident.getPriority() == 0) {
+                                incident.setPriority(((Number) predictions.get("priority")).intValue());
+                            }
                         }
                     }
                 }
             }
-        }
-    } catch (Exception e) {
-        System.err.println("Error calling AI service: " + e.getMessage());
-        if (incident.getCategory() == null || incident.getCategory().isEmpty()) incident.setCategory("GENERAL");
-        if (incident.getPriority() == 0) incident.setPriority(2);
-    }
-
-    loadUserData(incident);
-    return incidentRepository.save(incident);
-}
     
+            // Ghassen added  reporter
+            String reporterUsername = incident.getReporter().getUsername(); 
+            User reporter = userRepository.findByUsername(reporterUsername); 
+    
+            if (reporter != null) {
+                incident.setReporter(reporter); 
+            } else {
+                throw new RuntimeException("Reporter not found"); 
+            }
+    
+        } catch (Exception e) {
+            System.err.println("Error calling AI service or finding reporter: " + e.getMessage());
+            if (incident.getCategory() == null || incident.getCategory().isEmpty()) {
+                incident.setCategory("GENERAL");
+            }
+            if (incident.getPriority() == 0) {
+                incident.setPriority(2);
+            }
+        }
+    
+        loadUserData(incident); 
+        return incidentRepository.save(incident); 
+    }
+    //ghassen updated this funvtion
     public Incident updateIncident(String id, Incident incident) {
         if (incidentRepository.existsById(id)) {
-            incident.setId(id);
-            loadUserData(incident);
-            return incidentRepository.save(incident);
+            Incident existingIncident = incidentRepository.findById(id).orElse(null);
+            if (existingIncident != null) {
+                incident.setId(id);
+                
+                incident.setReporter(existingIncident.getReporter());
+                loadUserData(incident);
+                return incidentRepository.save(incident);
+            }
         }
         return null;
     }
@@ -120,6 +140,7 @@ public class IncidentService {
     public List<Incident> findByReporter(String reporterId) {
         return incidentRepository.findByReporterId(reporterId);
     }
+    // said added this 
     private void loadUserData(Incident incident) {
         
         if (incident.getReporter() != null && incident.getReporter().getId() != null) {
@@ -137,7 +158,8 @@ public class IncidentService {
     }
 
 
-     public List<Incident> findByCategoryIn(List<String> specializations) {
+    // said added this
+    public List<Incident> findByCategoryIn(List<String> specializations) {
         
         List<String> lowerCaseSpecializations = specializations.stream()
             .map(String::toLowerCase)
@@ -151,6 +173,7 @@ public class IncidentService {
             })
             .collect(Collectors.toList());
     }
+    //ghassen added this
     public void takeChargeIncident(String incidentId, String username) {
         
         Incident incident = incidentRepository.findById(incidentId)
@@ -178,6 +201,7 @@ public class IncidentService {
         incidentRepository.save(incident);
         technicianRepository.save(technician);
     }
+    //said added this
     public List<Incident> getIncidentsByTechnicianUsername(String username) {
         Technician technician = technicianRepository.findByUsername(username);
         if (technician != null) {
@@ -185,4 +209,13 @@ public class IncidentService {
         }
         return List.of(); 
     }
+    //by ghassen
+    public List<Incident> getIncidentsByReporterUsername(String username) {
+        User reporter = userRepository.findByUsername(username);
+        if (reporter != null) {
+            return incidentRepository.findByReporter(reporter);
+        }
+        return List.of(); 
+    }
+    
 }

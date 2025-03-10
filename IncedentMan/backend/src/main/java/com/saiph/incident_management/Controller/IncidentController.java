@@ -72,9 +72,11 @@ public class IncidentController {
         return new ResponseEntity<>(incidentService.findByTechnician(technicianId), HttpStatus.OK);
     }
     
-    @GetMapping("/reporter/{reporterId}")
-    public ResponseEntity<List<Incident>> getIncidentsByReporter(@PathVariable String reporterId) {
-        return new ResponseEntity<>(incidentService.findByReporter(reporterId), HttpStatus.OK);
+    
+    @GetMapping("/reporter/{username}")
+    public ResponseEntity<List<Incident>> getIncidentsByReporterUsername(@PathVariable String username) {
+        List<Incident> incidents = incidentService.getIncidentsByReporterUsername(username);
+        return ResponseEntity.ok(incidents);
     }
     
     @PostMapping("/by-specialization")

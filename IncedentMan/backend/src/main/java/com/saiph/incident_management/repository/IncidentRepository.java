@@ -2,6 +2,7 @@ package com.saiph.incident_management.repository;
 
 import com.saiph.incident_management.model.Incident;
 import com.saiph.incident_management.model.Technician;
+import com.saiph.incident_management.model.User;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
@@ -15,4 +16,5 @@ public interface IncidentRepository extends MongoRepository<Incident, String> {
     List<Incident> findByAssignedTechnicianId(String technicianId);
     List<Incident> findByReporterId(String reporterId);
     List<Incident> findByAssignedTechnician(Technician technician);
+    List<Incident> findByReporter(User reporter);
 }

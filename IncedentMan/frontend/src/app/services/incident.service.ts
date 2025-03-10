@@ -18,4 +18,14 @@ export class IncidentService {
   getIncidentsByTechnician(username: string): Observable<Incident[]> {
     return this.http.get<Incident[]>(`${this.apiUrl}/assigned/${username}`);
   }
+  getIncidentsByReporterUsername(username: string): Observable<Incident[]> {
+    return this.http.get<Incident[]>(`${this.apiUrl}/reporter/${username}`);
+  }
+  deleteIncident(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  updateIncident(id: string, incident: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, incident);
+  }
 }

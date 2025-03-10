@@ -4,12 +4,32 @@ import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../../../model/user.model';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatTableModule } from '@angular/material/table';
 
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss'],
-  imports: [CommonModule, RouterModule] 
+  imports: [CommonModule, RouterModule,
+    MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatButtonModule,
+        MatIconModule,
+        MatCardModule,
+        MatChipsModule,
+        MatTooltipModule,
+        MatTableModule
+
+  ] 
 })
 export class AdminComponent {
   
