@@ -1,4 +1,4 @@
-<div class="saiph-container">
+<div class="saiph-container" [class.dark-mode]="themeService.getCurrentTheme()">
   <header class="saiph-header">
     <div class="logo-container">
       <div class="logo-star">
@@ -28,7 +28,7 @@
       <mat-card>
         <mat-card-header>
           <mat-card-title>
-            <mat-icon>person_add</mat-icon>
+            <mat-icon class="add-user-icon">person_add</mat-icon>
             Add New User
           </mat-card-title>
         </mat-card-header>
@@ -37,7 +37,7 @@
           <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
             <mat-form-field appearance="outline">
               <mat-label>Username</mat-label>
-              <mat-icon matPrefix>account_circle</mat-icon>
+              <mat-icon matPrefix class="account-icon">account_circle</mat-icon>
               <input matInput formControlName="username" placeholder="Enter username">
               <mat-error *ngIf="userForm.get('username')?.invalid">
                 {{getErrorMessage('username')}}
@@ -46,7 +46,7 @@
 
             <mat-form-field appearance="outline">
               <mat-label>Password</mat-label>
-              <mat-icon matPrefix>lock</mat-icon>
+              <mat-icon matPrefix class="password-icon">lock</mat-icon>
               <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
               <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
                 <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
@@ -58,7 +58,7 @@
 
             <mat-form-field appearance="outline">
               <mat-label>Email</mat-label>
-              <mat-icon matPrefix>email</mat-icon>
+              <mat-icon matPrefix class="email-icon">email</mat-icon>
               <input matInput type="email" formControlName="email" placeholder="example@domain.com">
               <mat-error *ngIf="userForm.get('email')?.invalid">
                 {{getErrorMessage('email')}}
@@ -67,7 +67,7 @@
 
             <mat-form-field appearance="outline">
               <mat-label>Role</mat-label>
-              <mat-icon matPrefix>badge</mat-icon>
+              <mat-icon matPrefix class="role-icon">badge</mat-icon>
               <mat-select formControlName="role">
                 <mat-option value="">Select Role</mat-option>
                 <mat-option value="admin">Admin</mat-option>
@@ -79,29 +79,26 @@
               </mat-error>
             </mat-form-field>
 
-            
             <ng-container *ngIf="userForm.get('role')?.value === 'technician'">
               <mat-form-field appearance="outline" class="specializations-field">
                 <mat-label>Specializations</mat-label>
-                <mat-icon matPrefix>engineering</mat-icon>
-                
-                
-                <input matInput readonly [value]="selectedSpecializations.length ? selectedSpecializations.join(', ') : ''" 
+                <mat-icon matPrefix class="engineering-icon">engineering</mat-icon>
+
+                <input matInput readonly [value]="selectedSpecializations.length ? selectedSpecializations.join(', ') : ''"
                       placeholder="Select at least one specialization">
-                
+
                 <mat-hint align="start" class="specialization-hint" [class.visible]="showSpecHint">
                   Select the technical areas of expertise
                 </mat-hint>
-                
+
                 <mat-error *ngIf="userForm.get('specializations')?.hasError('required')">
                   At least one specialization is required
                 </mat-error>
               </mat-form-field>
-              
-              
+
               <div class="specialization-chips-container">
                 <div class="specialization-chips">
-                  <div *ngFor="let spec of specializationOptions" 
+                  <div *ngFor="let spec of specializationOptions"
                       class="chip-item"
                       [class.selected]="isSpecSelected(spec.value)"
                       (click)="toggleSpecialization(spec.value, !isSpecSelected(spec.value))"
@@ -116,11 +113,11 @@
 
             <div class="button-group">
               <button mat-raised-button color="primary" type="submit" [disabled]="!userForm.valid">
-                <mat-icon>save</mat-icon>
+                <mat-icon class="save-icon">save</mat-icon>
                 Create User
               </button>
               <button mat-raised-button color="warn" type="button" (click)="router.navigate(['/admin'])">
-                <mat-icon>cancel</mat-icon>
+                <mat-icon class="cancel-icon">cancel</mat-icon>
                 Cancel
               </button>
             </div>

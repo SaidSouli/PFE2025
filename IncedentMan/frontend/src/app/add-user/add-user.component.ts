@@ -14,6 +14,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ThemeService } from '../services/theme.service';
 
 @Component({
   selector: 'app-add-user',
@@ -54,7 +55,8 @@ export class AddUserComponent {
     private fb: FormBuilder,
     private http: HttpClient,
     public router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    public themeService:ThemeService
   ) {
     this.userForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
@@ -83,7 +85,14 @@ export class AddUserComponent {
     });
   }
 
-  
+  ngOnInit(): void {
+    // Apply dark mode class based on the current theme
+    if (this.themeService.getCurrentTheme()) {
+      document.body.classList.add('dark-theme');
+    } else {
+      document.body.classList.remove('dark-theme');
+    }
+  }
   conditionalValidator(condition: () => boolean, validator: any) {
     return (control: any) => {
       if (!condition()) {

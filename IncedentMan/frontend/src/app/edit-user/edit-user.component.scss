@@ -21,6 +21,23 @@ $database-color: #9c27b0;
 $security-color: #e74c3c;
 $cloud-color: #3498db;
 
+// Dark mode colors
+$dark-bg-primary: #1a1f2e;
+$dark-bg-secondary: #242837;
+$dark-border: #2f3446;
+$dark-text-primary: #e0e0e0;
+$dark-text-secondary: rgba(255, 255, 255, 0.7);
+$dark-accent: #376fa3; // Darker blue for better contrast in dark mode
+$dark-hover: #333c4f;
+
+// Dark mode specialization colors - More vibrant for dark backgrounds
+$dark-network-color: #1aadee;
+$dark-hardware-color: #ffb52e;
+$dark-software-color: #9cd44f;
+$dark-database-color: #b33dc9;
+$dark-security-color: #f05545;
+$dark-cloud-color: #48a7ea;
+
 // Mixins
 @mixin card-shadow {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -42,9 +59,363 @@ $cloud-color: #3498db;
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
+
+  &.dark-mode {
+    background-color: $dark-bg-primary;
+    color: $dark-text-primary;
+
+    .saiph-header {
+      background-color: $dark-bg-secondary;
+      border-bottom-color: $dark-border;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+      h1, .tagline {
+        color: $dark-text-primary;
+      }
+
+      .logo-star {
+        .star-point-1 { background-color: color.adjust($saiph-green, $lightness: 10%); }
+        .star-point-2 { background-color: color.adjust($saiph-yellow, $lightness: 5%); }
+        .star-point-3 { background-color: color.adjust($saiph-blue, $lightness: 10%); }
+        .star-point-4 { background-color: color.adjust($saiph-gray, $lightness: 20%); }
+      }
+
+      .button-group {
+        .back-button {
+          background-color: rgba(255, 255, 255, 0.1);
+          color: $dark-text-primary;
+          border: 1px solid $dark-border;
+
+          &:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+          }
+        }
+
+        .logout-button {
+          background-color: $dark-accent;
+
+          &:hover {
+            background-color: color.adjust($dark-accent, $lightness: 10%);
+          }
+        }
+      }
+    }
+
+    .form-container {
+      background-color: $dark-bg-secondary;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+
+      mat-card {
+        background-color: $dark-bg-secondary;
+        color: $dark-text-primary;
+        border: 1px solid $dark-border;
+      }
+
+      mat-card-header {
+        background-color: rgba(0, 0, 0, 0.2);
+        border-bottom: 1px solid $dark-border;
+
+        .mat-card-title {
+          color: $dark-text-primary;
+
+          mat-icon {
+            color: $saiph-green; // Use your brand green color
+          }
+        }
+      }
+
+      mat-form-field {
+        ::ng-deep {
+          .mat-mdc-text-field-wrapper,
+          .mat-mdc-form-field-flex {
+            background-color: $dark-bg-secondary;
+          }
+
+          .mdc-line-ripple::after {
+            border-color: $dark-accent;
+          }
+
+          .mat-mdc-form-field-infix,
+          .mat-mdc-input-element {
+            color: $dark-text-primary;
+          }
+
+          .mdc-floating-label,
+          .mat-mdc-floating-label,
+          mat-label {
+            color: $dark-text-secondary;
+          }
+
+          .mat-mdc-form-field-icon-prefix > .mat-icon,
+          .mat-mdc-form-field-icon-suffix > .mat-icon {
+            color: $dark-text-secondary;
+          }
+
+          .mdc-text-field--outlined .mdc-notched-outline__leading,
+          .mdc-text-field--outlined .mdc-notched-outline__notch,
+          .mdc-text-field--outlined .mdc-notched-outline__trailing {
+            border-color: $dark-border;
+          }
+
+          .mdc-text-field--focused .mdc-notched-outline__leading,
+          .mdc-text-field--focused .mdc-notched-outline__notch,
+          .mdc-text-field--focused .mdc-notched-outline__trailing {
+            border-color: $dark-accent;
+          }
+
+          .mat-mdc-form-field-error {
+            color: color.adjust($priority-high, $lightness: 10%);
+          }
+
+          .mat-mdc-select-value-text {
+            color: $dark-text-primary;
+          }
+
+          .mat-mdc-select-arrow {
+            color: $dark-text-secondary;
+          }
+
+          .mat-icon {
+            // Add specific colors for different form fields
+            &.account-icon {
+              color: $saiph-blue;
+            }
+
+            &.email-icon {
+              color: $saiph-yellow;
+            }
+
+            &.role-icon {
+              color: $saiph-green;
+            }
+
+            &.engineering-icon {
+              color: $hardware-color; // or another appropriate color
+            }
+          }
+        }
+      }
+
+      &.scrollbar-style,
+      mat-card-content {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.2);
+
+        &::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        &::-webkit-scrollbar-track {
+          background: rgba(0, 0, 0, 0.2);
+          border-radius: 10px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.3);
+          border-radius: 10px;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.4);
+          }
+        }
+      }
+
+      .button-group {
+        border-top: 1px solid $dark-border;
+        background-color: $dark-bg-secondary;
+
+        button {
+          mat-icon {
+            // Save button icon
+            &.save-icon {
+              color: white; // This will be visible on your primary colored button
+            }
+
+            // Cancel button icon
+            &.cancel-icon {
+              color: white; // This will be visible on your warn colored button
+            }
+          }
+        }
+      }
+    }
+
+    .mat-raised-button.mat-primary {
+      background-color: $saiph-green;
+
+      &:hover {
+        background-color: color.adjust($saiph-green, $lightness: 5%);
+      }
+
+      &:disabled {
+        background-color: rgba($saiph-green, 0.4);
+        color: rgba(255, 255, 255, 0.5);
+      }
+    }
+
+    .mat-raised-button.mat-warn {
+      background-color: $priority-medium;
+
+      &:hover {
+        background-color: color.adjust($priority-medium, $lightness: 5%);
+      }
+    }
+
+    .specialization-hint {
+      color: $dark-text-secondary;
+    }
+
+    .specialization-chips {
+      .chip-item {
+        background-color: rgba(255, 255, 255, 0.08);
+        color: $dark-text-primary;
+        border: 2px solid transparent;
+
+        mat-icon {
+          color: $dark-text-secondary;
+        }
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.12);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+        }
+
+        &.selected {
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+
+          &[data-color="network"] {
+            background-color: rgba($dark-network-color, 0.25);
+            border-color: $dark-network-color;
+
+            mat-icon {
+              color: $dark-network-color;
+            }
+          }
+
+          &[data-color="hardware"] {
+            background-color: rgba($dark-hardware-color, 0.25);
+            border-color: $dark-hardware-color;
+
+            mat-icon {
+              color: $dark-hardware-color;
+            }
+          }
+
+          &[data-color="software"] {
+            background-color: rgba($dark-software-color, 0.25);
+            border-color: $dark-software-color;
+
+            mat-icon {
+              color: $dark-software-color;
+            }
+          }
+
+          &[data-color="database"] {
+            background-color: rgba($dark-database-color, 0.25);
+            border-color: $dark-database-color;
+
+            mat-icon {
+              color: $dark-database-color;
+            }
+          }
+
+          &[data-color="security"] {
+            background-color: rgba($dark-security-color, 0.25);
+            border-color: $dark-security-color;
+
+            mat-icon {
+              color: $dark-security-color;
+            }
+          }
+
+          &[data-color="cloud"] {
+            background-color: rgba($dark-cloud-color, 0.25);
+            border-color: $dark-cloud-color;
+
+            mat-icon {
+              color: $dark-cloud-color;
+            }
+          }
+        }
+      }
+    }
+
+    ::ng-deep {
+      .mat-mdc-select-panel,
+      .mdc-menu-surface.mat-mdc-select-panel {
+        background-color: $dark-bg-secondary !important;
+        color: $dark-text-primary !important;
+        border: 1px solid $dark-border !important;
+        border-radius: 4px !important;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3) !important;
+      }
+
+      .mat-mdc-option {
+        color: $dark-text-primary !important;
+
+        &:hover:not(.mat-mdc-option-disabled) {
+          background-color: $dark-hover !important;
+        }
+
+        &.mat-mdc-option-active {
+          background-color: rgba($dark-accent, 0.3) !important;
+        }
+
+        &.mat-mdc-selected:not(.mat-mdc-option-multiple):not(.mat-mdc-option-disabled) {
+          background-color: rgba($dark-accent, 0.2) !important;
+
+          .mdc-list-item__primary-text {
+            color: $dark-text-primary !important;
+          }
+        }
+
+        .mdc-list-item__primary-text {
+          color: $dark-text-primary !important;
+        }
+      }
+
+      .mat-mdc-optgroup-label {
+        color: $dark-text-secondary !important;
+      }
+
+      .cdk-overlay-backdrop.cdk-overlay-backdrop-showing {
+        opacity: 0.7 !important;
+      }
+
+      .cdk-overlay-pane {
+        .mat-mdc-menu-panel,
+        .mat-mdc-select-panel,
+        .mdc-menu-surface {
+          background-color: $dark-bg-secondary !important;
+        }
+      }
+
+      .mat-mdc-dialog-container {
+        background-color: $dark-bg-secondary;
+        color: $dark-text-primary;
+      }
+
+      .mat-mdc-menu-panel {
+        background-color: $dark-bg-secondary;
+        color: $dark-text-primary;
+        border: 1px solid $dark-border;
+      }
+
+      .mat-mdc-snack-bar-container {
+        background-color: $dark-bg-secondary;
+        color: $dark-text-primary;
+      }
+
+      .mat-tooltip {
+        background-color: rgba(255, 255, 255, 0.9);
+        color: $dark-bg-primary;
+        font-weight: 500;
+      }
+    }
+  }
 }
 
-// Header Styles
+// Header Styles - Fixed position to improve scrollability
 .saiph-header {
   position: sticky;
   top: 0;
@@ -173,10 +544,22 @@ $cloud-color: #3498db;
     .icon-logout {
       margin-right: 8px;
     }
+
+    mat-icon {
+      // Save button icon
+      &.save-icon {
+        color: white; // This will be visible on your primary colored button
+      }
+
+      // Cancel button icon
+      &.cancel-icon {
+        color: white; // This will be visible on your warn colored button
+      }
+    }
   }
 }
 
-// Content Area
+// Main Content Area - Improved Scrollability
 .content-area {
   flex: 1;
   padding: 30px;
@@ -184,7 +567,7 @@ $cloud-color: #3498db;
   margin-bottom: 20px;
 }
 
-// Form Container
+// Form Container Styles - Improved
 .form-container {
   max-width: 650px;
   margin: 0 auto;
@@ -221,7 +604,7 @@ $cloud-color: #3498db;
 
       mat-icon {
         margin-right: 10px;
-        color: $saiph-green;
+        color: $saiph-green; // Use your brand green color
       }
     }
   }
@@ -243,10 +626,26 @@ $cloud-color: #3498db;
 
     .mat-icon {
       color: $saiph-gray;
+
+      // Add specific colors for different form fields
+      &.account-icon {
+        color: $saiph-blue;
+      }
+
+      &.email-icon {
+        color: $saiph-yellow;
+      }
+
+      &.role-icon {
+        color: $saiph-green;
+      }
+
+      &.engineering-icon {
+        color: $hardware-color; // or another appropriate color
+      }
     }
   }
 
-  // Scrollbar Styling
   &.scrollbar-style,
   mat-card-content {
     scrollbar-width: thin;
@@ -270,29 +669,58 @@ $cloud-color: #3498db;
       }
     }
   }
+
+  .button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid $saiph-light-gray;
+    position: sticky;
+    bottom: 0;
+    background-color: white;
+    padding: 15px 0 0;
+
+    button {
+      @include transition;
+      min-width: 120px;
+
+      mat-icon {
+        margin-right: 8px;
+      }
+    }
+  }
 }
 
-// Alert Styles
-.alert {
-  padding: 12px 16px;
-  margin-bottom: 20px;
-  border-radius: 4px;
-  font-weight: 500;
+// Style for the primary button (Create User)
+.mat-raised-button.mat-primary {
+  background-color: $saiph-green;
+  color: white;
 
-  &.alert-danger {
-    background-color: rgba($priority-high, 0.1);
-    color: $priority-high;
-    border: 1px solid rgba($priority-high, 0.2);
+  &:hover {
+    background-color: color.adjust($saiph-green, $lightness: -5%);
+    transform: translateY(-2px);
   }
 
-  &.alert-success {
-    background-color: rgba($priority-low, 0.1);
-    color: $priority-low;
-    border: 1px solid rgba($priority-low, 0.2);
+  &:disabled {
+    background-color: rgba($saiph-green, 0.6);
+    transform: none;
   }
 }
 
-// Specialization Styles
+// Style for the warn button (Cancel)
+.mat-raised-button.mat-warn {
+  background-color: $priority-medium;
+  color: white;
+
+  &:hover {
+    background-color: color.adjust($priority-medium, $lightness: -5%);
+    transform: translateY(-2px);
+  }
+}
+
+// NEW SPECIALIZATION CHIPS STYLES
 .specializations-field {
   margin-bottom: 10px !important;
 }
@@ -305,7 +733,7 @@ $cloud-color: #3498db;
   opacity: 0;
   transform: translateY(5px);
   transition: all 0.3s ease;
-  
+
   &.visible {
     opacity: 0.8;
     transform: translateY(0);
@@ -321,7 +749,7 @@ $cloud-color: #3498db;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 12px;
   margin-bottom: 15px;
-  
+
   .chip-item {
     display: flex;
     align-items: center;
@@ -331,66 +759,84 @@ $cloud-color: #3498db;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
     border: 2px solid transparent;
-    
+
     mat-icon {
       margin-right: 8px;
       color: $saiph-gray;
     }
-    
+
     &:hover {
       transform: translateY(-2px);
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
-    
+
     &.selected {
       transform: translateY(-2px);
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-      
+
       &[data-color="network"] {
         background-color: rgba($network-color, 0.15);
         border-color: $network-color;
-        mat-icon { color: $network-color; }
+
+        mat-icon {
+          color: $network-color;
+        }
       }
-      
+
       &[data-color="hardware"] {
         background-color: rgba($hardware-color, 0.15);
         border-color: $hardware-color;
-        mat-icon { color: $hardware-color; }
+
+        mat-icon {
+          color: $hardware-color;
+        }
       }
-      
+
       &[data-color="software"] {
         background-color: rgba($software-color, 0.15);
         border-color: $software-color;
-        mat-icon { color: $software-color; }
+
+        mat-icon {
+          color: $software-color;
+        }
       }
-      
+
       &[data-color="database"] {
         background-color: rgba($database-color, 0.15);
         border-color: $database-color;
-        mat-icon { color: $database-color; }
+
+        mat-icon {
+          color: $database-color;
+        }
       }
-      
+
       &[data-color="security"] {
         background-color: rgba($security-color, 0.15);
         border-color: $security-color;
-        mat-icon { color: $security-color; }
+
+        mat-icon {
+          color: $security-color;
+        }
       }
-      
+
       &[data-color="cloud"] {
         background-color: rgba($cloud-color, 0.15);
         border-color: $cloud-color;
-        mat-icon { color: $cloud-color; }
+
+        mat-icon {
+          color: $cloud-color;
+        }
       }
     }
   }
 }
 
-// Animations
+// Animation for form fields
 mat-form-field {
   opacity: 0;
   transform: translateY(10px);
   animation: fadeInUp 0.3s forwards;
-  
+
   @for $i from 1 through 6 {
     &:nth-child(#{$i}) {
       animation-delay: #{$i * 0.1}s;
@@ -398,12 +844,13 @@ mat-form-field {
   }
 }
 
+// Animation for specialization chips
 .specialization-chips {
   .chip-item {
     opacity: 0;
     transform: translateY(10px);
     animation: fadeInUp 0.3s forwards;
-    
+
     @for $i from 1 through 6 {
       &:nth-child(#{$i}) {
         animation-delay: #{0.5 + ($i * 0.05)}s;
@@ -419,30 +866,30 @@ mat-form-field {
   }
 }
 
-// Responsive Design
+// Responsive adjustments
 @media (max-width: 768px) {
   .saiph-header {
     flex-direction: column;
     align-items: flex-start;
     padding: 15px 20px;
-    
+
     .button-group {
       margin-top: 15px;
       width: 100%;
       justify-content: space-between;
     }
   }
-  
+
   .form-container {
     max-width: 100%;
     margin: 0;
     border-radius: 0;
   }
-  
+
   .content-area {
     padding: 15px;
   }
-  
+
   .specialization-chips {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   }

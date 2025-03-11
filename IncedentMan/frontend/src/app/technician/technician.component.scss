@@ -1,5 +1,6 @@
 @use "sass:color";
-// SAIPH Color Palette based on the logo
+
+// SAIPH Color Palette
 $saiph-gray: #5a6872;
 $saiph-green: #8cb33f;
 $saiph-yellow: #f7a600;
@@ -194,6 +195,10 @@ $priority-low: #27ae60;
     background-color: $saiph-light-gray;
     color: $saiph-gray;
     font-weight: 600;
+    
+    &.expand-column {
+      width: 40px;
+    }
   }
 
   .title-cell {
@@ -206,6 +211,66 @@ $priority-low: #27ae60;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  // Expanded row styles
+  .active-row {
+    background-color: rgba($saiph-blue, 0.05);
+  }
+
+  .expanded-row {
+    background-color: rgba($saiph-light-gray, 0.5);
+    
+    td {
+      padding: 0;
+    }
+  }
+
+  .expanded-content {
+    padding: 20px;
+    
+    .expanded-section {
+      margin-bottom: 20px;
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+      
+      h4 {
+        color: $saiph-gray;
+        font-size: 1.1rem;
+        margin: 0 0 10px 0;
+        font-weight: 600;
+      }
+      
+      p {
+        margin: 0;
+        line-height: 1.6;
+        color: $saiph-gray;
+        white-space: pre-wrap;
+      }
+    }
+
+    .details-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      
+      .detail-item {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        
+        .detail-label {
+          font-size: 0.9rem;
+          color: lighten($saiph-gray, 20%);
+        }
+        
+        .detail-value {
+          font-weight: 500;
+        }
+      }
+    }
   }
 }
 
@@ -266,6 +331,32 @@ $priority-low: #27ae60;
   }
 }
 
+// Expand button styles
+.expand-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $saiph-gray;
+  @include transition;
+
+  &:hover {
+    color: $saiph-blue;
+  }
+
+  .expand-icon {
+    font-size: 1rem;
+    transition: transform 0.3s ease;
+
+    &.expanded {
+      transform: rotate(0deg);
+    }
+  }
+}
+
 // Responsive Styles
 @media (max-width: 1024px) {
   .incidents-table {
@@ -302,5 +393,11 @@ $priority-low: #27ae60;
 
   .incidents-table {
     min-width: 800px;
+
+    .expanded-content {
+      .details-grid {
+        grid-template-columns: 1fr;
+      }
+    }
   }
 }

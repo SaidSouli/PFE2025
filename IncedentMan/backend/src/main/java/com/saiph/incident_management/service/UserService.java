@@ -43,77 +43,89 @@ public class UserService {
     }
     //Said completed this 
     public User updateUser(String id, Map<String, Object> userData) {
-    Optional<User> existingUserOptional = userRepository.findById(id);
-    
-    if (existingUserOptional.isPresent()) {
-        User existingUser = existingUserOptional.get();
-        String newRole = userData.containsKey("role") ? (String) userData.get("role") : existingUser.getRole();
-        if (newRole.equalsIgnoreCase("technician") && !(existingUser instanceof Technician)) {
-            
-            Technician technician = new Technician();
-            technician.setId(existingUser.getId());
-            technician.setUsername(existingUser.getUsername());
-            technician.setPassword(existingUser.getPassword());
-            technician.setEmail(existingUser.getEmail());
-            technician.setRole(newRole);
-            technician.setSpecializations(new ArrayList<>());
-            technician.setAssignedIncidents(new ArrayList<>());
-            
-            existingUser = technician;
-        }
+        Optional<User> existingUserOptional = userRepository.findById(id);
         
-        if (userData.containsKey("username")) {
-            existingUser.setUsername((String) userData.get("username"));
-        }
-        if (userData.containsKey("password")) {
-            existingUser.setPassword((String) userData.get("password"));
-        }
-        if (userData.containsKey("email")) {
-            existingUser.setEmail((String) userData.get("email"));
-        }
-        if (userData.containsKey("role")) {
-            existingUser.setRole((String) userData.get("role"));
-        }
-
-        if (existingUser instanceof Technician && userData.containsKey("specializations")) {
-            Technician technician = (Technician) existingUser;
-            Object specsObj = userData.get("specializations");
-            if (technician.getAssignedIncidents() == null) {
+        if (existingUserOptional.isPresent()) {
+            User existingUser = existingUserOptional.get();
+            String newRole = userData.containsKey("role") ? (String) userData.get("role") : existingUser.getRole();
+            
+            
+            if (newRole.equalsIgnoreCase("technician") && !(existingUser instanceof Technician)) {
+                Technician technician = new Technician();
+                technician.setId(existingUser.getId());
+                technician.setUsername(existingUser.getUsername());
+                technician.setPassword(existingUser.getPassword());
+                technician.setEmail(existingUser.getEmail());
+                technician.setRole(newRole);
+                technician.setSpecializations(new ArrayList<>());
                 technician.setAssignedIncidents(new ArrayList<>());
-            }
-            if (specsObj instanceof List<?>) {
-                List<?> specsList = (List<?>) specsObj;
-                List<Specialization> specs = new ArrayList<>();
                 
-                for (Object item : specsList) {
-                    if (item instanceof String) {
-                        try {
-                            Specialization spec = Specialization.valueOf(((String) item).toUpperCase());
-                            specs.add(spec);
-                        } catch (IllegalArgumentException e) {
-                            throw new IllegalArgumentException("Invalid specialization value: " + item);
-                        }
-                    } else {
-                        throw new IllegalArgumentException("Specialization values must be strings");
-                    }
+                existingUser = technician;
+            }
+            
+            else if (!newRole.equalsIgnoreCase("technician") && existingUser instanceof Technician) {
+                User user = new User();
+                user.setId(existingUser.getId());
+                user.setUsername(existingUser.getUsername());
+                user.setPassword(existingUser.getPassword());
+                user.setEmail(existingUser.getEmail());
+                user.setRole(newRole);
+                
+                existingUser = user;
+            }
+            
+            
+            if (userData.containsKey("username")) {
+                existingUser.setUsername((String) userData.get("username"));
+            }
+            if (userData.containsKey("password")) {
+                existingUser.setPassword((String) userData.get("password"));
+            }
+            if (userData.containsKey("email")) {
+                existingUser.setEmail((String) userData.get("email"));
+            }
+            if (userData.containsKey("role")) {
+                existingUser.setRole((String) userData.get("role"));
+            }
+            
+            
+            if (existingUser instanceof Technician && userData.containsKey("specializations")) {
+                Technician technician = (Technician) existingUser;
+                Object specsObj = userData.get("specializations");
+                if (technician.getAssignedIncidents() == null) {
+                    technician.setAssignedIncidents(new ArrayList<>());
                 }
-                
-                
-                technician.setSpecializations(specs);
-            } else {
-                throw new IllegalArgumentException("Specializations must be a list");
+                if (specsObj instanceof List<?>) {
+                    List<?> specsList = (List<?>) specsObj;
+                    List<Specialization> specs = new ArrayList<>();
+                    
+                    for (Object item : specsList) {
+                        if (item instanceof String) {
+                            try {
+                                Specialization spec = Specialization.valueOf(((String) item).toUpperCase());
+                                specs.add(spec);
+                            } catch (IllegalArgumentException e) {
+                                throw new IllegalArgumentException("Invalid specialization value: " + item);
+                            }
+                        } else {
+                            throw new IllegalArgumentException("Specialization values must be strings");
+                        }
+                    }
+                    
+                    technician.setSpecializations(specs);
+                } else {
+                    throw new IllegalArgumentException("Specializations must be a list");
+                }
+                if (userData.containsKey("assignedIncidents")) {
+                    technician.setAssignedIncidents(new ArrayList<>());
+                }
             }
-            if (userData.containsKey("assignedIncidents")) {
-                technician.setAssignedIncidents(new ArrayList<>()); 
-            }
+            
+            return userRepository.save(existingUser);
         }
         
-        
-        return userRepository.save(existingUser);
+        return null;
     }
-    
-    return null;
-}
     public User getUserById(String id) {
         Optional<User> userOptional = userRepository.findById(id);
         return userOptional.orElse(null); 

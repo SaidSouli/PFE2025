@@ -15,6 +15,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
+import { ThemeService } from '../services/theme.service';
 
 interface SpecializationOption {
   value: Specialization;
@@ -52,19 +53,20 @@ export class EditUserComponent implements OnInit {
   showSpecHint = true;
   
   specializationOptions: SpecializationOption[] = [
-    { value: Specialization.NETWORK, label: 'Network', icon: 'router', color: 'blue' },
-    { value: Specialization.HARDWARE, label: 'Hardware', icon: 'memory', color: 'red' },
-    { value: Specialization.SOFTWARE, label: 'Software', icon: 'code', color: 'green' },
-    { value: Specialization.DATABASE, label: 'Database', icon: 'storage', color: 'orange' },
-    { value: Specialization.SECURITY, label: 'Security', icon: 'security', color: 'purple' },
-    { value: Specialization.CLOUD, label: 'Cloud', icon: 'cloud', color: 'teal' }
+    { value: Specialization.NETWORK, label: 'Network', icon: 'router', color: 'network' },
+    { value: Specialization.HARDWARE, label: 'Hardware', icon: 'memory', color: 'hardware' },
+    { value: Specialization.SOFTWARE, label: 'Software', icon: 'code', color: 'software' },
+    { value: Specialization.DATABASE, label: 'Database', icon: 'storage', color: 'database' },
+    { value: Specialization.SECURITY, label: 'Security', icon: 'security', color: 'security' },
+    { value: Specialization.CLOUD, label: 'Cloud', icon: 'cloud', color: 'cloud' }
   ];
 
   constructor(
     private route: ActivatedRoute,
     public router: Router, // Changed to public for template access
     private http: HttpClient,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    public themeService:ThemeService
   ) {
     this.editForm = this.formBuilder.group({
       username: ['', Validators.required],
@@ -87,6 +89,13 @@ export class EditUserComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    
+    if (this.themeService.getCurrentTheme()) {
+      document.body.classList.add('dark-theme');
+    } else {
+      document.body.classList.remove('dark-theme');
+    }
+    
     this.userId = this.route.snapshot.paramMap.get('id');
     if (this.userId) {
       this.loadUserDetails(this.userId);

@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
@@ -13,44 +13,52 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTableModule } from '@angular/material/table';
+import { ThemeService } from '../services/theme.service';
 
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss'],
-  imports: [CommonModule, RouterModule,
-    MatFormFieldModule,
-        MatInputModule,
-        MatSelectModule,
-        MatButtonModule,
-        MatIconModule,
-        MatCardModule,
-        MatChipsModule,
-        MatTooltipModule,
-        MatTableModule
-
-  ] 
+  imports: [
+    CommonModule, RouterModule,
+    MatFormFieldModule, MatInputModule, MatSelectModule,
+    MatButtonModule, MatIconModule, MatCardModule,
+    MatChipsModule, MatTooltipModule, MatTableModule
+  ]
 })
 export class AdminComponent {
   
   users = signal<User[]>([]);
   searchTerm = signal("");
-  roles = ['admin','user','technician'];
-  filtredUsers = computed(()=> {
+  
+  roles = ['admin', 'user', 'technician'];
+
+  filteredUsers = computed(() => {
     const term = this.searchTerm().toLowerCase();
     const allUsers = this.users();
     if (!term) return allUsers;
-    //check exact role
-    if (this.roles.includes(term)){
+    if (this.roles.includes(term)) {
       return allUsers.filter(user => user.role.toLowerCase() === term);
     }
-    //search username
-    return allUsers.filter(user => user.username.toLowerCase().includes(term) || user.role.toLowerCase().includes(term));
+    return allUsers.filter(user => 
+      user.username.toLowerCase().includes(term) || user.role.toLowerCase().includes(term)
+    );
   });
-  constructor(private http: HttpClient, public router: Router) {}
+
+  constructor(private http: HttpClient, public router: Router,public themeService:ThemeService) {
+    const savedTheme = localStorage.getItem('theme');
+    effect(() => {
+      if (this.themeService.getCurrentTheme()) {
+        document.body.classList.add('dark-theme');
+      } else {
+        document.body.classList.remove('dark-theme');
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.loadUsers();
+    
   }
 
   loadUsers(): void {
@@ -58,32 +66,39 @@ export class AdminComponent {
       this.users.set(data);
     });
   }
-  updateSearch(event : Event):void {
+
+  updateSearch(event: Event): void {
     this.searchTerm.set((event.target as HTMLInputElement).value);
   }
+
   logout() {
     this.router.navigate(['/login']);
     localStorage.removeItem('jwtToken');
   }
-  editUser (user: User): void {
+
+  editUser(user: User): void {
     console.log('AdminComponent - Navigating to edit user with ID:', user.id);
     this.router.navigate(['/edit-user', user.id]);
-
   }
-  deleteUser (userId: string): void {
-    if (confirm('do you really wanna delete this user ?')) {
-      this.http.delete(`http://localhost:8080/api/users/${userId}`, { responseType: 'text' }).subscribe({ // Add responseType: 'text'
-        next: (response) => {
-          console.log('Delete successful response (text):', response); // Log the text response
-          this.loadUsers();
-          alert('User deleted successfully'); 
-        },
-        error: (error) => {
-          console.error('Error deleting user:', error);
-          alert('There was an error while deleting the user.');
-        }
-      });
+
+  deleteUser(userId: string): void {
+    if (confirm('Do you really want to delete this user?')) {
+      this.http.delete(`http://localhost:8080/api/users/${userId}`, { responseType: 'text' })
+        .subscribe({
+          next: (response) => {
+            console.log('Delete successful response:', response);
+            this.loadUsers();
+            alert('User deleted successfully');
+          },
+          error: (error) => {
+            console.error('Error deleting user:', error);
+            alert('There was an error while deleting the user.');
+          }
+        });
     }
   }
-  
+
+  toggleDarkMode(): void {
+    this.themeService.toggleDarkMode();
+  }
 }

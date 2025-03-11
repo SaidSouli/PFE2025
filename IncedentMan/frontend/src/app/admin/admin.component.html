@@ -1,4 +1,4 @@
-<div class="saiph-container">
+<div class="saiph-container" [class.dark-mode]="themeService.getCurrentTheme()">
   <header class="saiph-header">
     <div class="logo-container">
       <div class="logo-star">
@@ -10,58 +10,72 @@
       <h1>SAIPH</h1>
       <p class="tagline">User Management System</p>
     </div>
-
+    
     <div class="button-group">
-      <button mat-raised-button color="primary" routerLink="/add-user">
-        <mat-icon>person_add</mat-icon>
-        Add User
+      <!-- Theme Toggle Button -->
+      <button mat-icon-button class="theme-toggle" (click)="toggleDarkMode()"
+             [matTooltip]="themeService.getCurrentTheme() ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+        <mat-icon>{{ themeService.getCurrentTheme() ? 'light_mode' : 'dark_mode' }}</mat-icon>
       </button>
+
+      <!-- Add User Button -->
+      <button mat-raised-button color="primary" routerLink="/add-user">
+        <mat-icon>person_add</mat-icon> Add User
+      </button>
+
+      <!-- Logout Button -->
       <button mat-raised-button color="warn" (click)="logout()">
-        <mat-icon>logout</mat-icon>
-        Logout
+        <mat-icon>logout</mat-icon> Logout
       </button>
     </div>
   </header>
-
+  
   <div class="content-area">
+    <!-- Search Section -->
     <div class="search-section">
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" [class.dark-field]="themeService.getCurrentTheme()">
         <mat-label>Search Users</mat-label>
         <mat-icon matPrefix>search</mat-icon>
         <input matInput [value]="searchTerm()" (input)="updateSearch($event)" placeholder="Search by username or role">
       </mat-form-field>
     </div>
-
+    
+    <!-- Users Table Section -->
     <div class="users-table-container">
-      <mat-card>
+      <mat-card [class.dark-card]="themeService.getCurrentTheme()">
         <mat-card-header>
           <mat-card-title>
             <mat-icon>group</mat-icon>
             User Management
           </mat-card-title>
         </mat-card-header>
-
+        
         <mat-card-content>
-          <table mat-table [dataSource]="filtredUsers()" class="mat-elevation-z0">
+          <!-- Users Table -->
+          <table mat-table [dataSource]="filteredUsers()" class="mat-elevation-z0" [class.dark-table]="themeService.getCurrentTheme()">
+            <!-- Username Column -->
             <ng-container matColumnDef="username">
               <th mat-header-cell *matHeaderCellDef>Username</th>
               <td mat-cell *matCellDef="let user">{{ user.username }}</td>
             </ng-container>
-
+            
+            <!-- Email Column -->
             <ng-container matColumnDef="email">
               <th mat-header-cell *matHeaderCellDef>Email</th>
               <td mat-cell *matCellDef="let user">{{ user.email }}</td>
             </ng-container>
-
+            
+            <!-- Role Column -->
             <ng-container matColumnDef="role">
               <th mat-header-cell *matHeaderCellDef>Role</th>
               <td mat-cell *matCellDef="let user">
-                <span class="role-chip" [class]="user.role.toLowerCase()">
+                <span class="role-chip" [class]="user.role.toLowerCase()" [class.dark-chip]="themeService.getCurrentTheme()">
                   {{ user.role }}
                 </span>
               </td>
             </ng-container>
-
+            
+            <!-- Actions Column -->
             <ng-container matColumnDef="actions">
               <th mat-header-cell *matHeaderCellDef>Actions</th>
               <td mat-cell *matCellDef="let user">
@@ -73,9 +87,11 @@
                 </button>
               </td>
             </ng-container>
-
+            
+            
             <tr mat-header-row *matHeaderRowDef="['username', 'email', 'role', 'actions']"></tr>
-            <tr mat-row *matRowDef="let row; columns: ['username', 'email', 'role', 'actions'];"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['username', 'email', 'role', 'actions'];"
+                [class.dark-row]="themeService.getCurrentTheme()"></tr>
           </table>
         </mat-card-content>
       </mat-card>

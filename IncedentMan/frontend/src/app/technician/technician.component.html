@@ -8,7 +8,7 @@
         <span class="star-point star-point-4"></span>
       </div>
       <h1>SAIPH</h1>
-      <p class="tagline">Laboratoire Pharmacologique Citoyen </p>
+      <p class="tagline">Laboratoire Pharmacologique Citoyen</p>
     </div>
     <button class="logout-button" (click)="logout()">
       <i class="bi bi-box-arrow-right"></i>
@@ -16,7 +16,6 @@
     </button>
   </header>
 
-  <!-- Original content below - unchanged -->
   <div class="incidents-list">
     <div class="list-header">
       <h2>Incidents Ready for Your Specialization</h2>
@@ -24,11 +23,12 @@
         View Assigned Incidents
       </button>
     </div>
-    
+
     <div class="table-container">
       <table class="incidents-table">
         <thead>
           <tr>
+            <th class="expand-column"></th>
             <th>Title</th>
             <th>Description</th>
             <th>Status</th>
@@ -38,26 +38,55 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let incident of openIncidents">
-            <td class="title-cell">{{ incident.title }}</td>
-            <td class="description-cell">{{ incident.description }}</td>
-            <td>
-              <span class="status-badge">{{ incident.status }}</span>
-            </td>
-            <td>
-              <span class="priority-badge" [ngClass]="'priority-' + incident.priority">
-                {{ getPriorityLabel(incident.priority) }}
-              </span>
-            </td>
-            <td>
-              <span class="category-badge">{{ incident.category }}</span>
-            </td>
-            <td>
-              <button class="take-charge-button" (click)="takeCharge(incident.id!)">
-                Take in Charge
-              </button>
-            </td>
-          </tr>
+          <ng-container *ngFor="let incident of openIncidents">
+            <tr [ngClass]="{'active-row': isExpanded(incident)}">
+              <td class="expand-column">
+                <button class="expand-button" (click)="toggleExpanded(incident)">
+                  <i class="expand-icon" [ngClass]="{'expanded': isExpanded(incident)}">
+                    {{ isExpanded(incident) ? '▼' : '►' }}
+                  </i>
+                </button>
+              </td>
+              <td class="title-cell">{{ incident.title }}</td>
+              <td class="description-cell">{{ incident.description | slice:0:80 }}{{ incident.description.length > 80 ? '...' : '' }}</td>
+              <td>
+                <span class="status-badge">{{ incident.status }}</span>
+              </td>
+              <td>
+                <span class="priority-badge" [ngClass]="'priority-' + incident.priority">
+                  {{ getPriorityLabel(incident.priority) }}
+                </span>
+              </td>
+              <td>
+                <span class="category-badge">{{ incident.category }}</span>
+              </td>
+              <td>
+                <button class="take-charge-button" (click)="takeCharge(incident.id!)">
+                  Take in Charge
+                </button>
+              </td>
+            </tr>
+
+            <tr *ngIf="isExpanded(incident)" class="expanded-row">
+              <td colspan="7">
+                <div class="expanded-content">
+                  <div class="expanded-section">
+                    <h4>Full Description</h4>
+                    <p>{{ incident.description }}</p>
+                  </div>
+                  <div class="expanded-section">
+                    <h4>Additional Details</h4>
+                    <div class="details-grid">
+                      <div class="detail-item">
+                        <span class="detail-label">Reference:</span>
+                        <span class="detail-value">{{ incident.id }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
         </tbody>
       </table>
     </div>

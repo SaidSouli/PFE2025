@@ -1,4 +1,5 @@
 @use "sass:color";
+@use '@angular/material' as mat;
 
 // SAIPH Color Palette
 $saiph-gray: #5a6872;
@@ -8,14 +9,30 @@ $saiph-blue: #00a0df;
 $saiph-light-gray: #f5f7fa;
 $saiph-border-color: #e0e0e0;
 
+// Dark Mode Colors
+$dark-bg: #1a1f2e;
+$dark-card-bg: #242837;
+$dark-text: #e0e0e0;
+$dark-border: #2f3446;
+$dark-hover: rgba(255, 255, 255, 0.05);
+
 // Role Colors
 $admin-color: #8cb33f;
 $user-color: #00a0df;
 $technician-color: #f7a600;
 
+// Dark Mode Role Colors
+$dark-admin-color: #9ec94a;
+$dark-user-color: #32b5ec;
+$dark-technician-color: #ffb732;
+
 // Mixins
 @mixin card-shadow {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+@mixin dark-card-shadow {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 @mixin transition {
@@ -47,6 +64,22 @@ $technician-color: #f7a600;
   scrollbar-color: rgba($saiph-gray, 0.3) $saiph-light-gray;
 }
 
+@mixin dark-scrollbar {
+  &::-webkit-scrollbar-track {
+    background: $dark-card-bg;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+  }
+
+  scrollbar-color: rgba(255, 255, 255, 0.2) $dark-card-bg;
+}
+
 // Container
 .saiph-container {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -60,6 +93,168 @@ $technician-color: #f7a600;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+  &.dark-mode {
+    background-color: $dark-bg;
+    color: $dark-text;
+
+    .saiph-header {
+      background-color: $dark-card-bg;
+      border-bottom-color: $dark-border;
+      @include dark-card-shadow;
+
+      h1, .tagline {
+        color: $dark-text;
+      }
+    }
+
+    .content-area {
+      @include dark-scrollbar;
+    }
+
+    .search-section {
+      background: linear-gradient(to bottom, $dark-bg 0%, $dark-bg 80%, rgba($dark-bg, 0) 100%);
+
+      mat-form-field {
+        background: $dark-card-bg;
+        
+        ::ng-deep {
+          .mat-mdc-text-field-wrapper {
+            background-color: $dark-card-bg;
+          }
+          
+          .mat-mdc-form-field-flex {
+            background-color: $dark-card-bg;
+          }
+          
+          .mdc-line-ripple::after {
+            border-color: $saiph-blue;
+          }
+          
+          .mat-mdc-form-field-infix {
+            color: $dark-text;
+          }
+          
+          .mat-mdc-input-element {
+            color: $dark-text;
+          }
+          
+          .mdc-floating-label, .mat-mdc-floating-label, mat-label {
+            color: rgba(255, 255, 255, 0.7);
+          }
+          
+          .mat-mdc-form-field-icon-prefix > .mat-icon {
+            color: rgba(255, 255, 255, 0.7);
+          }
+          
+          .mdc-text-field--outlined .mdc-notched-outline__leading,
+          .mdc-text-field--outlined .mdc-notched-outline__notch,
+          .mdc-text-field--outlined .mdc-notched-outline__trailing {
+            border-color: $dark-border;
+          }
+          
+          .mdc-text-field--focused .mdc-notched-outline__leading,
+          .mdc-text-field--focused .mdc-notched-outline__notch,
+          .mdc-text-field--focused .mdc-notched-outline__trailing {
+            border-color: $saiph-blue;
+          }
+        }
+      }
+    }
+
+    .users-table-container {
+      mat-card {
+        background-color: $dark-card-bg;
+        @include dark-card-shadow;
+      }
+
+      mat-card-header {
+        background-color: rgba(255, 255, 255, 0.05);
+
+        mat-card-title {
+          color: $dark-text;
+        }
+      }
+
+      table {
+        color: $dark-text;
+
+        .mat-mdc-header-row {
+          background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .mat-mdc-header-cell {
+          background-color: rgba(255, 255, 255, 0.05);
+          color: $dark-text;
+        }
+
+        .mat-mdc-row {
+          border-bottom-color: $dark-border;
+          
+          &:hover {
+            background-color: $dark-hover;
+          }
+        }
+        
+        .mat-mdc-cell {
+          color: $dark-text;
+        }
+        
+        .role-chip {
+          &.admin {
+            background-color: rgba($dark-admin-color, 0.2);
+            color: $dark-admin-color;
+          }
+          
+          &.user {
+            background-color: rgba($dark-user-color, 0.2);
+            color: $dark-user-color;
+          }
+          
+          &.technician {
+            background-color: rgba($dark-technician-color, 0.2);
+            color: $dark-technician-color;
+          }
+        }
+      }
+    }
+    
+    // Style for icon buttons in dark mode
+    .mat-icon-button {
+      color: $dark-text;
+      
+      &.mat-primary {
+        color: $saiph-blue;
+      }
+      
+      &.mat-warn {
+        color: #f44336;
+      }
+    }
+  }
+}
+
+// Theme Toggle Button
+.theme-toggle {
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  @include transition;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: rotate(180deg);
+  }
+
+  mat-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+  }
 }
 
 // Header
@@ -74,6 +269,7 @@ $technician-color: #f7a600;
   background-color: white;
   border-bottom: 2px solid $saiph-border-color;
   @include card-shadow;
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 
   .logo-container {
     display: flex;
@@ -86,6 +282,7 @@ $technician-color: #f7a600;
       font-weight: 700;
       margin: 0;
       letter-spacing: 1px;
+      transition: color 0.3s ease;
     }
 
     .tagline {
@@ -93,6 +290,7 @@ $technician-color: #f7a600;
       font-size: 0.85rem;
       margin: 0;
       font-style: italic;
+      transition: color 0.3s ease;
     }
 
     .logo-star {
@@ -152,6 +350,7 @@ $technician-color: #f7a600;
   .button-group {
     display: flex;
     gap: 12px;
+    align-items: center;
 
     button {
       @include transition;
@@ -173,7 +372,8 @@ $technician-color: #f7a600;
   padding: 30px;
   overflow-y: auto;
   @include custom-scrollbar;
-  height: calc(100vh - 90px); // Subtract header height
+  height: calc(100vh - 90px);
+  transition: background-color 0.3s ease;
 
   .search-section {
     max-width: 1200px;
@@ -183,15 +383,18 @@ $technician-color: #f7a600;
     z-index: 10;
     padding: 10px 0;
     background: linear-gradient(to bottom, #f9f9f9 0%, #f9f9f9 80%, rgba(249, 249, 249, 0) 100%);
+    transition: background 0.3s ease;
 
     mat-form-field {
       width: 100%;
       background: white;
       border-radius: 8px;
       @include card-shadow;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
 
       ::ng-deep .mat-mdc-form-field-flex {
         background-color: white;
+        transition: background-color 0.3s ease;
       }
     }
   }
@@ -208,7 +411,8 @@ $technician-color: #f7a600;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    max-height: calc(100vh - 250px); // Adjust based on header and search height
+    max-height: calc(100vh - 250px);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 
     mat-card-header {
       background-color: $saiph-light-gray;
@@ -217,12 +421,14 @@ $technician-color: #f7a600;
       position: sticky;
       top: 0;
       z-index: 2;
+      transition: background-color 0.3s ease;
 
       mat-card-title {
         display: flex;
         align-items: center;
         color: $saiph-gray;
         margin: 0;
+        transition: color 0.3s ease;
 
         mat-icon {
           margin-right: 10px;
@@ -235,17 +441,23 @@ $technician-color: #f7a600;
       padding: 0;
       overflow: auto;
       @include custom-scrollbar;
+      
+      .dark-mode & {
+        @include dark-scrollbar;
+      }
     }
   }
 
   table {
     width: 100%;
+    transition: color 0.3s ease;
 
     .mat-mdc-header-row {
       position: sticky;
       top: 0;
       z-index: 1;
       background-color: $saiph-light-gray;
+      transition: background-color 0.3s ease;
     }
 
     .mat-mdc-header-cell {
@@ -253,14 +465,18 @@ $technician-color: #f7a600;
       color: $saiph-gray;
       font-weight: 600;
       padding: 16px;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     .mat-mdc-cell {
       padding: 16px;
+      transition: color 0.3s ease;
     }
 
     .mat-mdc-row {
       @include transition;
+      border-bottom: 1px solid $saiph-border-color;
+      transition: background-color 0.3s ease, border-bottom-color 0.3s ease;
 
       &:hover {
         background-color: rgba($saiph-light-gray, 0.5);
@@ -272,6 +488,7 @@ $technician-color: #f7a600;
       border-radius: 16px;
       font-size: 0.85rem;
       font-weight: 500;
+      transition: background-color 0.3s ease, color 0.3s ease;
 
       &.admin {
         background-color: rgba($admin-color, 0.15);
@@ -299,6 +516,48 @@ $technician-color: #f7a600;
   }
 }
 
+// Material Component Overrides for Dark Mode
+.dark-mode {
+  ::ng-deep {
+    // Override Angular Material's default theme variables
+    .mat-mdc-paginator,
+    .mat-mdc-paginator-container {
+      background-color: $dark-card-bg;
+      color: $dark-text;
+    }
+    
+    .mat-mdc-select-value-text,
+    .mat-mdc-paginator-range-label {
+      color: $dark-text;
+    }
+    
+    .mat-mdc-select-arrow {
+      color: $dark-text;
+    }
+    
+    .mat-mdc-paginator-icon {
+      fill: $dark-text;
+    }
+    
+    .mat-mdc-button-touch-target {
+      color: $dark-text;
+    }
+    
+    // Table overrides for Material 15+
+    .mat-mdc-table {
+      background: transparent;
+    }
+    
+    .mdc-data-table__row:last-child .mdc-data-table__cell {
+      border-bottom-color: $dark-border;
+    }
+    
+    .mat-mdc-tooltip {
+      background-color: $dark-card-bg;
+    }
+  }
+}
+
 // Responsive Design
 @media (max-width: 768px) {
   .saiph-header {
@@ -315,19 +574,23 @@ $technician-color: #f7a600;
 
   .content-area {
     padding: 15px;
-    height: calc(100vh - 140px); // Adjust for taller header on mobile
+    height: calc(100vh - 140px);
   }
 
   .users-table-container {
     overflow-x: auto;
     @include custom-scrollbar;
+    
+    .dark-mode & {
+      @include dark-scrollbar;
+    }
 
     table {
       min-width: 600px;
     }
 
     mat-card {
-      max-height: calc(100vh - 300px); // Adjust for mobile layout
+      max-height: calc(100vh - 300px);
     }
   }
 }
