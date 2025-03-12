@@ -121,7 +121,7 @@ $priority-low: #27ae60;
     @include transition;
 
     &:hover {
-      background-color: color.scale($saiph-gray, $lightness: -25%);
+      background-color: color.adjust($saiph-gray, $lightness: -10%);
     }
 
     i {
@@ -195,7 +195,7 @@ $priority-low: #27ae60;
     background-color: $saiph-light-gray;
     color: $saiph-gray;
     font-weight: 600;
-    
+
     &.expand-column {
       width: 40px;
     }
@@ -220,7 +220,7 @@ $priority-low: #27ae60;
 
   .expanded-row {
     background-color: rgba($saiph-light-gray, 0.5);
-    
+
     td {
       padding: 0;
     }
@@ -228,21 +228,21 @@ $priority-low: #27ae60;
 
   .expanded-content {
     padding: 20px;
-    
+
     .expanded-section {
       margin-bottom: 20px;
-      
+
       &:last-child {
         margin-bottom: 0;
       }
-      
+
       h4 {
         color: $saiph-gray;
         font-size: 1.1rem;
         margin: 0 0 10px 0;
         font-weight: 600;
       }
-      
+
       p {
         margin: 0;
         line-height: 1.6;
@@ -255,17 +255,17 @@ $priority-low: #27ae60;
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 15px;
-      
+
       .detail-item {
         display: flex;
         flex-direction: column;
         gap: 5px;
-        
+
         .detail-label {
           font-size: 0.9rem;
-          color: lighten($saiph-gray, 20%);
+          color: color.adjust($saiph-gray, $lightness: 20%);
         }
-        
+
         .detail-value {
           font-weight: 500;
         }
@@ -282,17 +282,17 @@ $priority-low: #27ae60;
   font-weight: 600;
   text-transform: uppercase;
 
-  &.priority-high {
+  &.priority-1 {
     background-color: rgba($priority-high, 0.1);
     color: $priority-high;
   }
 
-  &.priority-medium {
+  &.priority-2 {
     background-color: rgba($priority-medium, 0.1);
     color: $priority-medium;
   }
 
-  &.priority-low {
+  &.priority-3 {
     background-color: rgba($priority-low, 0.1);
     color: $priority-low;
   }
@@ -313,7 +313,7 @@ $priority-low: #27ae60;
   border-radius: 4px;
   font-size: 0.9rem;
   background-color: rgba($saiph-yellow, 0.1);
-  color: color.adjust($saiph-yellow, $lightness: -15%);
+  color: color.adjust($saiph-yellow, $lightness: -10%);
 }
 
 .take-charge-button {
@@ -327,7 +327,7 @@ $priority-low: #27ae60;
   @include transition;
 
   &:hover {
-    background-color: color.scale($saiph-green, $lightness: -21.0743801653%);
+    background-color: color.adjust($saiph-green, $lightness: -10%);
   }
 }
 
@@ -336,23 +336,26 @@ $priority-low: #27ae60;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 5px;
+  padding: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: $saiph-gray;
+  border-radius: 50%;
   @include transition;
 
   &:hover {
+    background-color: rgba($saiph-blue, 0.1);
     color: $saiph-blue;
   }
 
   .expand-icon {
-    font-size: 1rem;
-    transition: transform 0.3s ease;
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     &.expanded {
-      transform: rotate(0deg);
+      transform: rotate(180deg);
     }
   }
 }

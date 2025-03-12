@@ -13,6 +13,10 @@ export class AuthService {
   constructor(private http: HttpClient, private router: Router) {}
 
   login(username: string, password: string) {
+    
+    username = username.trim();
+    password = password.trim();
+    
     return this.http.post<any>('http://localhost:8080/api/users/login', {
       username,
       password
@@ -22,7 +26,8 @@ export class AuthService {
           localStorage.setItem('jwtToken', response.token);
           localStorage.setItem('username', response.username);
           localStorage.setItem('role', response.role);
-          this.currentUserSubject.next(response); // Mettre à jour l'utilisateur connecté
+          this.currentUserSubject.next(response);
+
           this.redirectBasedOnRole(response.role);
         } else {
           console.error('No token found in response');
@@ -38,7 +43,7 @@ export class AuthService {
     localStorage.removeItem('jwtToken');
     localStorage.removeItem('username');
     localStorage.removeItem('role');
-    this.currentUserSubject.next(null); // Réinitialiser l'utilisateur connecté
+    this.currentUserSubject.next(null);
     this.router.navigate(['/login']);
   }
 

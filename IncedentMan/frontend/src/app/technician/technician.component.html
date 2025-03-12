@@ -42,9 +42,9 @@
             <tr [ngClass]="{'active-row': isExpanded(incident)}">
               <td class="expand-column">
                 <button class="expand-button" (click)="toggleExpanded(incident)">
-                  <i class="expand-icon" [ngClass]="{'expanded': isExpanded(incident)}">
-                    {{ isExpanded(incident) ? '▼' : '►' }}
-                  </i>
+                  <svg class="expand-icon" [ngClass]="{'expanded': isExpanded(incident)}" viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 9l6 6 6-6"/>
+                  </svg>
                 </button>
               </td>
               <td class="title-cell">{{ incident.title }}</td>
@@ -80,6 +80,8 @@
                       <div class="detail-item">
                         <span class="detail-label">Reference:</span>
                         <span class="detail-value">{{ incident.id }}</span>
+                        <span class="detail-label">reporter</span>
+                        <span class="detail-value">{{ incident.reporter.username }}</span>
                       </div>
                     </div>
                   </div>

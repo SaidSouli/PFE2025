@@ -105,9 +105,10 @@ export class TechnicianComponent implements OnInit {
   getPriorityLabel(priority?: number): string {
     if (!priority) return 'Not Assigned';
     switch (priority) {
-      case 1: return 'High';
+      case 1: return 'Low';
       case 2: return 'Medium';
-      case 3: return 'Low';
+      case 3: return 'High';
+      case 4: return 'Critical'
       default: return 'Unknown';
     }
   }
