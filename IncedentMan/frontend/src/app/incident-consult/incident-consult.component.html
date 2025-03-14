@@ -1,58 +1,81 @@
-
 <div class="header">
-    <button class="btn btn-secondary" routerLink="/report-incident">← Back</button>
+  <button class="btn btn-secondary" routerLink="/report-incident">← Back</button>
+
+  <div class="filter-options">
+    <label for="statusFilter" class="form-label">Filter by Status:</label>
+    <select id="statusFilter" class="form-select" (change)="onStatusChange($event)">
+      <option value="">All</option>
+      <option value="Open">Open</option>
+      <option value="Waiting">Waiting</option>
+      <option value="Resolved">Resolved</option>
+    </select>
   </div>
-  
-  <table *ngIf="!loading && incidents.length" class="incident-table">
-    <thead>
-      <tr>
-        <th>Title</th>
-        <th>Description</th>
-        <th>Status</th>
-        <th>Priority</th>
-        <th>Category</th>
-        <th>Reporter</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let incident of incidents">
-        <td>{{ incident.title }}</td>
-        <td>{{ incident.description }}</td>
-        <td>
-          <span class="status-badge">{{ incident.status }}</span>
-        </td>
-        <td>{{ incident.priority }}</td>
-        <td>{{ incident.category }}</td>
-        <td>{{ incident.reporter.username }}</td>
-        <td>
-          <div class="incident-actions">
-            <button *ngIf="incident.status === 'Open'" class="btn btn-warning" (click)="onEdit(incident)">Edit</button>
-            <button *ngIf="incident.status === 'Open'" class="btn btn-danger" (click)="onDelete(incident.id!)">Delete</button>
-            <ng-container *ngIf="incident.status !== 'Open'">
-              <i class="bi bi-lock" title="Locked" style="font-size: 1.5rem; color: #dc3545;"></i>
-            </ng-container>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <div *ngIf="selectedIncident" class="modal-overlay">
-    <div class="modal-content">
+</div>
+
+<table *ngIf="!loading && (filteredIncidents.length || selectedStatus === '')" class="incident-table">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Description</th>
+      <th>Status</th>
+      <th>Priority</th>
+      <th>Category</th>
+      <th>Reporter</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let incident of (selectedStatus ? filteredIncidents : incidents)">
+      <td>{{ incident.title }}</td>
+      <td>{{ incident.description }}</td>
+      <td>
+        <span class="status-badge">{{ incident.status }}</span>
+      </td>
+      <td>{{ incident.priority }}</td>
+      <td>{{ incident.category }}</td>
+      <td>{{ incident.reporter.username }}</td>
+      <td>
+        <div class="incident-actions">
+          <ng-container *ngIf="incident.status === 'Open'">
+            <button class="btn btn-warning" (click)="onEdit(incident)">Edit</button>
+            <button class="btn btn-danger" (click)="onDelete(incident.id!)">Delete</button>
+          </ng-container>
+          <ng-container *ngIf="incident.status === 'Waiting'">
+            <button class="btn btn-info" (click)="showSolutionForm(incident)">Voir Solution</button>
+          </ng-container>
+          <ng-container *ngIf="incident.status === 'Resolved'">
+            <span style="color: green;">Resolved</span>
+          </ng-container>
+          <ng-container *ngIf="incident.status !== 'Open' && incident.status !== 'Waiting' && incident.status !== 'Resolved'">
+            <i class="bi bi-lock" title="Locked" style="font-size: 1.5rem; color: #dc3545;"></i>
+          </ng-container>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Modale pour l'édition et la solution -->
+<div *ngIf="selectedIncident" class="modal-overlay">
+  <div class="modal-content">
+    <!-- Icône de fermeture en haut à droite -->
+    <button class="btn btn-close position-absolute top-0 end-0 m-2" (click)="closeModal()"></button>
+
+
+    <!-- Formulaire d'édition -->
+    <div *ngIf="!showSolutionFormFlag">
       <h2>Edit Incident</h2>
       <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
         <div class="form-group">
           <label for="title">Title:</label>
-          <input id="title" formControlName="title" class="form-control" required>
+          <input id="title" formControlName="title" class="form-control" required />
         </div>
-  
+
         <div class="form-group">
           <label for="description">Description:</label>
           <textarea id="description" formControlName="description" class="form-control" rows="4" required></textarea>
         </div>
-  
+
         <div class="form-group">
           <label for="category">Category:</label>
           <select id="category" formControlName="category" class="form-control" required>
@@ -64,9 +87,7 @@
             <option value="SECURITY">Security</option>
           </select>
         </div>
-  
-  
-  
+
         <div class="form-group">
           <label for="priority">Priority:</label>
           <select id="priority" formControlName="priority" class="form-control" required>
@@ -76,11 +97,23 @@
             <option value="4">Critical (4)</option>
           </select>
         </div>
-  
+
         <div class="form-buttons">
-          <button type="button" class="btn btn-secondary" (click)="selectedIncident = null">Cancel</button>
           <button type="submit" class="btn btn-primary">Save</button>
         </div>
       </form>
     </div>
+
+    <!-- Formulaire de solution -->
+   <!-- Formulaire de solution -->
+<div *ngIf="showSolutionFormFlag">
+  <h2>Solution pour {{ selectedIncident.title }}</h2>
+  <div *ngIf="solution">
+    <p>{{ solution.description }}</p> <!-- Affichez la description de la solution -->
+    <p><strong>Date de création:</strong> {{ solution.creationDate | date }}</p> <!-- Affichez la date de création -->
   </div>
+  <div class="form-buttons">
+    <button type="button" class="btn btn-success" (click)="acceptSolution()">Accepter</button>
+    <button type="button" class="btn btn-danger" (click)="rejectSolution()">Refuser</button>
+  </div>
+</div>

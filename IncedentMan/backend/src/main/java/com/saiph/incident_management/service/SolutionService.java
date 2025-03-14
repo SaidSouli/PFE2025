@@ -52,7 +52,7 @@ public class SolutionService {
         solution.setCreationDate(new Date());
         
         // Update incident status
-        incident.setStatus("Resolved");
+        incident.setStatus("Waiting");
         incident.setResolutionDate(new Date());
         incidentRepository.save(incident);
         
@@ -92,4 +92,5 @@ public class SolutionService {
         
         solutionRepository.delete(solution);
     }
+    
 }

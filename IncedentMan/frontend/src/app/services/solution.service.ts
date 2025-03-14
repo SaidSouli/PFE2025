@@ -16,4 +16,8 @@ export class SolutionService {
   createSolution(solution: Solution): Observable<Solution> {
     return this.http.post<Solution>(this.apiUrl, solution);
   }
+
+  getSolutionByIncidentId(incidentId: string): Observable<Solution> {
+    return this.http.get<Solution>(`${this.apiUrl}/incident/${incidentId}`);
+  }
 }

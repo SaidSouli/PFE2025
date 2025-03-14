@@ -90,7 +90,7 @@ export class AssignedIncidentsComponent implements OnInit {
     this.solutionService.createSolution(solution).subscribe(
       (response) => {
         // Update incident status locally
-        incident.status = 'Resolved';
+        incident.status = 'Waiting for approval';
         
         // Clear and reset
         this.solutionText[incidentId] = '';
@@ -136,9 +136,10 @@ export class AssignedIncidentsComponent implements OnInit {
     if (priority === undefined) return 'Medium';
         
     switch(priority) {
-      case 1: return 'High';
+      case 1: return 'Low';
       case 2: return 'Medium';
-      case 3: return 'Low';
+      case 3: return 'High';
+      case 4: return 'Critical';
       default: return 'Medium';
     }
   }

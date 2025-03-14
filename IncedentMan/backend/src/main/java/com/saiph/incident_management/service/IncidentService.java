@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class IncidentService {
+
+    private final JWTService JWTService;
     
     @Autowired
     private IncidentRepository incidentRepository;
@@ -32,6 +34,10 @@ public class IncidentService {
     
     @Autowired
     private RestTemplate restTemplate;
+
+    IncidentService(JWTService JWTService) {
+        this.JWTService = JWTService;
+    }
     public List<Incident> getAllIncidents() {
         List<Incident> incidents = incidentRepository.findAll();
         for (Incident incident : incidents) {
@@ -217,5 +223,6 @@ public class IncidentService {
         }
         return List.of(); 
     }
+    
     
 }

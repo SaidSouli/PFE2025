@@ -1,8 +1,10 @@
 package com.saiph.incident_management.Controller;
 
+import com.saiph.incident_management.CorsConfig;
 import com.saiph.incident_management.model.Incident;
 
 import com.saiph.incident_management.service.IncidentService;
+import com.saiph.incident_management.service.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +17,13 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/incidents")
 public class IncidentController {
-    
+
     @Autowired
     private IncidentService incidentService;
+
+
+    IncidentController(JWTService JWTService, CorsConfig corsConfig) {
+    }
    
     
     @GetMapping
@@ -95,4 +101,5 @@ public class IncidentController {
         List<Incident> incidents = incidentService.getIncidentsByTechnicianUsername(username);
         return ResponseEntity.ok(incidents);
     }
+    
 }

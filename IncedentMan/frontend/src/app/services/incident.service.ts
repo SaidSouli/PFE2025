@@ -28,4 +28,8 @@ export class IncidentService {
   updateIncident(id: string, incident: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/${id}`, incident);
   }
+  // In incident.service.ts
+  unassignIncidentFromTechnician(incidentId: string) {
+    return this.http.post<void>(`${this.apiUrl}/incidents/${incidentId}/unassign`, {});
+}
 }
