@@ -223,6 +223,16 @@ public class IncidentService {
         }
         return List.of(); 
     }
-    
+    //by said
+    public Incident updateIncidentStatus(String id, String newStatus) {
+        if (incidentRepository.existsById(id)) {
+            Incident existingIncident = incidentRepository.findById(id).orElse(null);
+            if (existingIncident != null) {
+                existingIncident.setStatus(newStatus);
+                return incidentRepository.save(existingIncident);
+            }
+        }
+        return null;
+    }
     
 }

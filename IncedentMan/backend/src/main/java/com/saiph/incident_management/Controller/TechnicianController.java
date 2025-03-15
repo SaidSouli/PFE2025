@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.saiph.incident_management.model.Incident;
+
 import com.saiph.incident_management.model.Specialization;
 import com.saiph.incident_management.model.Technician;
 import com.saiph.incident_management.repository.IncidentRepository;

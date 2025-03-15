@@ -166,49 +166,110 @@ export class IncidentConsultComponent implements OnInit {
       return;
     }
     
-    // First get the technician assigned to this incident
-    this.technicianService.getAssignedTechnicianForIncident(this.selectedIncident.id)
+    // First check if there's a solution to delete
+    this.solutionService.getSolutionByIncidentId(this.selectedIncident.id)
       .subscribe({
-        next: (technicianData) => {
-          const technicianId = technicianData.id;
-          if (!technicianId) {
-            this.showNotification('Error: No technician ID found', 'error');
-            return;
+        next: (solution) => {
+          // If solution exists, delete it first
+          if (solution && solution.id) {
+            this.solutionService.deletesolution(solution.id)
+              .subscribe({
+                next: () => {
+                  this.updateIncidentStatus();
+                },
+                error: (err) => {
+                  console.error('Error deleting solution:', err);
+                  this.showNotification('Failed to delete solution', 'error');
+                }
+              });
+          } else {
+            // No solution to delete, proceed with status update
+            this.updateIncidentStatus();
           }
-          
-          // Now update the incident status
-          this.technicianService.updateIncidentStatus(technicianId, this.selectedIncident!.id!, 'notResolved')
-            .subscribe({
-              next: (response) => {
-                // Update your UI and close the modal
-                const index = this.incidents.findIndex(inc => inc.id === this.selectedIncident!.id);
-                if (index !== -1) {
-                  this.incidents[index].status = 'Open';
-                }
-                
-                // Update filtered incidents if necessary
-                if (this.selectedStatus) {
-                  this.filteredIncidents = this.incidents.filter(inc => 
-                    inc.status === this.selectedStatus
-                  );
-                }
-                
-                this.closeModal();
-                this.showNotification('Solution rejected. Incident re-opened.');
-              },
-              error: (err) => {
-                console.error('Error updating status:', err);
-                this.showNotification('Failed to update incident status', 'error');
-              }
-            });
         },
-        error: (error) => {
-          console.error('Error fetching technician:', error);
-          this.showNotification('Failed to get assigned technician', 'error');
+        error: (err) => {
+          console.error('Error fetching solution:', err);
+          this.showNotification('Failed to check for existing solution', 'error');
+          // Still try to proceed with status update
+          this.updateIncidentStatus();
         }
       });
   }
+  /**
+ * Updates an incident's status, either directly or through the technician service
+ * @param useTechnicianService If true, will use the technician service flow which also deletes the solution
+ */
+  private updateIncidentStatus(useTechnicianService: boolean = true): void {
+    // Direct incident service update path
+    this.incidentService.updateIncidentStatus(this.selectedIncident!.id!, 'Open')
+      .subscribe({
+        next: (updatedIncident) => {
+          this.updateIncidentInLists('Open');
+          
+          // Only close and show notification if not also using technician service
+          if (!useTechnicianService) {
+            this.closeModal();
+            this.showNotification('Solution rejected and incident re-opened.');
+          }
+        },
+        error: (err) => {
+          console.error('Error updating incident status:', err);
+          this.showNotification('Failed to update incident status', 'error');
+        }
+      });
   
+    // Execute technician service path if requested
+    if (useTechnicianService) {
+      // Technician service path - first get the technician then update status
+      this.technicianService.getAssignedTechnicianForIncident(this.selectedIncident!.id!)
+        .subscribe({
+          next: (technicianData) => {
+            const technicianId = technicianData.id;
+            if (!technicianId) {
+              this.showNotification('Error: No technician ID found', 'error');
+              return;
+            }
+            
+            // Now update the incident status through technician service
+            this.technicianService.updateIncidentStatus(technicianId, this.selectedIncident!.id!, 'notResolved')
+              .subscribe({
+                next: (response) => {
+                  this.updateIncidentInLists('Open');
+                  this.closeModal();
+                  this.showNotification('Solution rejected and deleted. Incident re-opened.');
+                },
+                error: (err) => {
+                  console.error('Error updating status:', err);
+                  this.showNotification('Failed to update incident status', 'error');
+                }
+              });
+          },
+          error: (error) => {
+            console.error('Error fetching technician:', error);
+            this.showNotification('Failed to get assigned technician', 'error');
+          }
+        });
+    }
+  }
+
+/**
+ * Helper method to update the incident status in the UI lists
+ * @param newStatus The new status to set
+ */
+private updateIncidentInLists(newStatus: string): void {
+  // Update main incidents list
+  const index = this.incidents.findIndex(inc => inc.id === this.selectedIncident!.id);
+  if (index !== -1) {
+    this.incidents[index].status = newStatus;
+  }
+  
+  // Update filtered incidents if necessary
+  if (this.selectedStatus) {
+    this.filteredIncidents = this.incidents.filter(inc =>
+      inc.status === this.selectedStatus
+    );
+  }
+}
   // Helper method for notifications (implement based on your UI framework)
   private showNotification(message: string, type: string = 'success'): void {
     // Implementation depends on your notification system

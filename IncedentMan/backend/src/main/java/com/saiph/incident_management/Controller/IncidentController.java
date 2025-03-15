@@ -5,6 +5,7 @@ import com.saiph.incident_management.model.Incident;
 
 import com.saiph.incident_management.service.IncidentService;
 import com.saiph.incident_management.service.JWTService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+
 
 @RestController
 @RequestMapping("/api/incidents")
@@ -100,6 +102,17 @@ public class IncidentController {
     public ResponseEntity<List<Incident>> getIncidentsByTechnicianUsername(@PathVariable String username) {
         List<Incident> incidents = incidentService.getIncidentsByTechnicianUsername(username);
         return ResponseEntity.ok(incidents);
+    }
+    //by said
+    @PutMapping("/{id}/status/{status}")
+    public ResponseEntity<Incident> updateIncidentStatus(@PathVariable String id, @PathVariable String status) {
+        Incident updatedIncident = incidentService.updateIncidentStatus(id, status);
+        
+        if (updatedIncident == null) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        return ResponseEntity.ok(updatedIncident);
     }
     
 }

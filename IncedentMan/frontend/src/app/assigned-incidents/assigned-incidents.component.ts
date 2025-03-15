@@ -63,7 +63,7 @@ export class AssignedIncidentsComponent implements OnInit {
   }
 
   filterIncidents(): void {
-    this.filteredIncidents = this.incidents.filter(incident => incident.status === 'En cours'||'In Progress');
+    this.filteredIncidents = this.incidents.filter(incident => incident.status ==='In Progress');
   }
 
   submitSolution(incident: Incident): void {
