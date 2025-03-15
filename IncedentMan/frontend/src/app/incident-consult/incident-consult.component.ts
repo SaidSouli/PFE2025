@@ -6,6 +6,7 @@ import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Solution } from '../../../model/solution.model'; // Assurez-vous d'avoir un modèle pour la solution
+import { TechnicianService } from '../services/technician.service';
 
 @Component({
   selector: 'incident-consult',
@@ -26,7 +27,8 @@ export class IncidentConsultComponent implements OnInit {
 
   constructor(
     private incidentService: IncidentService,
-    private solutionService: SolutionService, // Injectez le service de solution
+    private solutionService: SolutionService,
+    private technicianService:TechnicianService, // Injectez le service de solution
     private fb: FormBuilder
   ) {
     this.editForm = this.fb.group({
@@ -116,7 +118,7 @@ export class IncidentConsultComponent implements OnInit {
   // Méthode pour afficher le formulaire de solution
    // Méthode pour afficher le formulaire de solution
    showSolutionForm(incident: Incident): void {
-    this.selectedIncident = incident;
+    this.selectedIncident = {...incident};
     this.solution = null; // Réinitialiser la solution
     this.showSolutionFormFlag = true; // Afficher le formulaire de solution
 
@@ -157,44 +159,62 @@ export class IncidentConsultComponent implements OnInit {
   }
 
   // Méthode pour refuser la solution
+
   rejectSolution(): void {
-    if (this.selectedIncident) {
-      // First update the incident status to 'Open'
-      this.selectedIncident.status = 'Open';
-      
-      this.incidentService.updateIncident(this.selectedIncident.id!, this.selectedIncident)
-        .subscribe(
-          (response) => {
-            // Then unassign the incident from the technician
-            this.incidentService.unassignIncidentFromTechnician(this.selectedIncident!.id!)
-              .subscribe(
-                () => {
-                  console.log('Incident unassigned successfully');
-                  
-                  // Update the local arrays
-                  const index = this.incidents.findIndex((i) => i.id === this.selectedIncident!.id);
-                  if (index !== -1) {
-                    this.incidents[index] = { ...this.incidents[index], ...this.selectedIncident };
-                    this.filteredIncidents[index] = { ...this.filteredIncidents[index], ...this.selectedIncident };
-                  }
-                  
-                  this.selectedIncident = null;
-                  this.solution = null;
-                  this.showSolutionFormFlag = false;
-                },
-                (error) => {
-                  this.error = 'Erreur lors du retrait de l\'incident des tâches du technicien';
-                  console.error('Error unassigning incident', error);
-                }
-              );
-          },
-          (error) => {
-            this.error = 'Erreur lors du refus de la solution';
-            console.error('Error rejecting solution', error);
-          }
-        );
+    if (!this.selectedIncident || !this.selectedIncident.id) {
+      console.error('No incident selected or incident ID is missing');
+      return;
     }
+    
+    // First get the technician assigned to this incident
+    this.technicianService.getAssignedTechnicianForIncident(this.selectedIncident.id)
+      .subscribe({
+        next: (technicianData) => {
+          const technicianId = technicianData.id;
+          if (!technicianId) {
+            this.showNotification('Error: No technician ID found', 'error');
+            return;
+          }
+          
+          // Now update the incident status
+          this.technicianService.updateIncidentStatus(technicianId, this.selectedIncident!.id!, 'notResolved')
+            .subscribe({
+              next: (response) => {
+                // Update your UI and close the modal
+                const index = this.incidents.findIndex(inc => inc.id === this.selectedIncident!.id);
+                if (index !== -1) {
+                  this.incidents[index].status = 'Open';
+                }
+                
+                // Update filtered incidents if necessary
+                if (this.selectedStatus) {
+                  this.filteredIncidents = this.incidents.filter(inc => 
+                    inc.status === this.selectedStatus
+                  );
+                }
+                
+                this.closeModal();
+                this.showNotification('Solution rejected. Incident re-opened.');
+              },
+              error: (err) => {
+                console.error('Error updating status:', err);
+                this.showNotification('Failed to update incident status', 'error');
+              }
+            });
+        },
+        error: (error) => {
+          console.error('Error fetching technician:', error);
+          this.showNotification('Failed to get assigned technician', 'error');
+        }
+      });
   }
+  
+  // Helper method for notifications (implement based on your UI framework)
+  private showNotification(message: string, type: string = 'success'): void {
+    // Implementation depends on your notification system
+    // For example, using a service or component
+  }
+    
 
   // Méthode pour annuler l'affichage du formulaire de solution
   cancelSolution(): void {

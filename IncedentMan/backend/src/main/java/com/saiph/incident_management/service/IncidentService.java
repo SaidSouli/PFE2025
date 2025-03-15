@@ -108,7 +108,7 @@ public class IncidentService {
         loadUserData(incident); 
         return incidentRepository.save(incident); 
     }
-    //ghassen updated this funvtion
+    //ghassen updated this function
     public Incident updateIncident(String id, Incident incident) {
         if (incidentRepository.existsById(id)) {
             Incident existingIncident = incidentRepository.findById(id).orElse(null);

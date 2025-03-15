@@ -7,13 +7,16 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.saiph.incident_management.model.Incident;
 import com.saiph.incident_management.model.Specialization;
 import com.saiph.incident_management.model.Technician;
+import com.saiph.incident_management.repository.IncidentRepository;
 import com.saiph.incident_management.repository.TechnicianRepository;
 
 @Service
@@ -21,6 +24,8 @@ public class TechnicianService {
 
     @Autowired
     private TechnicianRepository technicianRepository;
+    @Autowired
+    private IncidentRepository incidentRepository;
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -48,5 +53,20 @@ public class TechnicianService {
         }
 
         return updatedTechnician;
+    }
+    public Technician getAssignedTechnician(String incidentId) {
+        // Find the incident by ID
+        Optional<Incident> incidentOpt = incidentRepository.findById(incidentId);
+        if (incidentOpt.isEmpty()) {
+            return null;
+        }
+        
+        // Find the technician assigned to this incident
+        Optional<Technician> technicianOpt = technicianRepository.findByAssignedIncidents_Id(incidentId);
+        if (technicianOpt.isEmpty()) {
+            return null;
+        }
+        
+        return technicianOpt.get();
     }
 }

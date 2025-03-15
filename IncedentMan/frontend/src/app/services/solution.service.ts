@@ -20,4 +20,8 @@ export class SolutionService {
   getSolutionByIncidentId(incidentId: string): Observable<Solution> {
     return this.http.get<Solution>(`${this.apiUrl}/incident/${incidentId}`);
   }
+  deletesolution(solutionId:String):Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${solutionId}`)
+  }
+
 }

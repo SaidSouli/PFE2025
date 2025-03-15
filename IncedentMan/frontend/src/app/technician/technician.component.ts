@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgFor, NgClass, NgIf, SlicePipe } from '@angular/common';
 import { Incident } from '../../../model/incident.model';
 import { Specialization } from '../../../model/specialization.model';
-import { TechnicianService } from '../services/technician-service.service';
+import { TechnicianService } from '../services/technician.service';
 import { Router } from '@angular/router';
 
 @Component({

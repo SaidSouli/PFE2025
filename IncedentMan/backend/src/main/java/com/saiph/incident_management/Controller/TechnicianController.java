@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.saiph.incident_management.model.Incident;
 import com.saiph.incident_management.model.Specialization;
 import com.saiph.incident_management.model.Technician;
+import com.saiph.incident_management.repository.IncidentRepository;
+import com.saiph.incident_management.repository.TechnicianRepository;
 import com.saiph.incident_management.service.TechnicianService;
 
 @RestController
@@ -21,6 +24,11 @@ public class TechnicianController {
 
     @Autowired
     private TechnicianService technicianService;
+    @Autowired 
+    private IncidentRepository incidentRepository;
+    @Autowired
+    private TechnicianRepository technicianRepository;
+    
 
     @GetMapping("/{username}/specializations")
     public ResponseEntity<List<Specialization>> getTechnicianSpecializations(@PathVariable String username) {
@@ -36,4 +44,15 @@ public class TechnicianController {
         Technician updatedTechnician = technicianService.updateAssignedIncidentStatus(technicianId, incidentId, status);
         return ResponseEntity.ok(updatedTechnician);
     }
+    @GetMapping("/{incidentId}/technician")
+    public ResponseEntity<Technician> getAssignedTechnician(@PathVariable String incidentId) {
+        Technician technician = technicianService.getAssignedTechnician(incidentId);
+        
+        if (technician == null) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        return ResponseEntity.ok(technician);
+    }
+    
 }

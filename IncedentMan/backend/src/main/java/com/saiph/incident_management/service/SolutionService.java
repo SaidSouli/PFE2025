@@ -84,7 +84,7 @@ public class SolutionService {
         Solution solution = solutionRepository.findById(solutionId)
                 .orElseThrow(() -> new RuntimeException("Solution not found with id: " + solutionId));
         
-        // Update the incident status if necessary
+        
         Incident incident = solution.getIncident();
         incident.setStatus("In Progress");
         incident.setResolutionDate(null);
