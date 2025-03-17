@@ -1,119 +1,173 @@
-<div class="header">
-  <button class="btn btn-secondary" routerLink="/report-incident">← Back</button>
-
-  <div class="filter-options">
-    <label for="statusFilter" class="form-label">Filter by Status:</label>
-    <select id="statusFilter" class="form-select" (change)="onStatusChange($event)">
-      <option value="">All</option>
-      <option value="Open">Open</option>
-      <option value="Waiting">Waiting</option>
-      <option value="Resolved">Resolved</option>
-    </select>
-  </div>
-</div>
-
-<table *ngIf="!loading && (filteredIncidents.length || selectedStatus === '')" class="incident-table">
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Description</th>
-      <th>Status</th>
-      <th>Priority</th>
-      <th>Category</th>
-      <th>Reporter</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let incident of (selectedStatus ? filteredIncidents : incidents)">
-      <td>{{ incident.title }}</td>
-      <td>{{ incident.description }}</td>
-      <td>
-        <span class="status-badge">{{ incident.status }}</span>
-      </td>
-      <td>{{ incident.priority }}</td>
-      <td>{{ incident.category }}</td>
-      <td>{{ incident.reporter.username }}</td>
-      <td>
-        <div class="incident-actions">
-          <ng-container *ngIf="incident.status === 'Open'">
-            <button class="btn btn-warning" (click)="onEdit(incident)">Edit</button>
-            <button class="btn btn-danger" (click)="onDelete(incident.id!)">Delete</button>
-          </ng-container>
-          <ng-container *ngIf="incident.status === 'Waiting'">
-            <button class="btn btn-info" (click)="showSolutionForm(incident)">Voir Solution</button>
-          </ng-container>
-          <ng-container *ngIf="incident.status === 'Resolved'">
-            <span style="color: green;">Resolved</span>
-          </ng-container>
-          <ng-container *ngIf="incident.status !== 'Open' && incident.status !== 'Waiting' && incident.status !== 'Resolved'">
-            <i class="bi bi-lock" title="Locked" style="font-size: 1.5rem; color: #dc3545;"></i>
-          </ng-container>
-        </div>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<!-- Modale pour l'édition et la solution -->
-<div *ngIf="selectedIncident" class="modal-overlay">
-  <div class="modal-content">
-    <!-- Icône de fermeture en haut à droite -->
-    <button class="btn btn-close position-absolute top-0 end-0 m-2" (click)="closeModal()"></button>
-
-
-    <!-- Formulaire d'édition -->
-    <div *ngIf="!showSolutionFormFlag">
-      <h2>Edit Incident</h2>
-      <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
-        <div class="form-group">
-          <label for="title">Title:</label>
-          <input id="title" formControlName="title" class="form-control" required />
-        </div>
-
-        <div class="form-group">
-          <label for="description">Description:</label>
-          <textarea id="description" formControlName="description" class="form-control" rows="4" required></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="category">Category:</label>
-          <select id="category" formControlName="category" class="form-control" required>
-            <option value="">Select a category</option>
-            <option value="NETWORK">Network</option>
-            <option value="HARDWARE">Hardware</option>
-            <option value="SOFTWARE">Software</option>
-            <option value="DATABASE">Database</option>
-            <option value="SECURITY">Security</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="priority">Priority:</label>
-          <select id="priority" formControlName="priority" class="form-control" required>
-            <option value="1">Low (1)</option>
-            <option value="2">Medium (2)</option>
-            <option value="3">High (3)</option>
-            <option value="4">Critical (4)</option>
-          </select>
-        </div>
-
-        <div class="form-buttons">
-          <button type="submit" class="btn btn-primary">Save</button>
-        </div>
-      </form>
+<div class="saiph-container" [class.dark-mode]="themeService.getCurrentTheme()">
+  <header class="saiph-header">
+    <div class="logo-container">
+      <div class="logo-star">
+        <div class="star-point star-point-1"></div>
+        <div class="star-point star-point-2"></div>
+        <div class="star-point star-point-3"></div>
+        <div class="star-point star-point-4"></div>
+      </div>
+      <h1>SAIPH</h1>
+      <p class="tagline">Incident Management System</p>
     </div>
 
-    <!-- Formulaire de solution -->
-   <!-- Formulaire de solution -->
-<div *ngIf="showSolutionFormFlag">
-  <h2>Solution pour {{ selectedIncident.title }}</h2>
-  <div *ngIf="solution">
-    <p>{{ solution.description }}</p> <!-- Affichez la description de la solution -->
-    <p><strong>Date de création:</strong> {{ solution.creationDate | date }}</p> <!-- Affichez la date de création -->
+    <div class="button-group">
+      <button mat-icon-button class="theme-toggle" (click)="toggleDarkMode()"
+              [matTooltip]="themeService.getCurrentTheme() ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+        <mat-icon>{{ themeService.getCurrentTheme() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+      </button>
+
+      <button mat-raised-button color="primary" routerLink="/report-incident">
+        <mat-icon>add</mat-icon> Report Incident
+      </button>
+
+      <button mat-raised-button color="warn" (click)="logout()">
+        <mat-icon>logout</mat-icon> Logout
+      </button>
+    </div>
+  </header>
+
+  <div class="content-area">
+    <div class="filter-options">
+      <label for="statusFilter" class="form-label">Filter by Status:</label>
+      <select id="statusFilter" class="form-select" (change)="onStatusChange($event)">
+        <option value="">All</option>
+        <option value="Open">Open</option>
+        <option value="Waiting">Waiting</option>
+        <option value="Resolved">Resolved</option>
+      </select>
+    </div>
+
+    <div class="incident-table-container">
+      <mat-card [class.dark-card]="themeService.getCurrentTheme()">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>warning</mat-icon>
+            Incident Management
+          </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <table *ngIf="!loading" class="incident-table">
+            <thead>
+              <tr class="mat-mdc-header-row">
+                <th class="mat-mdc-header-cell">Title</th>
+                <th class="mat-mdc-header-cell">Description</th>
+                <th class="mat-mdc-header-cell">Status</th>
+                <th class="mat-mdc-header-cell">Priority</th>
+                <th class="mat-mdc-header-cell">Category</th>
+                <th class="mat-mdc-header-cell">Reporter</th>
+                <th class="mat-mdc-header-cell">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let incident of (selectedStatus ? filteredIncidents : incidents)" class="mat-mdc-row">
+                <td class="mat-mdc-cell">{{ incident.title }}</td>
+                <td class="mat-mdc-cell">{{ incident.description }}</td>
+                <td class="mat-mdc-cell">
+                  <span class="status-badge" [ngClass]="{
+                    'open': incident.status === 'Open',
+                    'closed': incident.status === 'Resolved',
+                    'in-progress': incident.status === 'Waiting'
+                  }">{{ incident.status }}</span>
+                </td>
+                <td class="mat-mdc-cell">{{ incident.priority }}</td>
+                <td class="mat-mdc-cell">{{ incident.category }}</td>
+                <td class="mat-mdc-cell">{{ incident.reporter.username }}</td>
+                <td class="mat-mdc-cell">
+                  <div class="incident-actions">
+                    <ng-container *ngIf="incident.status === 'Open'">
+                      <button mat-icon-button color="primary" (click)="onEdit(incident)" matTooltip="Edit Incident">
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                      <button mat-icon-button color="warn" (click)="onDelete(incident.id!)" matTooltip="Delete Incident">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </ng-container>
+                    <ng-container *ngIf="incident.status === 'Waiting'">
+                      <button mat-icon-button color="primary" (click)="showSolutionForm(incident)" matTooltip="View Solution">
+                        <mat-icon>visibility</mat-icon>
+                      </button>
+                    </ng-container>
+                    <ng-container *ngIf="incident.status === 'Resolved'">
+                      <span style="color: green;">Resolved</span>
+                    </ng-container>
+                    <ng-container *ngIf="incident.status !== 'Open' && incident.status !== 'Waiting' && incident.status !== 'Resolved'">
+                      <i class="bi bi-lock" title="Locked" style="font-size: 1.5rem; color: #dc3545;"></i>
+                    </ng-container>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <!-- Empty state message -->
+          <div *ngIf="!loading && filteredIncidents.length === 0 && selectedStatus !== ''" class="empty-state">
+            <mat-icon>search</mat-icon>
+            <p>No incidents found matching the selected status.</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
   </div>
-  <div class="form-buttons">
-    <button type="button" class="btn btn-success" (click)="acceptSolution()">Accepter</button>
-    <button type="button" class="btn btn-danger" (click)="rejectSolution()">Refuser</button>
+
+  <div *ngIf="selectedIncident" class="modal-overlay">
+    <div class="modal-content">
+      <button mat-icon-button class="modal-close-btn" (click)="closeModal()">
+        <mat-icon>close</mat-icon>
+      </button>
+
+      <div *ngIf="!showSolutionFormFlag">
+        <h2>Edit Incident</h2>
+        <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <label for="title">Title:</label>
+            <input id="title" formControlName="title" class="form-control" required />
+          </div>
+
+          <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea id="description" formControlName="description" class="form-control" rows="4" required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="category">Category:</label>
+            <select id="category" formControlName="category" class="form-control" required>
+              <option value="">Select a category</option>
+              <option value="NETWORK">Network</option>
+              <option value="HARDWARE">Hardware</option>
+              <option value="SOFTWARE">Software</option>
+              <option value="DATABASE">Database</option>
+              <option value="SECURITY">Security</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="priority">Priority:</label>
+            <select id="priority" formControlName="priority" class="form-control" required>
+              <option value="1">Low</option>
+              <option value="2">Medium</option>
+              <option value="3">High</option>
+              <option value="4">Critical</option>
+            </select>
+          </div>
+
+          <div class="form-buttons">
+            <button type="submit" mat-raised-button color="primary">Save</button>
+          </div>
+        </form>
+      </div>
+
+      <div *ngIf="showSolutionFormFlag">
+        <h2>The technical staff solved "{{ selectedIncident.title }}" , you can reject their claim if your incident persists</h2>
+        <div *ngIf="solution">
+          <p><strong>Solve Date:</strong> {{ solution.creationDate | date }}</p>
+        </div>
+        <div class="form-buttons">
+          <button type="button" mat-raised-button color="primary" (click)="acceptSolution()">It's solved</button>
+          <button type="button" mat-raised-button color="warn" (click)="rejectSolution()">No, it's not</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

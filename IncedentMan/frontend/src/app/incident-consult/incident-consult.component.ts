@@ -1,16 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, effect, OnInit } from '@angular/core';
 import { Incident } from '../../../model/incident.model';
 import { IncidentService } from '../services/incident.service';
 import { SolutionService } from '../services/solution.service'; // Importez le service de solution
 import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Solution } from '../../../model/solution.model'; // Assurez-vous d'avoir un modèle pour la solution
 import { TechnicianService } from '../services/technician.service';
-
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ThemeService } from '../services/theme.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDividerModule } from '@angular/material/divider';
 @Component({
   selector: 'incident-consult',
-  imports: [NgIf, NgFor, ReactiveFormsModule, RouterLink, FormsModule,CommonModule],
+  imports: [NgIf, NgFor, ReactiveFormsModule, FormsModule,CommonModule,
+    MatFormFieldModule, MatInputModule, MatSelectModule,
+        MatButtonModule, MatIconModule, MatCardModule,
+        MatChipsModule, MatTooltipModule, MatTableModule, MatProgressSpinnerModule,MatDividerModule,RouterLink
+  ],
   templateUrl: './incident-consult.component.html',
   styleUrls: ['./incident-consult.component.scss'],
 })
@@ -28,9 +43,20 @@ export class IncidentConsultComponent implements OnInit {
   constructor(
     private incidentService: IncidentService,
     private solutionService: SolutionService,
-    private technicianService:TechnicianService, // Injectez le service de solution
+    private technicianService:TechnicianService,
+    public themeService:ThemeService,
+    public router: Router, // Injectez le service de solution
     private fb: FormBuilder
   ) {
+    const savedTheme = localStorage.getItem('theme');
+        effect(() => {
+          if (this.themeService.getCurrentTheme()) {
+            document.body.classList.add('dark-theme');
+          } else {
+            document.body.classList.remove('dark-theme');
+          }
+        });
+    
     this.editForm = this.fb.group({
       title: [''],
       description: [''],
@@ -59,7 +85,13 @@ export class IncidentConsultComponent implements OnInit {
       this.loading = false;
     }
   }
-
+  toggleDarkMode(): void {
+    this.themeService.toggleDarkMode();
+  }
+  logout() {
+    this.router.navigate(['/login']);
+    localStorage.removeItem('jwtToken');
+  }
   onDelete(id: string): void {
     if (confirm('Êtes-vous sûr de vouloir supprimer cet incident ?')) {
       this.incidentService.deleteIncident(id).subscribe({
@@ -249,6 +281,17 @@ export class IncidentConsultComponent implements OnInit {
             this.showNotification('Failed to get assigned technician', 'error');
           }
         });
+    }
+  }
+  getPriorityLabel(priority: number | undefined): string {
+    if (priority === undefined) return 'Medium';
+        
+    switch(priority) {
+      case 1: return 'Low';
+      case 2: return 'Medium';
+      case 3: return 'High';
+      case 4: return 'Critical';
+      default: return 'Medium';
     }
   }
 

@@ -1,181 +1,504 @@
-.incident-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  border-radius: 5px; // Ajout d'un arrondi aux coins
+@use "sass:color";
+@use '@angular/material' as mat;
 
-  th, td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    text-align: left;
-    transition: background-color 0.3s; // Transition pour l'effet de survol
-  }
+// SAIPH Color Palette
+$saiph-gray: #5a6872;
+$saiph-green: #8cb33f;
+$saiph-yellow: #f7a600;
+$saiph-blue: #00a0df;
+$saiph-light-gray: #f5f7fa;
+$saiph-border-color: #e0e0e0;
 
-  th {
-    background-color: #4CAF50; // Couleur de fond pour l'en-tête
-    color: white; // Couleur du texte pour l'en-tête
-    font-weight: bold; // Gras pour l'en-tête
-  }
+// Dark Mode Colors
+$dark-bg: #1a1f2e;
+$dark-card-bg: #242837;
+$dark-text: #e0e0e0;
+$dark-border: #2f3446;
+$dark-hover: rgba(255, 255, 255, 0.05);
 
-  tr:nth-child(even) {
-    background-color: #f2f2f2; // Couleur de fond pour les lignes paires
-  }
+// Role Colors
+$admin-color: #8cb33f;
+$user-color: #00a0df;
+$technician-color: #f7a600;
 
-  tr:hover {
-    background-color: #ddd; // Couleur de fond au survol
-  }
+// Dark Mode Role Colors
+$dark-admin-color: #9ec94a;
+$dark-user-color: #32b5ec;
+$dark-technician-color: #ffb732;
+
+// Mixins
+@mixin card-shadow {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-.status-badge {
-  padding: 5px 10px;
-  border-radius: 3px; // Arrondi pour le badge
-  font-weight: bold; // Texte en gras
-  &.open {
-    background-color: #28a745; // Vert pour "open"
-    color: white;
-  }
-  &.closed {
-    background-color: #dc3545; // Rouge pour "closed"
-    color: white;
-  }
-  &.in-progress {
-    background-color: #ffc107; // Jaune pour "in-progress"
-    color: black;
-  }
+@mixin dark-card-shadow {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.incident-actions {
+@mixin transition {
+  transition: all 0.3s ease;
+}
+
+// Custom Scrollbar Mixin
+@mixin custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $saiph-light-gray;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba($saiph-gray, 0.3);
+    border-radius: 4px;
+
+    &:hover {
+      background: rgba($saiph-gray, 0.5);
+    }
+  }
+
+  scrollbar-width: thin;
+  scrollbar-color: rgba($saiph-gray, 0.3) $saiph-light-gray;
+}
+
+@mixin dark-scrollbar {
+  &::-webkit-scrollbar-track {
+    background: $dark-card-bg;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+  }
+
+  scrollbar-color: rgba(255, 255, 255, 0.2) $dark-card-bg;
+}
+
+// Container
+.saiph-container {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  color: $saiph-gray;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+  height: 100vh;
   display: flex;
-  gap: 5px; // Espace entre les boutons
+  flex-direction: column;
+  overflow: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+  &.dark-mode {
+    background-color: $dark-bg;
+    color: $dark-text;
+
+    .saiph-header {
+      background-color: $dark-card-bg;
+      border-bottom-color: $dark-border;
+      @include dark-card-shadow;
+
+      h1, .tagline {
+        color: $dark-text;
+      }
+    }
+
+    .content-area {
+      @include dark-scrollbar;
+    }
+
+    .filter-options {
+      background: linear-gradient(to bottom, $dark-bg 0%, $dark-bg 80%, rgba($dark-bg, 0) 100%);
+
+      .form-select {
+        background: $dark-card-bg;
+        color: $dark-text;
+        border-color: $dark-border;
+      }
+    }
+
+    .incident-table-container {
+      mat-card {
+        background-color: $dark-card-bg;
+        @include dark-card-shadow;
+      }
+
+      mat-card-header {
+        background-color: rgba(255, 255, 255, 0.05);
+
+        mat-card-title {
+          color: $dark-text;
+        }
+      }
+
+      table {
+        color: $dark-text;
+
+        .mat-mdc-header-row {
+          background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .mat-mdc-header-cell {
+          background-color: rgba(255, 255, 255, 0.05);
+          color: $dark-text;
+        }
+
+        .mat-mdc-row {
+          border-bottom-color: $dark-border;
+
+          &:hover {
+            background-color: $dark-hover;
+          }
+        }
+
+        .mat-mdc-cell {
+          color: $dark-text;
+        }
+
+        .status-badge {
+          &.open {
+            background-color: rgba($dark-admin-color, 0.2);
+            color: $dark-admin-color;
+          }
+
+          &.closed {
+            background-color: rgba($dark-user-color, 0.2);
+            color: $dark-user-color;
+          }
+
+          &.in-progress {
+            background-color: rgba($dark-technician-color, 0.2);
+            color: $dark-technician-color;
+          }
+        }
+      }
+    }
+
+    .modal-overlay {
+      background-color: rgba(0, 0, 0, 0.5);
+
+      .modal-content {
+        background-color: $dark-card-bg;
+        color: $dark-text;
+
+        .form-group {
+          label {
+            color: $dark-text;
+          }
+
+          input, textarea, select {
+            background-color: $dark-card-bg;
+            color: $dark-text;
+            border-color: $dark-border;
+          }
+        }
+
+        .form-buttons {
+          button {
+            color: $dark-text;
+          }
+        }
+      }
+    }
+  }
 }
 
-.btn {
-  padding: 8px 12px;
+// Theme Toggle Button
+.theme-toggle {
+  background: transparent;
   border: none;
-  border-radius: 4px; // Arrondi pour les boutons
+  color: inherit;
   cursor: pointer;
-  transition: background-color 0.3s; // Transition pour l'effet de survol
+  padding: 8px;
+  border-radius: 50%;
+  @include transition;
 
-  &.btn-warning {
-    background-color: #ffc107; // Jaune
-    color: black;
-
-    &:hover {
-      background-color: #e0a800; // Couleur au survol
-    }
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: rotate(180deg);
   }
 
-  &.btn-danger {
-    background-color: #dc3545; // Rouge
-    color: white;
-
-    &:hover {
-      background-color: #c82333; // Couleur au survol
-    }
-  }
-
-  &.btn-secondary {
-    background-color: #6c757d; // Gris
-    color: white;
-
-    &:hover {
-      background-color: #5a6268; // Couleur au survol
-    }
-  }
-
-  &.btn-primary {
-    background-color: #007bff; // Bleu
-    color: white;
-
-    &:hover {
-      background-color: #0056b3; // Couleur au survol
-    }
+  mat-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
   }
 }
 
-.modal-overlay {
-  position: fixed;
+// Header
+.saiph-header {
+  position: sticky;
   top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5); // Fond semi-transparent
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-content {
-  background-color: white;
-  padding: 20px;
-  border-radius: 5px; // Arrondi pour la modale
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  width: 400px; // Largeur de la modale
-}
-
-.form-group {
-  margin-bottom: 15px; // Espace entre les groupes de formulaire
-}
-
-.form-buttons {
-  display: flex;
-  justify-content: space-between; // Espace entre les boutons
-}
-
-.bi-lock {
-  cursor: not-allowed; // Change le curseur pour indiquer que l'icône est non cliquable
-}
-.header {
+  z-index: 1000;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
-  background-color: #f8f9fa; // Couleur de fond de l'en-tête
-  border-bottom: 1px solid #dee2e6; // Bordure inférieure pour séparer l'en-tête du contenu
-}
+  padding: 15px 30px;
+  background-color: white;
+  border-bottom: 2px solid $saiph-border-color;
+  @include card-shadow;
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 
-.btn-secondary {
-  background-color: #6c757d; // Couleur de fond du bouton
-  color: #fff; // Couleur du texte
-  border: none; // Pas de bordure
-  padding: 0.5rem 1rem; // Espacement interne
-  border-radius: 0.25rem; // Coins arrondis
-  transition: background-color 0.3s; // Transition pour l'effet de survol
+  .logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 
-  &:hover {
-    background-color: #5a6268; // Couleur de fond au survol
-  }
-}
-
-.filter-options {
-  display: flex;
-  align-items: center;
-
-  label {
-    margin-right: 1rem; // Espacement à droite du label
-    font-weight: bold; // Mettre le label en gras
-    color: #343a40; // Couleur du texte
-  }
-
-  .form-select {
-    padding: 0.375rem 0.75rem; // Espacement interne
-    border: 1px solid #ced4da; // Bordure
-    border-radius: 0.25rem; // Coins arrondis
-    background-color: #fff; // Couleur de fond
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; // Transition pour l'effet de focus
-
-    &:focus {
-      border-color: #80bdff; // Couleur de bordure au focus
-      outline: 0; // Pas de contour
-      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); // Ombre au focus
+    h1 {
+      color: $saiph-gray;
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin: 0;
+      letter-spacing: 1px;
+      transition: color 0.3s ease;
     }
 
-    option {
-      padding: 0.5rem; // Espacement interne pour les options
+    .tagline {
+      color: $saiph-gray;
+      font-size: 0.85rem;
+      margin: 0;
+      font-style: italic;
+      transition: color 0.3s ease;
+    }
+
+    .logo-star {
+      position: relative;
+      width: 36px;
+      height: 36px;
+      margin-bottom: 8px;
+
+      .star-point {
+        position: absolute;
+        transition: transform 0.3s ease;
+
+        &.star-point-1 {
+          width: 30px;
+          height: 8px;
+          top: 16px;
+          left: 0;
+          background-color: $saiph-green;
+        }
+
+        &.star-point-2 {
+          width: 8px;
+          height: 30px;
+          top: 0;
+          left: 16px;
+          background-color: $saiph-yellow;
+        }
+
+        &.star-point-3 {
+          width: 20px;
+          height: 8px;
+          top: 16px;
+          right: 0;
+          background-color: $saiph-blue;
+        }
+
+        &.star-point-4 {
+          width: 8px;
+          height: 20px;
+          bottom: 0;
+          left: 16px;
+          background-color: $saiph-gray;
+        }
+      }
+
+      &:hover {
+        .star-point {
+          &.star-point-1 { transform: translateX(-2px); }
+          &.star-point-2 { transform: translateY(-2px); }
+          &.star-point-3 { transform: translateX(2px); }
+          &.star-point-4 { transform: translateY(2px); }
+        }
+      }
+    }
+  }
+
+  .button-group {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+
+    button {
+      @include transition;
+
+      mat-icon {
+        margin-right: 8px;
+      }
+
+      &:hover {
+        transform: translateY(-2px);
+      }
     }
   }
 }
+
+// Content Area
+.content-area {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+  @include custom-scrollbar;
+  height: calc(100vh - 90px);
+  transition: background-color 0.3s ease;
+
+  .filter-options {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+
+    label {
+      margin-right: 1rem;
+      font-weight: bold;
+      color: $saiph-gray;
+    }
+
+    .form-select {
+      padding: 0.375rem 0.75rem;
+      border: 1px solid $saiph-border-color;
+      border-radius: 0.25rem;
+      background-color: white;
+      transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+      &:focus {
+        border-color: $saiph-blue;
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba($saiph-blue, 0.25);
+      }
+
+      option {
+        padding: 0.5rem;
+      }
+    }
+  }
+
+  .incident-table-container {
+    max-width: 1200px;
+    margin: 0 auto;
+
+    mat-card {
+      @include card-shadow;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      max-height: calc(100vh - 250px);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+
+      mat-card-header {
+        background-color: $saiph-light-gray;
+        padding: 20px;
+        margin-bottom: 0;
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        transition: background-color 0.3s ease;
+
+        mat-card-title {
+          display: flex;
+          align-items: center;
+          color: $saiph-gray;
+          margin: 0;
+          transition: color 0.3s ease;
+
+          mat-icon {
+            margin-right: 10px;
+            color: $saiph-green;
+          }
+        }
+      }
+
+      mat-card-content {
+        padding: 0;
+        overflow: auto;
+        @include custom-scrollbar;
+
+        .dark-mode & {
+          @include dark-scrollbar;
+        }
+      }
+    }
+
+    table {
+      width: 100%;
+      transition: color 0.3s ease;
+
+      .mat-mdc-header-row {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background-color: $saiph-light-gray;
+        transition: background-color 0.3s ease;
+      }
+
+      .mat-mdc-header-cell {
+        background-color: $saiph-light-gray;
+        color: $saiph-gray;
+        font-weight: 600;
+        padding: 16px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      .mat-mdc-cell {
+        padding: 16px;
+        transition: color 0.3s ease;
+      }
+
+      .mat-mdc-row {
+        @include transition;
+        border-bottom: 1px solid $saiph-border-color;
+        transition: background-color 0.3s ease, border-bottom-color 0.3s ease;
+
+        &:hover {
+          background-color: rgba($saiph-light-gray, 0.5);
+        }
+      }
+
+      .status-badge {
+        padding: 5px 10px;
+        border-radius: 3px;
+        font-weight: bold;
+
+        &.open {
+          background-color: rgba($admin-color, 0.15);
+          color: $admin-color;
+        }
+
+        &.closed {
+          background-color: rgba($user-color, 0.15);
+          color: $user-color;
+        }
+
+        &.in-progress {
+          background-color: rgba($technician-color, 0.15);
+          color: $technician-color;
+        }
+      }
+
+      .incident-actions {
+        display: flex;
+        gap: 5px;
+
+        button {
+          @include transition;
+
+          &:hover {
+            transform: translateY(-2px);
+          }
+        }
+      }
+    }
+  }
+}
+
+// Modal Overlay
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -187,46 +510,309 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
-}
 
-.modal-content {
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  width: 500px;
-  max-width: 90%;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
+  .modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 500px;
+    max-width: 90%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
-.btn-close {
-  // Personnalisation de l'icône "X"
-  &:hover {
-    opacity: 0.8; // Effet de survol
+    .btn-close {
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+
+      input, textarea, select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+    }
+
+    .form-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
   }
 }
 
-.form-group {
-  margin-bottom: 15px;
+// Responsive Design
+@media (max-width: 768px) {
+  .saiph-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 15px 20px;
 
-  label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
+    .button-group {
+      margin-top: 15px;
+      width: 100%;
+      justify-content: space-between;
+    }
   }
 
-  input,
-  textarea,
-  select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+  .content-area {
+    padding: 15px;
+    height: calc(100vh - 140px);
+  }
+
+  .incident-table-container {
+    overflow-x: auto;
+    @include custom-scrollbar;
+
+    .dark-mode & {
+      @include dark-scrollbar;
+    }
+
+    table {
+      min-width: 600px;
+    }
+
+    mat-card {
+      max-height: calc(100vh - 300px);
+    }
   }
 }
+// Add these styles to your existing SCSS file
 
-.form-buttons {
+// Empty state styling
+.empty-state {
   display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 20px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  color: $saiph-gray;
+  text-align: center;
+
+  mat-icon {
+    font-size: 48px;
+    height: 48px;
+    width: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+
+  p {
+    font-size: 16px;
+    opacity: 0.8;
+  }
+
+  .dark-mode & {
+    color: $dark-text;
+  }
+}
+
+// Fix table cell display and sizing
+.incident-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  
+  .mat-mdc-header-cell, 
+  .mat-mdc-cell {
+    padding: 16px;
+    text-align: left;
+    vertical-align: middle;
+  }
+  
+  .mat-mdc-header-cell {
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+  
+  .mat-mdc-cell {
+    max-width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    
+    &:nth-child(2) { // Description column
+      max-width: 300px;
+    }
+  }
+}
+
+// Status badge fixes - ensure consistent mapping between HTML and CSS
+.status-badge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-weight: 500;
+  text-align: center;
+  min-width: 80px;
+  
+  &.open {
+    background-color: rgba($admin-color, 0.15);
+    color: $admin-color;
+  }
+  
+  &.in-progress {
+    background-color: rgba($technician-color, 0.15);
+    color: $technician-color;
+  }
+  
+  &.closed {
+    background-color: rgba($user-color, 0.15);
+    color: $user-color;
+  }
+  
+  .dark-mode & {
+    &.open {
+      background-color: rgba($dark-admin-color, 0.2);
+      color: $dark-admin-color;
+    }
+    
+    &.in-progress {
+      background-color: rgba($dark-technician-color, 0.2);
+      color: $dark-technician-color;
+    }
+    
+    &.closed {
+      background-color: rgba($dark-user-color, 0.2);
+      color: $dark-user-color;
+    }
+  }
+}
+
+// Better mobile responsiveness
+@media (max-width: 768px) {
+  .incident-table-container {
+    margin: 0 -15px;
+    width: calc(100% + 30px);
+    
+    .incident-table {
+      .mat-mdc-header-cell, 
+      .mat-mdc-cell {
+        padding: 12px 8px;
+        font-size: 0.9rem;
+      }
+      
+      .mat-mdc-cell:nth-child(2) { // Hide description on mobile
+        display: none;
+      }
+      
+      .status-badge {
+        min-width: 60px;
+        padding: 4px 6px;
+        font-size: 0.8rem;
+      }
+    }
+    
+    .incident-actions {
+      button {
+        padding: 0;
+        min-width: 32px;
+        
+        mat-icon {
+          font-size: 18px;
+          height: 18px;
+          width: 18px;
+        }
+      }
+    }
+  }
+}
+// Add this to your SCSS file to fix the white header in dark mode
+
+.saiph-container {
+  &.dark-mode {
+    // Fix for white mat-card-header in dark mode
+    mat-card {
+      mat-card-header, .mat-mdc-card-header {
+        background-color: $dark-card-bg !important; // Use !important to override Angular Material's default styles
+        border-bottom: 1px solid $dark-border;
+        
+        .mat-mdc-card-header-text {
+          color: $dark-text;
+        }
+        
+        mat-card-title, .mat-mdc-card-title {
+          color: $dark-text;
+          
+          mat-icon {
+            color: $dark-admin-color; // Change icon color to match dark theme
+          }
+        }
+      }
+    }
+    
+    // Ensure the header row in the table is styled correctly
+    .incident-table-container {
+      .mat-mdc-header-row, thead tr {
+        background-color: rgba($dark-card-bg, 0.8) !important;
+      }
+    }
+  }
+}
+
+// General fix for mat-card-header to ensure styling is consistent
+.mat-card-header, .mat-mdc-card-header {
+  transition: background-color 0.3s ease, color 0.3s ease;
+  
+  .mat-mdc-card-title {
+    display: flex;
+    align-items: center;
+    
+    mat-icon {
+      margin-right: 10px;
+    }
+  }
+}
+// Add this to your SCSS file to style the modal close button properly
+
+.modal-overlay {
+  .modal-content {
+    position: relative;
+    
+    // Style for the single close button
+    .modal-close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 10;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 50%;
+      transition: background-color 0.2s ease;
+      
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+      
+      mat-icon {
+        font-size: 20px;
+        height: 20px;
+        width: 20px;
+      }
+    }
+    
+    // Dark mode styling for close button
+    .dark-mode & {
+      .modal-close-btn {
+        color: $dark-text;
+        
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.1);
+        }
+      }
+    }
+  }
 }
