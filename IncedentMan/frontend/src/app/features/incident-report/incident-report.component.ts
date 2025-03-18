@@ -1,13 +1,31 @@
-import { Component } from '@angular/core';
+import { Component, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
     selector: 'app-incident-report',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, HttpClientModule, RouterLink],
+    imports: [CommonModule, ReactiveFormsModule, HttpClientModule, RouterLink,
+        MatFormFieldModule,
+            MatInputModule,
+            MatSelectModule,
+            MatButtonModule,
+            MatIconModule,
+            MatCardModule,
+            MatChipsModule,
+            MatTooltipModule
+    ],
     templateUrl: 'incident-report.component.html',
     styleUrl: 'incident-report.component.scss'
 })
@@ -49,8 +67,19 @@ export class IncidentReportComponent {
 
     constructor(
         private fb: FormBuilder,
-        private http: HttpClient
+        private http: HttpClient,
+        public themeService:ThemeService,
+        public router:  Router
     ) {
+        const savedTheme = localStorage.getItem('theme');
+            effect(() => {
+              if (this.themeService.getCurrentTheme()) {
+                document.body.classList.add('dark-theme');
+              } else {
+                document.body.classList.remove('dark-theme');
+              }
+            });
+        
         this.incidentForm = this.fb.group({
             title: ['', Validators.required],
             description: ['', Validators.required],
@@ -80,10 +109,19 @@ export class IncidentReportComponent {
         });
     }
 
+    toggleDarkMode(): void {
+        this.themeService.toggleDarkMode();
+      }
+      logout() {
+        this.router.navigate(['/login']);
+        localStorage.removeItem('jwtToken');
+      }
+    
     isFieldInvalid(fieldName: string): boolean {
         const field = this.incidentForm.get(fieldName);
         return field ? field.invalid && (field.dirty || field.touched) : false;
     }
+
 
     getPrediction() {
         // Only get prediction if description has meaningful content
