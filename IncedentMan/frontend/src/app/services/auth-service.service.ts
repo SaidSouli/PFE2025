@@ -26,9 +26,12 @@ export class AuthService {
           localStorage.setItem('jwtToken', response.token);
           localStorage.setItem('username', response.username);
           localStorage.setItem('role', response.role);
+          localStorage.setItem('firstLogin',response.firstLogin)
           this.currentUserSubject.next(response);
-
-          this.redirectBasedOnRole(response.role);
+          if (response.firstLogin){
+            this.router.navigate(['/set-password'])
+          }else{
+          this.redirectBasedOnRole(response.role);}
         } else {
           console.error('No token found in response');
         }
@@ -48,6 +51,24 @@ export class AuthService {
   }
 
   getCurrentUser() {
+    if (!this.currentUserSubject.value) {
+      
+      const token = localStorage.getItem('jwtToken');
+      const username = localStorage.getItem('username');
+      const role = localStorage.getItem('role');
+      const firstLogin = localStorage.getItem('firstLogin');
+      
+      if (token && username && role) {
+        const user = {
+          token,
+          username,
+          role,
+          firstLogin: firstLogin === 'true'
+        };
+        this.currentUserSubject.next(user);
+        return user;
+      }
+    }
     return this.currentUserSubject.value;
   }
 
@@ -55,13 +76,13 @@ export class AuthService {
     return !!localStorage.getItem('jwtToken');
   }
 
-  private redirectBasedOnRole(role: string) {
+  public redirectBasedOnRole(role: string) {
     switch (role.toLowerCase()) {
       case 'admin':
         this.router.navigate(['/admin']);
         break;
       case 'user':
-        this.router.navigate(['/report-incident']);
+        this.router.navigate(['/incident-consult']);
         break;
       case 'technician':
         this.router.navigate(['/technician']);
@@ -70,4 +91,13 @@ export class AuthService {
         this.router.navigate(['/home']);
     }
   }
+  
+isFirstLogin(): boolean {
+  return localStorage.getItem('firstLogin') === 'true';
+}
+
+
+clearFirstLoginFlag(): void {
+  localStorage.setItem('firstLogin', 'false');
+}
 }

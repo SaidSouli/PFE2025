@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin  
@@ -115,7 +116,8 @@ public ResponseEntity<?> createUser(@RequestBody Map<String, Object> userData) {
             "message", "Login successful",
             "token", token, 
             "role", user.getRole(),
-            "username", user.getUsername()
+            "username", user.getUsername(),
+            "firstLogin", user.isFirstLogin()
         ));
     }
     @DeleteMapping("/{id}")
@@ -145,6 +147,14 @@ public ResponseEntity<?> createUser(@RequestBody Map<String, Object> userData) {
             return ResponseEntity.ok(user); 
         } else {
             return ResponseEntity.notFound().build(); 
+        }
     }
+    @PutMapping("{username}/password")
+    public ResponseEntity<User> setUserPassword(@PathVariable String username, @RequestBody Map<String, String> passwordData) {
+        String password = passwordData.get("password");
+        User user = userService.setUserPassword(username, password);
+    
+        return ResponseEntity.ok(user);
+    
 }
 }

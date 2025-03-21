@@ -130,4 +130,13 @@ public class UserService {
         Optional<User> userOptional = userRepository.findById(id);
         return userOptional.orElse(null); 
     }
+    public User setUserPassword (String username, String password){
+        User user = userRepository.findByUsername(username);
+        
+        user.setPassword(password);
+        user.setFirstLogin(false);
+        return userRepository.save(user);
+    
+    }
+
 }

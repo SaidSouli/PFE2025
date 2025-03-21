@@ -18,6 +18,8 @@ public class User  {
     private String email;
 
     private String role;
+
+    private boolean firstLogin =true ;
     
     
     public User() {}
@@ -40,4 +42,13 @@ public class User  {
     public void setEmail(String email) { this.email = email; }
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
+
+    public boolean isFirstLogin() {
+        return firstLogin;
+    }
+
+    public void setFirstLogin(boolean firstLogin) {
+        this.firstLogin = firstLogin;
+    }
+    
 }

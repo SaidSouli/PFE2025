@@ -8,6 +8,7 @@ import { IncidentReportComponent } from './features/incident-report/incident-rep
 import { TechnicianComponent } from './technician/technician.component';
 import { AssignedIncidentsComponent } from './assigned-incidents/assigned-incidents.component';
 import { IncidentConsultComponent } from './incident-consult/incident-consult.component';
+import { SetPasswordComponent } from './set-password/set-password.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -19,5 +20,6 @@ export const routes: Routes = [
   {path: 'report-incident', component:IncidentReportComponent },
   {path: 'technician', component:TechnicianComponent },
   {path:'assigned-incidents',component:AssignedIncidentsComponent},
-  {path:'incident-consult',component:IncidentConsultComponent}
+  {path:'incident-consult',component:IncidentConsultComponent},
+  {path:'set-password',component : SetPasswordComponent}
 ];

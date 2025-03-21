@@ -300,8 +300,23 @@ export class IncidentConsultComponent implements OnInit {
  * @param newStatus The new status to set
  */
 private updateIncidentInLists(newStatus: string): void {
+  // Guard clause to handle null case
+  if (!this.selectedIncident) {
+    console.error('No selected incident when updating lists');
+    return;
+  }
+
+  // Guard clause for missing ID
+  if (!this.selectedIncident.id) {
+    console.error('Selected incident has no ID when updating lists');
+    return;
+  }
+
+  // Now TypeScript knows selectedIncident and its id are not null
+  const incidentId = this.selectedIncident.id;
+  
   // Update main incidents list
-  const index = this.incidents.findIndex(inc => inc.id === this.selectedIncident!.id);
+  const index = this.incidents.findIndex(inc => inc.id === incidentId);
   if (index !== -1) {
     this.incidents[index].status = newStatus;
   }

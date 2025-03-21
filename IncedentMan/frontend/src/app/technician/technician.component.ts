@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { NgFor, NgClass, NgIf, SlicePipe } from '@angular/common';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { NgFor, NgClass, NgIf, SlicePipe, isPlatformBrowser } from '@angular/common';
 import { Incident } from '../../../model/incident.model';
 import { Specialization } from '../../../model/specialization.model';
 import { TechnicianService } from '../services/technician.service';
 import { Router } from '@angular/router';
-
+import { LocalStorageService } from '../services/localstorage.service';
 @Component({
   selector: 'app-technicien',
   templateUrl: './technician.component.html',
@@ -15,23 +15,29 @@ import { Router } from '@angular/router';
 export class TechnicianComponent implements OnInit {
   incidents: Incident[] = [];
   specializations: Specialization[] = [];
-  username = '';
+  username: string | null = null;
   expandedIncidents: Map<string, boolean> = new Map();
 
   constructor(
     private technicianService: TechnicianService,
-    private router: Router
+    private router: Router,
+    private lss : LocalStorageService,
+    @Inject(PLATFORM_ID) private platformId: object 
   ) {}
 
   ngOnInit(): void {
-    const username = localStorage.getItem('username');
-    console.log('Retrieved username:', username);
-    if (username) {
-      this.fetchTechnicianSpecializations(username);
-    } else {
-      console.error('Username not found in local storage');
+    if (isPlatformBrowser(this.platformId)) {
+      const username = this.lss.getItem('username');
+      console.log('Retrieved username in ngOnInit:', username);  // Log here
+  
+      if (username) {
+        this.fetchTechnicianSpecializations(username);
+      } else {
+        console.error('Username not found in local storage');
+      }
     }
   }
+  
 
   toggleExpanded(incident: Incident): void {
     const incidentId = incident.id!;
@@ -66,7 +72,7 @@ export class TechnicianComponent implements OnInit {
   }
 
   takeCharge(IncidentId: string): void {
-    const username = localStorage.getItem('username');
+    const username = this.lss.getItem('username');
     if (!username) {
       console.error('username not found in the local storage');
       return;
@@ -98,8 +104,8 @@ export class TechnicianComponent implements OnInit {
 
   logout() {
     this.router.navigate(['/login']);
-    localStorage.removeItem('jwtToken');
-    localStorage.removeItem('username');
+    this.lss.removeItem('jwtToken');
+    this.lss.removeItem('username');
   }
 
   getPriorityLabel(priority?: number): string {

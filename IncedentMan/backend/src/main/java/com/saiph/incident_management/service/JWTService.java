@@ -50,7 +50,7 @@ public class JWTService {
 
     private Claims parseClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(secretKey) // Use the generated secret key
+                .setSigningKey(secretKey) 
                 .build()
                 .parseClaimsJws(token)
                 .getBody();

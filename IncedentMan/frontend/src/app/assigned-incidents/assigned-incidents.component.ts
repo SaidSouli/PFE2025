@@ -1,5 +1,6 @@
 // assigned-incidents.component.ts
-import { Component, OnInit } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Component, OnInit ,Inject,PLATFORM_ID} from '@angular/core';
 import { Incident } from '../../../model/incident.model';
 import { Solution } from '../../../model/solution.model';
 import { IncidentService } from '../services/incident.service';
@@ -7,6 +8,7 @@ import { SolutionService } from '../services/solution.service';
 import { NgFor, NgIf, NgClass } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { LocalStorageService } from '../services/localstorage.service';
 
 @Component({
   selector: 'app-assigned-incidents',
@@ -25,17 +27,25 @@ export class AssignedIncidentsComponent implements OnInit {
   constructor(
     private incidentService: IncidentService,
     private solutionService: SolutionService,
-    private router: Router
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: object ,
+    private lss:LocalStorageService
   ) {}
 
   ngOnInit(): void {
-    this.username = localStorage.getItem('username');
-    if (this.username) {
-      this.loadIncidents();
-    } else {
-      console.error('No username found in local storage');
-      // Redirect to login
-      this.router.navigate(['/login']);
+    if (isPlatformBrowser(this.platformId)) {
+      
+      setTimeout(() => {
+        this.username = this.lss.getItem('username');
+        console.log('Retrieved username after delay:', this.username);
+        
+        if (this.username) {
+          this.loadIncidents();
+        } else {
+          console.error('No username found in local storage');
+          this.router.navigate(['/login']);
+        }
+      }, 100);
     }
   }
 
@@ -63,7 +73,7 @@ export class AssignedIncidentsComponent implements OnInit {
   }
 
   filterIncidents(): void {
-    this.filteredIncidents = this.incidents.filter(incident => incident.status ==='In Progress');
+    this.filteredIncidents = this.incidents.filter(incident => incident.status ==='In progress');
   }
 
   submitSolution(incident: Incident): void {
@@ -116,8 +126,8 @@ export class AssignedIncidentsComponent implements OnInit {
 
   logout() {
     this.router.navigate(['/login']);
-    localStorage.removeItem('jwtToken');
-    localStorage.removeItem('username');
+    this.lss.removeItem('jwtToken');
+    this.lss.removeItem('username');
   }
 
   getPriorityClass(priority: number | undefined): string {
