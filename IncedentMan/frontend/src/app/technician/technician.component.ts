@@ -1,15 +1,29 @@
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, effect, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { NgFor, NgClass, NgIf, SlicePipe, isPlatformBrowser } from '@angular/common';
 import { Incident } from '../../../model/incident.model';
 import { Specialization } from '../../../model/specialization.model';
 import { TechnicianService } from '../services/technician.service';
 import { Router } from '@angular/router';
 import { LocalStorageService } from '../services/localstorage.service';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ThemeService } from '../services/theme.service';
 @Component({
   selector: 'app-technicien',
   templateUrl: './technician.component.html',
   styleUrls: ['./technician.component.scss'],
-  imports: [NgFor, NgClass, NgIf, SlicePipe],
+  imports: [NgFor, NgClass, NgIf, SlicePipe,MatFormFieldModule, MatInputModule, MatSelectModule,
+        MatButtonModule, MatIconModule, MatCardModule,
+        MatChipsModule, MatTooltipModule, MatTableModule,MatProgressSpinnerModule
+      ],
   standalone: true
 })
 export class TechnicianComponent implements OnInit {
@@ -22,8 +36,19 @@ export class TechnicianComponent implements OnInit {
     private technicianService: TechnicianService,
     private router: Router,
     private lss : LocalStorageService,
-    @Inject(PLATFORM_ID) private platformId: object 
-  ) {}
+    @Inject(PLATFORM_ID) private platformId: object,
+    public themeService:ThemeService 
+  ) {
+      const savedTheme = localStorage.getItem('theme');
+              effect(() => {
+                if (this.themeService.getCurrentTheme()) {
+                  document.body.classList.add('dark-theme');
+                } else {
+                  document.body.classList.remove('dark-theme');
+                }
+              });
+
+  }
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -117,5 +142,8 @@ export class TechnicianComponent implements OnInit {
       case 4: return 'Critical'
       default: return 'Unknown';
     }
+  }
+  toggleDarkMode(): void {
+    this.themeService.toggleDarkMode();
   }
 }

@@ -1,4 +1,5 @@
 @use "sass:color";
+@use '@angular/material' as mat;
 
 // SAIPH Color Palette
 $saiph-gray: #5a6872;
@@ -13,115 +14,316 @@ $priority-high: #e74c3c;
 $priority-medium: #f39c12;
 $priority-low: #27ae60;
 
+// Dark Mode Colors
+$dark-bg: #1a1f2e;
+$dark-card-bg: #242837;
+$dark-text: #e0e0e0;
+$dark-border: #2f3446;
+$dark-hover: rgba(255, 255, 255, 0.05);
+
 // Mixins
 @mixin card-shadow {
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+@mixin dark-card-shadow {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 @mixin transition {
   transition: all 0.3s ease;
 }
 
-// Global Styles
+// Custom Scrollbar Mixin
+@mixin custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $saiph-light-gray;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba($saiph-gray, 0.3);
+    border-radius: 4px;
+    
+    &:hover {
+      background: rgba($saiph-gray, 0.5);
+    }
+  }
+
+  scrollbar-width: thin;
+  scrollbar-color: rgba($saiph-gray, 0.3) $saiph-light-gray;
+}
+
+@mixin dark-scrollbar {
+  &::-webkit-scrollbar-track {
+    background: $dark-card-bg;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+  }
+
+  scrollbar-color: rgba(255, 255, 255, 0.2) $dark-card-bg;
+}
+
+// Container
 .saiph-container {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
   color: $saiph-gray;
   background-color: #f9f9f9;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  @include custom-scrollbar;
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+  &.dark-mode {
+    background-color: $dark-bg;
+    color: $dark-text;
+    @include dark-scrollbar;
+
+    .saiph-header {
+      background-color: $dark-card-bg;
+      border-bottom-color: $dark-border;
+      @include dark-card-shadow;
+
+      h1, .tagline {
+        color: $dark-text;
+      }
+      
+      .logo-container {
+        .logo-img {
+          background-color: rgba(255, 255, 255, 0.1);
+          
+          &::after {
+            border-color: $dark-card-bg;
+          }
+        }
+      }
+    }
+
+    .incidents-list {
+      .list-header {
+        h2 {
+          color: $dark-text;
+          
+          &:after {
+            background-color: $saiph-green;
+          }
+        }
+      }
+    }
+
+    .table-container {
+      background-color: $dark-card-bg;
+      @include dark-card-shadow;
+    }
+
+    .incidents-table {
+      th {
+        background-color: rgba(0, 0, 0, 0.2);
+        color: $dark-text;
+      }
+      
+      td {
+        border-bottom-color: $dark-border;
+        color: rgba($dark-text, 0.9);
+      }
+      
+      .title-cell {
+        color: $dark-text;
+      }
+      
+      .active-row {
+        background-color: rgba($saiph-blue, 0.1);
+      }
+      
+      .expanded-row {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+      
+      .expanded-content {
+        .expanded-section {
+          h4 {
+            color: $dark-text;
+          }
+          
+          p {
+            color: rgba($dark-text, 0.9);
+          }
+        }
+        
+        .details-grid {
+          .detail-item {
+            .detail-label {
+              color: rgba($dark-text, 0.7);
+            }
+            
+            .detail-value {
+              color: $dark-text;
+            }
+          }
+        }
+      }
+    }
+    
+    .expand-button {
+      color: $dark-text;
+      
+      &:hover {
+        background-color: rgba($saiph-blue, 0.2);
+      }
+    }
+    
+    .priority-badge, .category-badge, .status-badge {
+      color: $dark-text;
+    }
+    
+    .priority-badge {
+      &.priority-1 {
+        background-color: rgba($priority-high, 0.2);
+      }
+      
+      &.priority-2 {
+        background-color: rgba($priority-medium, 0.2);
+      }
+      
+      &.priority-3 {
+        background-color: rgba($priority-low, 0.2);
+      }
+    }
+    
+    .category-badge {
+      background-color: rgba($saiph-blue, 0.2);
+    }
+    
+    .status-badge {
+      background-color: rgba($saiph-yellow, 0.2);
+    }
+    
+    .theme-toggle {
+      &::before {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+  }
 }
 
-// Header Styles
+// Header
 .saiph-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 20px;
-  margin-bottom: 30px;
+  padding: 15px 30px;
+  background-color: white;
   border-bottom: 2px solid $saiph-border-color;
+  @include card-shadow;
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 
   .logo-container {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    gap: 15px;
+
+    .branding {
+      display: flex;
+      flex-direction: column;
+    }
 
     h1 {
       color: $saiph-gray;
-      font-size: 2.5rem;
+      font-size: 2.2rem;
       font-weight: 700;
       margin: 0;
       letter-spacing: 1px;
+      transition: color 0.3s ease;
     }
 
     .tagline {
       color: $saiph-gray;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       margin: 0;
       font-style: italic;
+      transition: color 0.3s ease;
     }
 
-    .logo-star {
+    .logo-img {
       position: relative;
-      width: 40px;
-      height: 40px;
-      margin-bottom: 10px;
-
-      .star-point {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: $saiph-light-gray;
+      border-radius: 12px;
+      padding: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      
+      &:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+      
+      &::after {
+        content: '';
         position: absolute;
-        background-color: $saiph-yellow;
-
-        &.star-point-1 {
-          width: 30px;
-          height: 8px;
-          top: 16px;
-          left: 0;
-          background-color: $saiph-green;
-        }
-
-        &.star-point-2 {
-          width: 8px;
-          height: 30px;
-          top: 0;
-          left: 16px;
-          background-color: $saiph-yellow;
-        }
-
-        &.star-point-3 {
-          width: 20px;
-          height: 8px;
-          top: 16px;
-          right: 0;
-          background-color: $saiph-blue;
-        }
-
-        &.star-point-4 {
-          width: 8px;
-          height: 20px;
-          bottom: 0;
-          left: 16px;
-          background-color: $saiph-gray;
-        }
+        top: -3px;
+        right: -3px;
+        width: 12px;
+        height: 12px;
+        background-color: $saiph-green;
+        border-radius: 50%;
+        border: 2px solid white;
       }
     }
   }
 
+  .button-group {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  
   .logout-button {
-    background-color: $saiph-gray;
+    background-color: #f44336;
     color: white;
     border: none;
     padding: 10px 20px;
-    border-radius: 4px;
+    border-radius: 24px;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 8px;
     @include transition;
+    border: none;
+    outline: none;
 
     &:hover {
-      background-color: color.adjust($saiph-gray, $lightness: -10%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
     }
 
     i {
@@ -130,8 +332,53 @@ $priority-low: #27ae60;
   }
 }
 
-// Incidents List Styles
+// Theme Toggle Button
+.theme-toggle {
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  @include transition;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 50%;
+    transform: scale(0);
+    transition: transform 0.3s ease;
+  }
+
+  &:hover {
+    transform: rotate(180deg);
+    
+    &::before {
+      transform: scale(1);
+    }
+  }
+
+  mat-icon {
+    position: relative;
+    z-index: 1;
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+  }
+}
+
+// Main Content
 .incidents-list {
+  flex: 1;
+  padding: 20px 30px 30px;
+  
   .list-header {
     display: flex;
     justify-content: space-between;
@@ -160,14 +407,17 @@ $priority-low: #27ae60;
       background-color: $saiph-blue;
       color: white;
       border: none;
-      padding: 10px 20px;
-      border-radius: 4px;
+      padding: 12px 24px;
+      border-radius: 24px;
       font-weight: 600;
       cursor: pointer;
       @include transition;
+      box-shadow: 0 2px 8px rgba(0, 160, 223, 0.2);
 
       &:hover {
-        background-color: color.adjust($saiph-blue, $lightness: -10%);
+        transform: translateY(-2px);
+        background-color: color.adjust($saiph-blue, $lightness: -5%);
+        box-shadow: 0 4px 12px rgba(0, 160, 223, 0.3);
       }
     }
   }
@@ -176,9 +426,10 @@ $priority-low: #27ae60;
 // Table Styles
 .table-container {
   background-color: white;
-  border-radius: 8px;
+  border-radius: 12px;
   @include card-shadow;
   overflow: hidden;
+  margin-bottom: 30px;
 }
 
 .incidents-table {
@@ -186,7 +437,7 @@ $priority-low: #27ae60;
   border-collapse: collapse;
 
   th, td {
-    padding: 15px;
+    padding: 16px;
     text-align: left;
     border-bottom: 1px solid $saiph-border-color;
   }
@@ -195,9 +446,10 @@ $priority-low: #27ae60;
     background-color: $saiph-light-gray;
     color: $saiph-gray;
     font-weight: 600;
+    font-size: 0.95rem;
 
     &.expand-column {
-      width: 40px;
+      width: 50px;
     }
   }
 
@@ -211,6 +463,7 @@ $priority-low: #27ae60;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: color.adjust($saiph-gray, $lightness: 10%);
   }
 
   // Expanded row styles
@@ -227,10 +480,10 @@ $priority-low: #27ae60;
   }
 
   .expanded-content {
-    padding: 20px;
+    padding: 24px;
 
     .expanded-section {
-      margin-bottom: 20px;
+      margin-bottom: 24px;
 
       &:last-child {
         margin-bottom: 0;
@@ -239,7 +492,7 @@ $priority-low: #27ae60;
       h4 {
         color: $saiph-gray;
         font-size: 1.1rem;
-        margin: 0 0 10px 0;
+        margin: 0 0 12px 0;
         font-weight: 600;
       }
 
@@ -254,20 +507,26 @@ $priority-low: #27ae60;
     .details-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 15px;
+      gap: 16px;
+      background-color: rgba($saiph-light-gray, 0.5);
+      border-radius: 8px;
+      padding: 16px;
 
       .detail-item {
         display: flex;
         flex-direction: column;
-        gap: 5px;
+        gap: 6px;
 
         .detail-label {
           font-size: 0.9rem;
           color: color.adjust($saiph-gray, $lightness: 20%);
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
         }
 
         .detail-value {
           font-weight: 500;
+          color: $saiph-gray;
         }
       }
     }
@@ -276,11 +535,15 @@ $priority-low: #27ae60;
 
 // Badge Styles
 .priority-badge {
-  padding: 5px 10px;
+  padding: 6px 12px;
   border-radius: 20px;
   font-size: 0.8rem;
   font-weight: 600;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
   &.priority-1 {
     background-color: rgba($priority-high, 0.1);
@@ -299,21 +562,23 @@ $priority-low: #27ae60;
 }
 
 .category-badge {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 4px;
+  display: inline-flex;
+  padding: 6px 12px;
+  border-radius: 6px;
   font-size: 0.9rem;
   background-color: rgba($saiph-blue, 0.1);
   color: $saiph-blue;
+  font-weight: 500;
 }
 
 .status-badge {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 4px;
+  display: inline-flex;
+  padding: 6px 12px;
+  border-radius: 6px;
   font-size: 0.9rem;
   background-color: rgba($saiph-yellow, 0.1);
   color: color.adjust($saiph-yellow, $lightness: -10%);
+  font-weight: 500;
 }
 
 .take-charge-button {
@@ -321,13 +586,17 @@ $priority-low: #27ae60;
   color: white;
   border: none;
   padding: 8px 16px;
-  border-radius: 4px;
+  border-radius: 20px;
   font-weight: 600;
+  font-size: 0.9rem;
   cursor: pointer;
   @include transition;
+  box-shadow: 0 2px 6px rgba(140, 179, 63, 0.2);
 
   &:hover {
-    background-color: color.adjust($saiph-green, $lightness: -10%);
+    background-color: color.adjust($saiph-green, $lightness: -5%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(140, 179, 63, 0.3);
   }
 }
 
@@ -360,11 +629,66 @@ $priority-low: #27ae60;
   }
 }
 
+// No Data State
+.no-data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 0;
+  background-color: white;
+  border-radius: 12px;
+  @include card-shadow;
+  text-align: center;
+  
+  .no-data-icon {
+    font-size: 48px;
+    color: rgba($saiph-gray, 0.3);
+    margin-bottom: 16px;
+  }
+  
+  h3 {
+    font-size: 1.4rem;
+    color: $saiph-gray;
+    margin: 0 0 8px 0;
+  }
+  
+  p {
+    color: color.adjust($saiph-gray, $lightness: 20%);
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  .dark-mode & {
+    background-color: $dark-card-bg;
+    
+    .no-data-icon {
+      color: rgba($dark-text, 0.3);
+    }
+    
+    h3 {
+      color: $dark-text;
+    }
+    
+    p {
+      color: rgba($dark-text, 0.7);
+    }
+  }
+}
+
 // Responsive Styles
 @media (max-width: 1024px) {
+  .saiph-header {
+    padding: 15px 20px;
+  }
+  
+  .incidents-list {
+    padding: 20px;
+  }
+  
   .incidents-table {
     th, td {
-      padding: 12px 8px;
+      padding: 14px 10px;
     }
 
     .description-cell {
@@ -378,6 +702,19 @@ $priority-low: #27ae60;
     flex-direction: column;
     align-items: flex-start;
     gap: 20px;
+    
+    .button-group {
+      width: 100%;
+      justify-content: space-between;
+    }
+    
+    .logo-container {
+      .branding {
+        h1 {
+          font-size: 1.8rem;
+        }
+      }
+    }
   }
 
   .incidents-list .list-header {
@@ -387,6 +724,10 @@ $priority-low: #27ae60;
 
     .assigned-button {
       width: 100%;
+    }
+    
+    h2 {
+      font-size: 1.5rem;
     }
   }
 
@@ -402,5 +743,17 @@ $priority-low: #27ae60;
         grid-template-columns: 1fr;
       }
     }
+  }
+}
+
+@media (max-width: 480px) {
+  .saiph-header {
+    .logo-container {
+      width: 100%;
+    }
+  }
+  
+  .incidents-list {
+    padding: 15px;
   }
 }

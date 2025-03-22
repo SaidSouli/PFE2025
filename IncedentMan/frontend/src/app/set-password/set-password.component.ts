@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, effect, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from '../services/users.service';
 import { AuthService } from '../services/auth-service.service';
@@ -13,8 +13,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { RouterModule } from '@angular/router';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { Router, RouterModule } from '@angular/router';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
+import { ThemeService } from '../services/theme.service';
 
 @Component({
   selector: 'app-set-password',
@@ -41,8 +42,20 @@ export class SetPasswordComponent implements OnInit {
     private fb: FormBuilder,
     private userService: UserService,
     private authService: AuthService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    public themeService : ThemeService,
+    private router:Router
   ) {
+    
+    const savedTheme = localStorage.getItem('theme');
+        effect(() => {
+          if (this.themeService.getCurrentTheme()) {
+            document.body.classList.add('dark-theme');
+          } else {
+            document.body.classList.remove('dark-theme');
+          }
+        });
+    
     this.passwordForm = this.fb.group({
       currentPassword: ['', [Validators.required]],
       newPassword: ['', [Validators.required, Validators.minLength(8)]],
@@ -118,5 +131,12 @@ export class SetPasswordComponent implements OnInit {
   // Get form control for easier access in template
   get f() {
     return this.passwordForm.controls;
+  }
+  logout() {
+    this.router.navigate(['/login']);
+    localStorage.removeItem('jwtToken');
+  }
+  toggleDarkMode(): void {
+    this.themeService.toggleDarkMode();
   }
 }

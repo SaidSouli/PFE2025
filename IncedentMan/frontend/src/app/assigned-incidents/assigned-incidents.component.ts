@@ -1,6 +1,6 @@
 // assigned-incidents.component.ts
 import { isPlatformBrowser } from '@angular/common';
-import { Component, OnInit ,Inject,PLATFORM_ID} from '@angular/core';
+import { Component, OnInit ,Inject,PLATFORM_ID, effect} from '@angular/core';
 import { Incident } from '../../../model/incident.model';
 import { Solution } from '../../../model/solution.model';
 import { IncidentService } from '../services/incident.service';
@@ -9,10 +9,23 @@ import { NgFor, NgIf, NgClass } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { LocalStorageService } from '../services/localstorage.service';
-
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ThemeService } from '../services/theme.service';
 @Component({
   selector: 'app-assigned-incidents',
-  imports: [NgFor, NgIf, NgClass, FormsModule],
+  imports: [NgFor, NgIf, NgClass, FormsModule,MatFormFieldModule, MatInputModule, MatSelectModule,
+        MatButtonModule, MatIconModule, MatCardModule,
+        MatChipsModule, MatTooltipModule, MatTableModule,MatProgressSpinnerModule
+      ],
   templateUrl: './assigned-incidents.component.html',
   styleUrl: './assigned-incidents.component.scss'
 })
@@ -28,9 +41,21 @@ export class AssignedIncidentsComponent implements OnInit {
     private incidentService: IncidentService,
     private solutionService: SolutionService,
     private router: Router,
+    public themeService:ThemeService,
     @Inject(PLATFORM_ID) private platformId: object ,
     private lss:LocalStorageService
-  ) {}
+  ) {
+
+    const savedTheme = localStorage.getItem('theme');
+            effect(() => {
+              if (this.themeService.getCurrentTheme()) {
+                document.body.classList.add('dark-theme');
+              } else {
+                document.body.classList.remove('dark-theme');
+              }
+            });
+        
+  }
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -152,5 +177,8 @@ export class AssignedIncidentsComponent implements OnInit {
       case 4: return 'Critical';
       default: return 'Medium';
     }
+  }
+  toggleDarkMode(): void {
+    this.themeService.toggleDarkMode();
   }
 }

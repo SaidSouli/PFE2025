@@ -1,21 +1,30 @@
-<div class="saiph-container">
+<div class="saiph-container" [class.dark-mode]="themeService.getCurrentTheme()">
   <header class="saiph-header">
     <div class="logo-container">
-      <div class="logo-star">
-        <span class="star-point star-point-1"></span>
-        <span class="star-point star-point-2"></span>
-        <span class="star-point star-point-3"></span>
-        <span class="star-point star-point-4"></span>
+      <div class="logo-img">
+        <img src="saiph-logo.png" alt="SAIPH Logo">
       </div>
-      <h1>SAIPH</h1>
-      <p class="tagline">Laboratoire Pharmacologique Citoyen</p>
+      <div class="branding">
+        <h1>SAIPH</h1>
+        <p class="tagline">Laboratoire Pharmacologique Citoyen</p>
+      </div>
     </div>
-    <button class="logout-button" (click)="logout()">
-      <i class="bi bi-box-arrow-right"></i>
-      Logout
-    </button>
-  </header>
+    
+    <div class="button-group">
+      <!-- Theme Toggle Button -->
+      <button mat-icon-button class="theme-toggle" (click)="toggleDarkMode()"
+             [matTooltip]="themeService.getCurrentTheme() ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+        <mat-icon>{{ themeService.getCurrentTheme() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+      </button>
 
+      <!-- Logout Button -->
+      <button class="logout-button" (click)="logout()">
+        <i class="bi bi-box-arrow-right"></i>
+        Logout
+      </button>
+    </div>
+  </header>
+  
   <div class="incidents-list">
     <div class="list-header">
       <h2>Incidents Ready for Your Specialization</h2>
@@ -23,8 +32,8 @@
         View Assigned Incidents
       </button>
     </div>
-
-    <div class="table-container">
+    
+    <div class="table-container" *ngIf="openIncidents && openIncidents.length > 0">
       <table class="incidents-table">
         <thead>
           <tr>
@@ -66,7 +75,7 @@
                 </button>
               </td>
             </tr>
-
+            
             <tr *ngIf="isExpanded(incident)" class="expanded-row">
               <td colspan="7">
                 <div class="expanded-content">
@@ -78,11 +87,14 @@
                     <h4>Additional Details</h4>
                     <div class="details-grid">
                       <div class="detail-item">
-                        <span class="detail-label">Reference:</span>
+                        <span class="detail-label">Reference</span>
                         <span class="detail-value">{{ incident.id }}</span>
-                        <span class="detail-label">reporter</span>
+                      </div>
+                      <div class="detail-item">
+                        <span class="detail-label">Reporter</span>
                         <span class="detail-value">{{ incident.reporter.username }}</span>
                       </div>
+                      
                     </div>
                   </div>
                 </div>
@@ -91,6 +103,13 @@
           </ng-container>
         </tbody>
       </table>
+    </div>
+    
+    <!-- No data state -->
+    <div class="no-data" *ngIf="!openIncidents || openIncidents.length === 0">
+      <i class="bi bi-clipboard-check no-data-icon"></i>
+      <h3>No Incidents Available</h3>
+      <p>There are currently no incidents that match your specialization. Please check back later.</p>
     </div>
   </div>
 </div>
