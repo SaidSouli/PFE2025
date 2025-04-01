@@ -2,28 +2,28 @@
 
 // SAIPH Color Palette based on the logo
 $saiph-gray: #5a6872;
-$saiph-green: #8cb33f;
+$saiph-green: #10B981;
 $saiph-yellow: #f7a600;
-$saiph-blue: #00a0df;
+$saiph-blue: #3B82F6;
 $saiph-light-gray: #f5f7fa;
 $saiph-border-color: #e0e0e0;
 
 // Priority Colors
-$priority-high: #e74c3c;
-$priority-medium: #f39c12;
-$priority-low: #27ae60;
+$priority-high: #EF4444;
+$priority-medium: #F59E0B;
+$priority-low: #10B981;
 
 // Dark mode colors
-$dark-bg-primary: #1a1f2c;
-$dark-bg-secondary: #242837;
-$dark-border: #2f3446;
-$dark-text-primary: #e0e0e0;
-$dark-text-secondary: rgba(255, 255, 255, 0.7);
-$dark-accent: #376fa3;
-$dark-hover: #333c4f;
+$dark-bg-primary: #111827;
+$dark-bg-secondary: #1F2937;
+$dark-border: #374151;
+$dark-text-primary: #F9FAFB;
+$dark-text-secondary: #D1D5DB;
+$dark-accent: #60A5FA;
+$dark-hover: #2D3748;
 
 :host {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Inter', sans-serif;
   display: block;
   height: 100vh;
   overflow: hidden;
@@ -34,10 +34,10 @@ $dark-hover: #333c4f;
   display: flex;
   flex-direction: column;
   height: 100vh;
-  overflow: hidden;
-  background-color: #f9f9f9;
+  overflow: auto;
+  background-color: #f9fafb;
   color: $saiph-gray;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
   &.dark-mode {
     background-color: $dark-bg-primary;
@@ -46,104 +46,30 @@ $dark-hover: #333c4f;
     .saiph-header {
       background-color: $dark-bg-secondary;
       border-bottom-color: $dark-border;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-
-      h1, .tagline {
-        color: $dark-text-primary;
-      }
-
-      .logo-star {
-        .star-point-1 { background-color: color.adjust($saiph-green, $lightness: 10%); }
-        .star-point-2 { background-color: color.adjust($saiph-yellow, $lightness: 5%); }
-        .star-point-3 { background-color: color.adjust($saiph-blue, $lightness: 10%); }
-        .star-point-4 { background-color: color.adjust($saiph-gray, $lightness: 20%); }
-      }
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
     .nav-button {
       background-color: rgba(255, 255, 255, 0.1);
       color: $dark-text-primary;
-      border-color: $dark-border;
 
       &:hover {
-        background-color: rgba(255, 255, 255, 0.15);
+        background-color: $dark-accent;
+        color: white;
+      }
+
+      .material-icons-outlined {
+        color: $dark-text-primary;
       }
     }
 
     .theme-toggle {
+      color: $dark-text-primary;
       background-color: rgba(255, 255, 255, 0.1);
-      color: $dark-text-primary;
 
       &:hover {
-        background-color: rgba(255, 255, 255, 0.15);
+        background-color: rgba(255, 255, 255, 0.2);
       }
-    }
-
-    .form-container {
-      background-color: $dark-bg-secondary;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-    }
-
-    .form-header {
-      background-color: rgba(0, 0, 0, 0.2);
-      border-bottom-color: $dark-border;
-    }
-
-    .form-input,
-    .form-select,
-    .form-textarea {
-      background-color: $dark-bg-primary;
-      border-color: $dark-border;
-      color: $dark-text-primary;
-
-      &:focus {
-        border-color: $dark-accent;
-        box-shadow: 0 0 0 3px rgba($dark-accent, 0.2);
-      }
-
-      &::placeholder {
-        color: $dark-text-secondary;
-      }
-    }
-
-    .button-group {
-      border-top-color: $dark-border;
-    }
-
-    .submit-button {
-      background-color: $saiph-green;
-
-      &:hover {
-        background-color: color.adjust($saiph-green, $lightness: -5%);
-      }
-
-      &:disabled {
-        background-color: rgba($saiph-green, 0.4);
-        color: rgba(255, 255, 255, 0.5);
-      }
-    }
-
-    .ai-suggestion {
-      background-color: rgba($saiph-blue, 0.2);
-      border: 1px solid rgba($saiph-blue, 0.3);
-
-      .suggestion-btn {
-        background-color: $dark-accent;
-
-        &:hover {
-          background-color: color.adjust($dark-accent, $lightness: 5%);
-        }
-      }
-    }
-
-    .success-message {
-      background-color: rgba($priority-low, 0.2);
-      border-color: rgba($priority-low, 0.3);
-    }
-
-    .error-alert {
-      background-color: rgba($priority-high, 0.2);
-      border-color: rgba($priority-high, 0.3);
     }
   }
 }
@@ -156,92 +82,62 @@ $dark-hover: #333c4f;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 30px;
+  padding: 16px 24px;
   background-color: white;
-  border-bottom: 2px solid $saiph-border-color;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  border-bottom: 1px solid $saiph-border-color;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
   .logo-container {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-
-    h1 {
-      color: $saiph-gray;
-      font-size: 2.2rem;
-      font-weight: 700;
-      margin: 0;
-      letter-spacing: 1px;
-      transition: color 0.3s ease;
-    }
-
-    .tagline {
-      color: $saiph-gray;
-      font-size: 0.85rem;
-      margin: 0;
-      font-style: italic;
-      transition: color 0.3s ease;
-    }
+    align-items: center;
+    gap: 16px;
 
     .logo-star {
       position: relative;
-      width: 36px;
-      height: 36px;
-      margin-bottom: 8px;
-
-      .star-point {
-        position: absolute;
-        transition: transform 0.3s ease, background-color 0.3s ease;
-
-        &.star-point-1 {
-          width: 30px;
-          height: 8px;
-          top: 16px;
-          left: 0;
-          background-color: $saiph-green;
-        }
-
-        &.star-point-2 {
-          width: 8px;
-          height: 30px;
-          top: 0;
-          left: 16px;
-          background-color: $saiph-yellow;
-        }
-
-        &.star-point-3 {
-          width: 20px;
-          height: 8px;
-          top: 16px;
-          right: 0;
-          background-color: $saiph-blue;
-        }
-
-        &.star-point-4 {
-          width: 8px;
-          height: 20px;
-          bottom: 0;
-          left: 16px;
-          background-color: $saiph-gray;
-        }
-      }
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.04);
+      border-radius: 12px;
+      padding: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
 
       &:hover {
-        .star-point {
-          &.star-point-1 { transform: translateX(-2px); }
-          &.star-point-2 { transform: translateY(-2px); }
-          &.star-point-3 { transform: translateX(2px); }
-          &.star-point-4 { transform: translateY(2px); }
-        }
+        transform: scale(1.05) rotate(5deg);
       }
+
+      img {
+        width: 28px;
+        height: 28px;
+        object-fit: contain;
+      }
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin: 0;
+      background: linear-gradient(135deg, $saiph-blue, $saiph-green);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .tagline {
+      font-size: 0.875rem;
+      color: $saiph-gray;
+      margin: 0;
     }
   }
 
   .header-actions {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
   }
 
   .nav-button {
@@ -250,335 +146,371 @@ $dark-hover: #333c4f;
     padding: 8px 16px;
     background-color: $saiph-light-gray;
     color: $saiph-gray;
-    border: 1px solid $saiph-border-color;
-    border-radius: 4px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
     text-decoration: none;
-    font-weight: 600;
-    transition: all 0.3s ease;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
     &:hover {
-      background-color: color.adjust($saiph-light-gray, $lightness: -5%);
-      transform: translateY(-2px);
+      background-color: color.adjust($saiph-blue, $lightness: -5%);
+      color: white;
+      transform: translateY(-1px);
     }
 
-    .nav-icon {
+    .material-icons-outlined {
       margin-right: 8px;
+      font-size: 20px;
     }
   }
 
   .theme-toggle {
-    background: transparent;
-    border: none;
-    color: inherit;
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 50%;
-    transition: all 0.3s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.05)
+  );
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
 
-    &:hover {
-      background-color: rgba(255, 255, 255, 0.1);
-      transform: rotate(180deg);
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    border-radius: 11px;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  mat-icon, .material-icons-outlined {
+    position: relative;
+    font-size: 20px;
+    color: #5a6872;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  &:hover {
+    transform: translateY(-2px) ;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    &::before {
+      background: linear-gradient(135deg, #e9ecef, #dee2e6);
     }
 
-    mat-icon {
-      font-size: 24px;
-      width: 24px;
-      height: 24px;
+    mat-icon, .material-icons-outlined {
+      transform: rotate(180deg) scale(1.1);
+      color: #00a0df;
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    mat-icon, .material-icons-outlined {
+      transform: scale(0.95);
     }
   }
 }
-
-// Content Area Styles
-.content-area {
-  flex: 1;
-  padding: 30px;
-  overflow-y: auto;
-  margin-bottom: 20px;
-  transition: background-color 0.3s ease;
 }
 
-// Form Container Styles
+// Form Styles
 .form-container {
   max-width: 800px;
-  margin: 0 auto;
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin: 24px auto;
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   overflow: hidden;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-  &.scrollbar-style {
-    scrollbar-width: thin;
-    scrollbar-color: $saiph-gray $saiph-light-gray;
+  .form-header {
+    padding: 24px;
+    border-bottom: 1px solid $saiph-border-color;
+    background-color: $saiph-light-gray;
 
-    &::-webkit-scrollbar {
-      width: 8px;
-    }
+    .form-title {
+      display: flex;
+      align-items: center;
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: $saiph-gray;
 
-    &::-webkit-scrollbar-track {
-      background: $saiph-light-gray;
-      border-radius: 10px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: rgba($saiph-gray, 0.6);
-      border-radius: 10px;
-
-      &:hover {
-        background: $saiph-gray;
+      .material-icons-outlined {
+        margin-right: 12px;
+        font-size: 24px;
+        color: $saiph-blue;
       }
     }
   }
 }
 
-// Form Header Styles
-.form-header {
-  background-color: $saiph-light-gray;
-  padding: 20px;
-  border-bottom: 1px solid $saiph-border-color;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-
-  .form-title {
-    display: flex;
-    align-items: center;
-    font-size: 1.5rem;
-    color: $saiph-gray;
-    margin: 0;
-
-    .form-icon {
-      margin-right: 10px;
-      font-size: 1.5rem;
-    }
-  }
-}
-
-// Form Content Styles
 .form-content {
   padding: 24px;
 }
 
-// Form Group Styles
 .form-group {
-  margin-bottom: 20px;
-  animation: fadeInUp 0.3s forwards;
-  opacity: 0;
-  transform: translateY(10px);
+  margin-bottom: 24px;
 
-  @for $i from 1 through 6 {
-    &:nth-child(#{$i}) {
-      animation-delay: #{$i * 0.1}s;
+  .form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: $saiph-gray;
+  }
+
+  .input-container {
+    position: relative;
+
+    .material-icons-outlined {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: $saiph-gray;
+      font-size: 20px;
+    }
+
+    &.textarea-container .material-icons-outlined {
+      top: 16px;
+      transform: none;
+    }
+  }
+
+  .form-input,
+  .form-select,
+  .form-textarea {
+    width: 100%;
+    padding: 12px 12px 12px 40px;
+    border: 1px solid $saiph-border-color;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:focus {
+      outline: none;
+      border-color: $saiph-blue;
+      box-shadow: 0 0 0 3px rgba($saiph-blue, 0.1);
     }
   }
 }
 
-// Form Row Styles
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 20px;
-
-  @media (min-width: 768px) {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-// Form Label Styles
-.form-label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 600;
-  color: inherit;
-}
-
-// Input Container Styles
-.input-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-
-  .input-icon {
-    position: absolute;
-    left: 10px;
-    z-index: 1;
-  }
-
-  &.textarea-container {
-    align-items: flex-start;
-
-    .textarea-icon {
-      margin-top: 12px;
-    }
-  }
-}
-
-// Form Input Styles
-.form-input,
-.form-select,
-.form-textarea {
-  width: 100%;
-  padding: 12px 12px 12px 40px;
-  border: 1px solid $saiph-border-color;
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  background-color: white;
-  color: $saiph-gray;
-
-  &:focus {
-    outline: none;
-    border-color: $saiph-blue;
-    box-shadow: 0 0 0 3px rgba($saiph-blue, 0.1);
-  }
-
-  &::placeholder {
-    color: color.adjust($saiph-gray, $lightness: 33%);
-  }
-}
-
-// Form Textarea Styles
-.form-textarea {
-  padding-top: 12px;
-  resize: vertical;
-}
-
-// Button Group Styles
 .button-group {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid $saiph-border-color;
   display: flex;
   justify-content: flex-end;
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px solid $saiph-border-color;
-  transition: border-color 0.3s ease;
 }
 
-// Submit Button Styles
 .submit-button {
   display: flex;
   align-items: center;
-  justify-content: center;
   padding: 12px 24px;
-  background-color: $saiph-green;
+  background-color: $saiph-blue;
   color: white;
   border: none;
   border-radius: 8px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
-  &:hover {
-    background-color: color.adjust($saiph-green, $lightness: -10%);
-    transform: translateY(-2px);
+  &:hover:not(:disabled) {
+    background-color: color.adjust($saiph-blue, $lightness: -5%);
+    transform: translateY(-1px);
   }
 
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
-    transform: none;
   }
 
-  .button-icon {
+  .material-icons-outlined {
     margin-right: 8px;
+    font-size: 20px;
   }
 }
 
-// Error Message Styles
-.error-message {
-  color: $priority-high;
-  font-size: 0.875rem;
-  margin-top: 6px;
-}
-
-// Success Message Styles
-.success-message {
-  margin-top: 20px;
-  padding: 16px;
-  background-color: rgba($priority-low, 0.1);
-  color: $priority-low;
-  border-radius: 8px;
-  border: 1px solid rgba($priority-low, 0.2);
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-// Error Alert Styles
-.error-alert {
-  margin-top: 20px;
-  padding: 16px;
-  background-color: rgba($priority-high, 0.1);
-  color: $priority-high;
-  border-radius: 8px;
-  border: 1px solid rgba($priority-high, 0.2);
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-// AI Suggestion Styles
 .ai-suggestion {
-  margin-top: 10px;
+  margin-top: 8px;
   padding: 12px;
   background-color: rgba($saiph-blue, 0.1);
   border-radius: 8px;
   display: flex;
   align-items: center;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
 
-  .ai-icon {
+  .material-icons-outlined {
     margin-right: 8px;
-    font-size: 1.2rem;
+    color: $saiph-blue;
   }
 
   .suggestion-btn {
     margin-left: auto;
+    padding: 6px 12px;
     background-color: $saiph-blue;
     color: white;
     border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
+    border-radius: 6px;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
     &:hover {
-      background-color: color.adjust($saiph-blue, $lightness: -20%);
+      background-color: color.adjust($saiph-blue, $lightness: -5%);
     }
   }
 }
 
-// Animation
-@keyframes fadeInUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
+// Messages
+.success-message,
+.error-message {
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+
+  .material-icons-outlined {
+    margin-right: 8px;
+    font-size: 20px;
   }
 }
 
-// Responsive Adjustments
+.success-message {
+  background-color: rgba($priority-low, 0.1);
+  color: $priority-low;
+  border: 1px solid rgba($priority-low, 0.2);
+}
+
+.error-message,
+.error-alert {
+  background-color: rgba($priority-high, 0.1);
+  color: $priority-high;
+  border: 1px solid rgba($priority-high, 0.2);
+}
+
 @media (max-width: 768px) {
   .saiph-header {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 15px 20px;
+    padding: 16px;
 
-    .header-actions {
-      margin-top: 15px;
-      width: 100%;
-      justify-content: space-between;
+    .logo-container {
+      .logo-star {
+        width: 36px;
+        height: 36px;
+
+        img {
+          width: 24px;
+          height: 24px;
+        }
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
     }
-  }
-
-  .content-area {
-    padding: 20px 15px;
   }
 
   .form-container {
-    max-width: 100%;
-    margin: 0;
-    border-radius: 8px;
+    margin: 16px;
+    border-radius: 12px;
+  }
+
+  .form-content {
+    padding: 16px;
   }
 
   .button-group {
     flex-direction: column;
+    gap: 12px;
   }
 
   .submit-button {
     width: 100%;
+  }
+}
+
+.saiph-container.dark-mode {
+  .theme-toggle {
+    background: linear-gradient(
+      135deg,
+      rgba(0, 0, 0, 0.2),
+      rgba(0, 0, 0, 0.1)
+    );
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+
+    &::before {
+      background: linear-gradient(135deg, #242837, #1a1f2e);
+    }
+
+    .material-icons-outlined {
+      color: #e0e0e0;
+    }
+
+    &:hover {
+      background: linear-gradient(
+        135deg,
+        rgba(0, 0, 0, 0.3),
+        rgba(0, 0, 0, 0.2)
+      );
+      
+      .material-icons-outlined {
+        color: #32b5ec;
+      }
+    }
+  }
+  .form-container {
+    background-color: $dark-bg-secondary;
+    color: $dark-text-primary;
+    border: 1px solid $dark-border;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+
+    .form-header {
+      background-color: $dark-bg-primary;
+      border-bottom: 1px solid $dark-border;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      background-color: $dark-bg-primary;
+      color: $dark-text-primary;
+      border: 1px solid $dark-border;
+
+      &:focus {
+        border-color: $dark-accent;
+        box-shadow: 0 0 0 3px rgba($dark-accent, 0.2);
+      }
+    }
+
+    .error-message,
+    .success-message {
+      background-color: rgba($priority-high, 0.1);
+      border: 1px solid rgba($priority-high, 0.2);
+      color: $priority-high;
+    }
+
+    .submit-button {
+      background-color: $dark-accent;
+      color: white;
+
+      &:hover:not(:disabled) {
+        background-color: color.adjust($dark-accent, $lightness: 10%);
+      }
+    }
   }
 }

@@ -23,5 +23,8 @@ export class SolutionService {
   deletesolution(solutionId:String):Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${solutionId}`)
   }
-
+  updateSolution(id: string, description: string): Observable<Solution> {
+    return this.http.put<Solution>(`${this.apiUrl}/${id}`, { description });
+  }
 }
+

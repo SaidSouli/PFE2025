@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.saiph.incident_management.model.Specialization;
 import com.saiph.incident_management.model.Technician;
-import com.saiph.incident_management.repository.IncidentRepository;
-import com.saiph.incident_management.repository.TechnicianRepository;
 import com.saiph.incident_management.service.TechnicianService;
 
 @RestController
@@ -24,12 +22,6 @@ public class TechnicianController {
 
     @Autowired
     private TechnicianService technicianService;
-    @Autowired 
-    private IncidentRepository incidentRepository;
-    @Autowired
-    private TechnicianRepository technicianRepository;
-    
-
     @GetMapping("/{username}/specializations")
     public ResponseEntity<List<Specialization>> getTechnicianSpecializations(@PathVariable String username) {
         List<Specialization> specializations = technicianService.getSpecializationsByUsername(username);

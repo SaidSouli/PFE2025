@@ -51,10 +51,20 @@ public class SolutionService {
         Solution solution = new Solution(description, technician, incident);
         solution.setCreationDate(new Date());
         
-        // Update incident status
+        // Update incident status and resolution date
         incident.setStatus("Waiting");
         incident.setResolutionDate(new Date());
         incidentRepository.save(incident);
+        
+        // Update the assignedIncidents list in the Technician object
+        List<Incident> assignedIncidents = technician.getAssignedIncidents();
+        for (int i = 0; i < assignedIncidents.size(); i++) {
+            if (assignedIncidents.get(i).getId().equals(incidentId)) {
+                assignedIncidents.set(i, incident); // Update the incident in the list
+                break;
+            }
+        }
+        technicianRepository.save(technician); // Save the updated technician
         
         return solutionRepository.save(solution);
     }
@@ -81,15 +91,36 @@ public class SolutionService {
     }
     
     public void deleteSolution(String solutionId) {
+        // Récupérer la solution
         Solution solution = solutionRepository.findById(solutionId)
                 .orElseThrow(() -> new RuntimeException("Solution not found with id: " + solutionId));
         
-        
+        // Récupérer l'incident associé à la solution
         Incident incident = solution.getIncident();
-        incident.setStatus("In Progress");
-        incident.setResolutionDate(null);
+        
+        // Récupérer le technicien assigné à l'incident
+        Technician technician = incident.getAssignedTechnician();
+        
+        // Mettre à jour le statut de l'incident vers "In Progress"
+        incident.setStatus("In progress");
+        incident.setResolutionDate(null); // Réinitialiser la date de résolution
+        
+        // Sauvegarder l'incident mis à jour
         incidentRepository.save(incident);
         
+        // Mettre à jour la liste assignedIncidents du technicien
+        List<Incident> assignedIncidents = technician.getAssignedIncidents();
+        for (int i = 0; i < assignedIncidents.size(); i++) {
+            if (assignedIncidents.get(i).getId().equals(incident.getId())) {
+                assignedIncidents.set(i, incident); // Mettre à jour l'incident dans la liste
+                break;
+            }
+        }
+        
+        // Sauvegarder le technicien mis à jour
+        technicianRepository.save(technician);
+        
+        // Supprimer la solution
         solutionRepository.delete(solution);
     }
     

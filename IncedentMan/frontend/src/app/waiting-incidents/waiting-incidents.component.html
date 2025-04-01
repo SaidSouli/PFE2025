@@ -1,0 +1,67 @@
+<div class="waiting-incidents-container" [class.dark-mode]="themeService.getCurrentTheme()">
+    <header class="saiph-header">
+        <div class="logo-container">
+            <div class="logo-star">
+                <img src="saiph-logo.png" alt="SAIPH Logo">
+            </div>
+            <div class="branding">
+                <h1>SAIPH</h1>
+                <p class="tagline">Incident Management System</p>
+            </div>
+        </div>
+        <div class="header-actions">
+            <button class="theme-toggle" (click)="toggleDarkMode()" 
+                [matTooltip]="themeService.getCurrentTheme() ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+                <span class="material-icons-outlined">
+                    {{ themeService.getCurrentTheme() ? 'light_mode' : 'dark_mode' }}
+                </span>
+            </button>
+        </div>
+    </header>
+
+    <h2 class="title">Incidents Waiting for Approval</h2>
+
+    <div class="button-group">
+        <button mat-raised-button color="accent" (click)="back()">
+            <mat-icon>arrow_back</mat-icon> Back
+        </button>
+        <button mat-raised-button color="warn" (click)="logout()">
+            <mat-icon>logout</mat-icon> Logout
+        </button>
+    </div>
+
+    <div *ngIf="filteredIncidents.length > 0" class="row">
+        <div *ngFor="let incident of filteredIncidents">
+            <div class="card">
+                <div class="card-body">
+                    <div class="incident-header">
+                        <h3 class="card-title">{{ incident.title }}</h3>
+                        <span class="badge">{{ incident.status }}</span>
+                    </div>
+                    <div class="incident-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Description:</span>
+                            <span>{{ incident.description }}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Solution:</span>
+                            <span>{{ solutions[incident.id!].description || 'Loading...' }}</span>
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <button mat-raised-button color="primary" (click)="modifySolution(incident)">
+                            <mat-icon>edit</mat-icon> Modify Solution
+                        </button>
+                        <button mat-raised-button color="warn" (click)="deleteSolution(incident)">
+                            <mat-icon>delete</mat-icon> Delete Solution
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="filteredIncidents.length === 0" class="text-center">
+        <p class="text-muted">No incidents are waiting for approval.</p>
+    </div>
+</div>

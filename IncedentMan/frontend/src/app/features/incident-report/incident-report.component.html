@@ -2,32 +2,34 @@
   <header class="saiph-header">
     <div class="logo-container">
       <div class="logo-star">
-        <div class="star-point star-point-1"></div>
-        <div class="star-point star-point-2"></div>
-        <div class="star-point star-point-3"></div>
-        <div class="star-point star-point-4"></div>
+        <img src="saiph-logo.png" alt="SAIPH Logo">
       </div>
-      <h1>SAIPH</h1>
-      <p class="tagline">Incident Management System</p>
+      <div class="branding">
+        <h1>SAIPH</h1>
+        <p class="tagline">Incident Management System</p>
+      </div>
     </div>
 
     <div class="header-actions">
+      <button class="theme-toggle" (click)="toggleDarkMode()"
+              [matTooltip]="themeService.getCurrentTheme() ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+        <span class="material-icons-outlined">
+          {{ themeService.getCurrentTheme() ? 'light_mode' : 'dark_mode' }}
+        </span>
+      </button>
+      
       <a routerLink="/incident-consult" class="nav-button">
-        <span class="nav-icon">👁️</span>
+        <span class="material-icons-outlined">visibility</span>
         See my reported incidents
       </a>
-      <button mat-icon-button class="theme-toggle" (click)="toggleDarkMode()"
-             [matTooltip]="themeService.getCurrentTheme() ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
-        <mat-icon>{{ themeService.getCurrentTheme() ? 'light_mode' : 'dark_mode' }}</mat-icon>
-      </button>
     </div>
   </header>
 
   <div class="content-area">
-    <div class="form-container scrollbar-style">
+    <div class="form-container">
       <div class="form-header">
         <h2 class="form-title">
-          <span class="form-icon">📋</span>
+          <span class="material-icons-outlined">report_problem</span>
           Report Incident
         </h2>
       </div>
@@ -37,7 +39,7 @@
           <div class="form-group">
             <label class="form-label">Title</label>
             <div class="input-container">
-              <span class="input-icon">📌</span>
+              <span class="material-icons-outlined">title</span>
               <input
                 type="text"
                 formControlName="title"
@@ -46,6 +48,7 @@
               >
             </div>
             <div *ngIf="isFieldInvalid('title')" class="error-message">
+              <span class="material-icons-outlined">error_outline</span>
               Title is required
             </div>
           </div>
@@ -54,7 +57,7 @@
             <div class="form-group">
               <label class="form-label">Category</label>
               <div class="input-container">
-                <span class="input-icon">🗂️</span>
+                <span class="material-icons-outlined">category</span>
                 <select
                   formControlName="category"
                   class="form-select"
@@ -64,10 +67,12 @@
                 </select>
               </div>
               <div *ngIf="isFieldInvalid('category')" class="error-message">
+                <span class="material-icons-outlined">error_outline</span>
                 Please select a category
               </div>
               <div class="ai-suggestion" *ngIf="showCategoryPrediction && aiPrediction">
-                <span class="ai-icon">🤖</span> AI suggests: <strong>{{aiPrediction.category}}</strong>
+                <span class="material-icons-outlined">psychology</span>
+                AI suggests: <strong>{{aiPrediction.category}}</strong>
                 <button type="button" class="suggestion-btn" (click)="useAiCategory()">Use this</button>
               </div>
             </div>
@@ -75,7 +80,7 @@
             <div class="form-group">
               <label class="form-label">Priority</label>
               <div class="input-container">
-                <span class="input-icon">🔥</span>
+                <span class="material-icons-outlined">priority_high</span>
                 <select
                   formControlName="priority"
                   class="form-select"
@@ -85,10 +90,12 @@
                 </select>
               </div>
               <div *ngIf="isFieldInvalid('priority')" class="error-message">
+                <span class="material-icons-outlined">error_outline</span>
                 Please select a priority
               </div>
               <div class="ai-suggestion" *ngIf="showPriorityPrediction && aiPrediction">
-                <span class="ai-icon">🤖</span> AI suggests <strong>{{getPriorityDisplay()}}</strong>
+                <span class="material-icons-outlined">psychology</span>
+                AI suggests <strong>{{getPriorityDisplay()}}</strong>
                 <button type="button" class="suggestion-btn" (click)="useAiPriority()">Use this</button>
               </div>
             </div>
@@ -97,7 +104,7 @@
           <div class="form-group">
             <label class="form-label">Description</label>
             <div class="input-container textarea-container">
-              <span class="input-icon textarea-icon">📝</span>
+              <span class="material-icons-outlined">description</span>
               <textarea
                 formControlName="description"
                 rows="6"
@@ -106,6 +113,7 @@
               ></textarea>
             </div>
             <div *ngIf="isFieldInvalid('description')" class="error-message">
+              <span class="material-icons-outlined">error_outline</span>
               Description is required
             </div>
           </div>
@@ -116,16 +124,18 @@
               [disabled]="incidentForm.invalid || isSubmitting"
               class="submit-button"
             >
-              <span class="button-icon">📤</span>
+              <span class="material-icons-outlined">send</span>
               {{ isSubmitting ? 'Submitting...' : 'Submit Incident Report' }}
             </button>
           </div>
 
           <div *ngIf="submitSuccess" class="success-message">
+            <span class="material-icons-outlined">check_circle</span>
             Incident reported successfully!
           </div>
 
           <div *ngIf="errorMessage" class="error-alert">
+            <span class="material-icons-outlined">error</span>
             {{ errorMessage }}
           </div>
         </form>

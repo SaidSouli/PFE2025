@@ -6,7 +6,7 @@ import { Solution } from '../../../model/solution.model';
 import { IncidentService } from '../services/incident.service';
 import { SolutionService } from '../services/solution.service';
 import { NgFor, NgIf, NgClass } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { LocalStorageService } from '../services/localstorage.service';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,7 +24,7 @@ import { ThemeService } from '../services/theme.service';
   selector: 'app-assigned-incidents',
   imports: [NgFor, NgIf, NgClass, FormsModule,MatFormFieldModule, MatInputModule, MatSelectModule,
         MatButtonModule, MatIconModule, MatCardModule,
-        MatChipsModule, MatTooltipModule, MatTableModule,MatProgressSpinnerModule
+        MatChipsModule, MatTooltipModule, MatTableModule,MatProgressSpinnerModule,RouterLink
       ],
   templateUrl: './assigned-incidents.component.html',
   styleUrl: './assigned-incidents.component.scss'

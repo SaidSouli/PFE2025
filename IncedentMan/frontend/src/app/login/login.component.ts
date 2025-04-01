@@ -17,7 +17,7 @@ export class LoginComponent {
   constructor(private authService: AuthService) {}
 
   onSubmit() {
-    // Trim whitespace from username and password
+    
     const trimmedUsername = this.username.trim();
     const trimmedPassword = this.password.trim();
     

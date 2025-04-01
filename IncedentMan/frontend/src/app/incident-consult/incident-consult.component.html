@@ -2,19 +2,20 @@
   <header class="saiph-header">
     <div class="logo-container">
       <div class="logo-star">
-        <div class="star-point star-point-1"></div>
-        <div class="star-point star-point-2"></div>
-        <div class="star-point star-point-3"></div>
-        <div class="star-point star-point-4"></div>
+        <img src="saiph-logo.png" alt="SAIPH Logo">
       </div>
-      <h1>SAIPH</h1>
-      <p class="tagline">Incident Management System</p>
+      <div class="branding">
+        <h1>SAIPH</h1>
+        <p class="tagline">Incident Management System</p>
+      </div>
     </div>
 
-    <div class="button-group">
-      <button mat-icon-button class="theme-toggle" (click)="toggleDarkMode()"
+    <div class="header-actions">
+      <button class="theme-toggle" (click)="toggleDarkMode()"
               [matTooltip]="themeService.getCurrentTheme() ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
-        <mat-icon>{{ themeService.getCurrentTheme() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+        <span class="material-icons-outlined">
+          {{ themeService.getCurrentTheme() ? 'light_mode' : 'dark_mode' }}
+        </span>
       </button>
 
       <button mat-raised-button color="primary" routerLink="/report-incident">
@@ -100,7 +101,7 @@
               </tr>
             </tbody>
           </table>
-          
+
           <!-- Empty state message -->
           <div *ngIf="!loading && filteredIncidents.length === 0 && selectedStatus !== ''" class="empty-state">
             <mat-icon>search</mat-icon>

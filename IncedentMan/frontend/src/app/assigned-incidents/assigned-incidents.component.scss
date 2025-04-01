@@ -50,7 +50,7 @@ $transition-ease: ease;
   &::-webkit-scrollbar-thumb {
     background: rgba($saiph-gray, 0.3);
     border-radius: 4px;
-    
+
     &:hover {
       background: rgba($saiph-gray, 0.5);
     }
@@ -67,7 +67,7 @@ $transition-ease: ease;
 
   &::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.2);
-    
+
     &:hover {
       background: rgba(255, 255, 255, 0.3);
     }
@@ -86,7 +86,7 @@ $transition-ease: ease;
 @mixin loading-animation {
   position: relative;
   overflow: hidden;
-  
+
   &::after {
     content: '';
     position: absolute;
@@ -95,14 +95,14 @@ $transition-ease: ease;
     width: 50%;
     height: 100%;
     background: linear-gradient(
-      90deg, 
-      transparent, 
-      rgba(255, 255, 255, 0.2), 
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
       transparent
     );
     animation: loading 1.5s infinite;
   }
-  
+
   @keyframes loading {
     0% {
       left: -100%;
@@ -131,7 +131,34 @@ $transition-ease: ease;
   &.dark-mode {
     background-color: $dark-bg;
     color: $dark-text;
-
+    .theme-toggle {
+      background: linear-gradient(
+        135deg,
+        rgba(0, 0, 0, 0.2),
+        rgba(0, 0, 0, 0.1)
+      );
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  
+      &::before {
+        background: linear-gradient(135deg, #242837, #1a1f2e);
+      }
+  
+      .material-icons-outlined {
+        color: #e0e0e0;
+      }
+  
+      &:hover {
+        background: linear-gradient(
+          135deg,
+          rgba(0, 0, 0, 0.3),
+          rgba(0, 0, 0, 0.2)
+        );
+        
+        .material-icons-outlined {
+          color: #32b5ec;
+        }
+      }
+    }
     .saiph-header {
       background-color: $dark-card-bg;
       border-bottom-color: $dark-border;
@@ -141,67 +168,67 @@ $transition-ease: ease;
         color: $dark-text;
       }
     }
-    
+
     .incident-list {
       h2 {
         color: $dark-text;
-        
+
         &::after {
           background-color: $saiph-blue;
         }
       }
-      
+
       .incident-item {
         background-color: $dark-card-bg;
         border-color: $dark-border;
         @include dark-card-shadow;
-        
+
         .incident-header {
           border-bottom-color: $dark-border;
-          
+
           h3 {
             color: $dark-text;
           }
         }
-        
+
         .incident-details {
           .detail-label {
             color: rgba($dark-text, 0.7);
           }
-          
+
           .detail-value {
             color: $dark-text;
           }
         }
-        
+
         .solution-area {
           background-color: rgba($dark-bg, 0.7);
           border-top-color: $dark-border;
-          
+
           h4 {
             color: $dark-text;
           }
-          
+
           textarea {
             background-color: rgba($dark-bg, 0.5);
             border-color: $dark-border;
             color: $dark-text;
-            
+
             &::placeholder {
               color: rgba($dark-text, 0.5);
             }
-            
+
             &:focus {
               border-color: $saiph-blue;
               box-shadow: 0 0 0 2px rgba($saiph-blue, 0.2);
             }
-            
+
             &:disabled {
               background-color: rgba($dark-text, 0.1);
               color: rgba($dark-text, 0.6);
             }
           }
-          
+
           .submit-button {
             &:disabled {
               background-color: rgba($dark-text, 0.2);
@@ -209,28 +236,28 @@ $transition-ease: ease;
             }
           }
         }
-        
+
         &:hover {
           transform: translateY(-4px);
           @include dark-card-shadow;
         }
       }
-      
+
       .no-incidents {
         background-color: $dark-card-bg;
         border-color: $dark-border;
         color: $dark-text;
       }
     }
-    
+
     // Apply dark scrollbar
     @include dark-scrollbar;
-    
+
     // Dark mode styling for Angular Material components
     mat-icon {
       color: $dark-text;
     }
-    
+
     .mat-tooltip {
       background-color: rgba($dark-card-bg, 0.9);
       color: $dark-text;
@@ -250,8 +277,8 @@ $transition-ease: ease;
   background-color: white;
   border-bottom: 2px solid $saiph-border-color;
   @include card-shadow;
-  transition: background-color $transition-speed $transition-ease, 
-              border-color $transition-speed $transition-ease, 
+  transition: background-color $transition-speed $transition-ease,
+              border-color $transition-speed $transition-ease,
               box-shadow $transition-speed $transition-ease;
 
   .logo-container {
@@ -293,18 +320,18 @@ $transition-ease: ease;
       padding: 8px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       transition: all $transition-speed $transition-ease;
-      
+
       &:hover {
         transform: scale(1.05);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       }
-      
+
       img {
         width: 100%;
         height: 100%;
         object-fit: contain;
       }
-      
+
       &::after {
         content: '';
         position: absolute;
@@ -317,12 +344,12 @@ $transition-ease: ease;
         border: 2px solid white;
       }
     }
-    
+
     .dark-mode & {
       .logo-star {
         background-color: rgba(255, 255, 255, 0.1);
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        
+
         &::after {
           border-color: $dark-card-bg;
         }
@@ -348,11 +375,11 @@ $transition-ease: ease;
       background-color: white;
       color: $saiph-gray;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-      
+
       &:focus {
         @include focus-outline;
       }
-      
+
       i {
         margin-right: 8px;
       }
@@ -361,87 +388,88 @@ $transition-ease: ease;
         transform: translateY(-2px);
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
       }
-      
+
       &.back-button {
         background-color: $saiph-blue; // Changed from $saiph-light-gray
         color: white;
-        
+
         &:hover {
-          background-color: darken($saiph-blue, 5%);
+          background-color: color.adjust($saiph-blue, $lightness: -5%);
         }
       }
-      
+
       &.logout-button {
         background-color: $priority-high; // Changed from rgba($saiph-blue, 0.9)
         color: white;
-        
+
         &:hover {
-          background-color: darken($priority-high, 5%);
+          background-color: color.adjust($priority-high, $lightness: -5%);
         }
       }
+
       
-      &.theme-toggle {
-        padding: 8px;
-        border-radius: 50%;
-        background-color: transparent;
-        box-shadow: none;
-        
-        &:hover {
-          background-color: rgba($saiph-gray, 0.05);
-        }
-      }
     }
   }
 }
 
 .theme-toggle {
-  background: transparent;
-  border: none;
-  color: inherit;
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 50%;
-  @include transition;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: none;
+  border-radius: 12px !important; 
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.05)
+  );
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
 
-  &:focus {
-    @include focus-outline;
-  }
-  
   &::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.05);
-    border-radius: 50%;
-    transform: scale(0);
-    transition: transform $transition-speed $transition-ease;
+    inset: 1px;
+    border-radius: 11px !important ;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  mat-icon, .material-icons-outlined {
+    position: relative;
+    font-size: 20px;
+    color: #5a6872;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   &:hover {
-    transform: rotate(180deg);
-    
+    transform: translateY(-2px) ;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
     &::before {
-      transform: scale(1);
+      background: linear-gradient(135deg, #e9ecef, #dee2e6);
+    }
+
+    mat-icon, .material-icons-outlined {
+      transform: rotate(180deg) scale(1.1);
+      color: #00a0df;
     }
   }
 
-  mat-icon {
-    position: relative;
-    z-index: 1;
-    font-size: 24px;
-    width: 24px;
-    height: 24px;
-    transition: color $transition-speed $transition-ease;
-  }
-  
-  .dark-mode & {
-    &::before {
-      background-color: rgba(255, 255, 255, 0.1);
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    mat-icon, .material-icons-outlined {
+      transform: scale(0.95);
     }
   }
 }
@@ -461,7 +489,7 @@ $transition-ease: ease;
     align-items: center;
     justify-content: center;
     @include transition;
-    
+
     &:focus {
       @include focus-outline;
     }
@@ -498,7 +526,7 @@ $transition-ease: ease;
   overflow-y: auto;
   @include custom-scrollbar;
   position: relative;
-  
+
   h2 {
     margin-top: 0;
     margin-bottom: 20px;
@@ -508,7 +536,7 @@ $transition-ease: ease;
     position: relative;
     padding-bottom: 10px;
     transition: color $transition-speed $transition-ease;
-    
+
     &::after {
       content: '';
       position: absolute;
@@ -521,17 +549,17 @@ $transition-ease: ease;
       transition: background-color $transition-speed $transition-ease;
     }
   }
-  
+
   .incidents-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     gap: 24px;
-    
+
     @media (max-width: 480px) {
       grid-template-columns: 1fr;
     }
   }
-  
+
   .incident-item {
     background-color: white;
     border-radius: 12px;
@@ -539,12 +567,12 @@ $transition-ease: ease;
     overflow: hidden;
     @include card-shadow;
     @include transition;
-    
+
     &:hover {
       transform: translateY(-4px);
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     }
-    
+
     .incident-header {
       display: flex;
       justify-content: space-between;
@@ -552,7 +580,7 @@ $transition-ease: ease;
       padding: 16px 20px;
       border-bottom: 1px solid $saiph-border-color;
       transition: border-color $transition-speed $transition-ease;
-      
+
       h3 {
         margin: 0;
         font-size: 1.2rem;
@@ -560,81 +588,81 @@ $transition-ease: ease;
         color: $saiph-gray;
         transition: color $transition-speed $transition-ease;
       }
-      
+
       .priority-badge {
         padding: 4px 12px;
         border-radius: 12px;
         font-size: 0.8rem;
         font-weight: 500;
         text-transform: uppercase;
-        
+
         &.priority-high {
           background-color: rgba($priority-high, 0.1);
           color: $priority-high;
         }
-        
+
         &.priority-medium {
           background-color: rgba($priority-medium, 0.1);
-          color: darken($priority-medium, 10%);
+          color: color.adjust($priority-medium, $lightness: -10%);
         }
-        
+
         &.priority-low {
           background-color: rgba($priority-low, 0.1);
-          color: darken($priority-low, 10%);
+          color: color.adjust($priority-low, $lightness: -10%);
         }
       }
     }
-    
+
     .incident-details {
       padding: 16px 20px;
-      
+
       .detail-row {
         display: flex;
         margin-bottom: 12px;
-        
+
         &:last-child {
           margin-bottom: 0;
         }
-        
+
         .detail-label {
           flex: 0 0 120px;
           font-weight: 500;
-          color: lighten($saiph-gray, 15%);
+          color: color.adjust($saiph-gray, $lightness: 15%);
           transition: color $transition-speed $transition-ease;
         }
-        
+
         .detail-value {
           flex: 1;
           transition: color $transition-speed $transition-ease;
-          
+
           &.category-badge, &.status-badge {
             display: inline-block;
             padding: 3px 10px;
             border-radius: 12px;
             font-size: 0.85rem;
           }
-          
+
           &.category-badge {
             background-color: rgba($saiph-blue, 0.1);
             color: $saiph-blue;
           }
-          
+
           &.status-badge {
             &.status-open {
               background-color: rgba($saiph-yellow, 0.1);
-              color: darken($saiph-yellow, 10%);
+              color: color.adjust($saiph-yellow, $lightness: -10%);
             }
-            
+
             &.status-inprogress {
               background-color: rgba($saiph-blue, 0.1);
               color: $saiph-blue;
             }
-            
+
             &.status-resolved {
               background-color: rgba($saiph-green, 0.1);
-              color: darken($saiph-green, 10%);
+              color: color.adjust($saiph-green, $lightness: -10%);
             }
-            
+
             &.status-closed {
               background-color: rgba($saiph-gray, 0.1);
               color: $saiph-gray;
@@ -643,14 +671,14 @@ $transition-ease: ease;
         }
       }
     }
-    
+
     .solution-area {
       padding: 16px 20px;
       background-color: $saiph-light-gray;
       border-top: 1px solid $saiph-border-color;
-      transition: background-color $transition-speed $transition-ease, 
+      transition: background-color $transition-speed $transition-ease,
                  border-color $transition-speed $transition-ease;
-      
+
       h4 {
         margin-top: 0;
         margin-bottom: 12px;
@@ -659,7 +687,7 @@ $transition-ease: ease;
         color: $saiph-gray;
         transition: color $transition-speed $transition-ease;
       }
-      
+
       textarea {
         width: 100%;
         padding: 12px;
@@ -671,23 +699,23 @@ $transition-ease: ease;
         color: $saiph-gray;
         min-height: 100px;
         @include transition;
-        
+
         &::placeholder {
-          color: lighten($saiph-gray, 25%);
+          color: color.adjust($saiph-gray, $lightness: 25%);
         }
-        
+
         &:focus {
           outline: none;
           border-color: $saiph-blue;
           box-shadow: 0 0 0 2px rgba($saiph-blue, 0.2);
         }
-        
+
         &:disabled {
           background-color: rgba($saiph-gray, 0.05);
           cursor: not-allowed;
         }
       }
-      
+
       .error-message {
         color: $priority-high;
         font-size: 0.85rem;
@@ -699,7 +727,7 @@ $transition-ease: ease;
         background-color: rgba($priority-high, 0.05);
         border-left: 3px solid $priority-high;
       }
-      
+
       .submit-button {
         margin-top: 16px;
         padding: 10px 20px;
@@ -710,29 +738,29 @@ $transition-ease: ease;
         font-weight: 500;
         cursor: pointer;
         @include transition;
-        
+
         &:focus {
           @include focus-outline;
         }
-        
+
         &:hover:not(:disabled) {
-          background-color: darken($saiph-blue, 5%);
+          background-color: color.adjust($saiph-blue, $lightness: -5%);
           transform: translateY(-2px);
           box-shadow: 0 4px 8px rgba($saiph-blue, 0.3);
         }
-        
+
         &:disabled {
-          background-color: lighten($saiph-gray, 20%);
+          background-color: color.adjust($saiph-gray, $lightness: 20%);
           cursor: not-allowed;
         }
-        
+
         &.submitting {
           @include loading-animation;
         }
       }
     }
   }
-  
+
   .no-incidents {
     padding: 30px;
     text-align: center;
@@ -742,23 +770,23 @@ $transition-ease: ease;
     @include card-shadow;
     transition: background-color $transition-speed $transition-ease,
                border-color $transition-speed $transition-ease;
-    
+
     p {
       margin: 0;
-      color: lighten($saiph-gray, 15%);
+      color: color.adjust($saiph-gray, $lightness: 15%);
       font-size: 1.1rem;
       transition: color $transition-speed $transition-ease;
     }
-    
+
     .no-data-icon {
       font-size: 64px;
-      color: lighten($saiph-gray, 25%);
+      color: color.adjust($saiph-gray, $lightness: 25%);
       margin-bottom: 16px;
       opacity: 0.6;
       transition: color $transition-speed $transition-ease;
     }
   }
-  
+
   // Loading state
   &.loading {
     &::before {
@@ -774,7 +802,7 @@ $transition-ease: ease;
       justify-content: center;
       align-items: center;
     }
-    
+
     &::after {
       content: 'Loading...';
       position: absolute;
@@ -789,12 +817,12 @@ $transition-ease: ease;
       border-radius: 24px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
-    
+
     .dark-mode & {
       &::before {
         background-color: rgba($dark-bg, 0.7);
       }
-      
+
       &::after {
         background-color: $dark-card-bg;
         color: $saiph-blue;
@@ -826,36 +854,29 @@ $transition-ease: ease;
   .icon-back {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e0e0e0'%3E%3Cpath d='M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z'/%3E%3C/svg%3E");
   }
-  
+
   .button-group {
     button {
       background-color: rgba(255, 255, 255, 0.1);
       color: $dark-text;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-      
+
       &:hover {
         background-color: rgba(255, 255, 255, 0.15);
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
       }
-      
+
       &:focus {
         box-shadow: 0 0 0 2px rgba($saiph-blue, 0.5);
       }
+
       
-      &.theme-toggle {
-        background-color: transparent;
-        box-shadow: none;
-        
-        &:hover {
-          background-color: rgba(255, 255, 255, 0.1);
-        }
-      }
-      
+
       &.logout-button {
         background-color: rgba($priority-high, 0.9);
-        
+
         &:hover {
-          background-color: $priority-high;  
+          background-color: $priority-high;
         }
       }
     }
@@ -902,7 +923,7 @@ $transition-ease: ease;
 
   .incident-list {
     padding: 15px;
-    
+
     h2 {
       font-size: 1.5rem;
     }
@@ -916,28 +937,26 @@ $transition-ease: ease;
       flex-direction: column;
       align-items: flex-start;
       gap: 8px;
-      
+
       .logo-star {
         margin-bottom: 8px;
       }
-      
+
       h1 {
         font-size: 1.8rem;
       }
     }
-    
+
     .button-group {
       button {
         padding: 6px 12px;
         font-size: 0.9rem;
+
         
-        &.theme-toggle {
-          padding: 6px;
-        }
       }
     }
   }
-  
+
   .incident-list {
     .incident-item {
       .incident-header {
@@ -945,11 +964,11 @@ $transition-ease: ease;
         align-items: flex-start;
         gap: 10px;
       }
-      
+
       .incident-details {
         .detail-row {
           flex-direction: column;
-          
+
           .detail-label {
             margin-bottom: 4px;
           }
@@ -965,37 +984,37 @@ $transition-ease: ease;
     height: auto;
     overflow: visible;
   }
-  
+
   .saiph-header {
     position: static;
     box-shadow: none;
     border-bottom: 1px solid black;
   }
-  
+
   .button-group {
     display: none;
   }
-  
+
   .incident-list {
     overflow: visible;
     padding: 15px 0;
-    
+
     .incidents-container {
       display: block;
     }
-    
+
     .incident-item {
       page-break-inside: avoid;
       margin-bottom: 20px;
       border: 1px solid black;
       box-shadow: none;
-      
+
       &:hover {
         transform: none;
         box-shadow: none;
       }
     }
-    
+
     .solution-area {
       .submit-button {
         display: none;

@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Document(collection = "users")
 public class Technician extends User {
+    
     private List<Specialization> specializations = new ArrayList<>();
     @JsonManagedReference
     private List<Incident> assignedIncidents = new ArrayList<>();

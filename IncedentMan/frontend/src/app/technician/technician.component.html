@@ -11,12 +11,14 @@
     </div>
     
     <div class="button-group">
-      <!-- Theme Toggle Button -->
-      <button mat-icon-button class="theme-toggle" (click)="toggleDarkMode()"
-             [matTooltip]="themeService.getCurrentTheme() ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
-        <mat-icon>{{ themeService.getCurrentTheme() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+      
+      <button class="theme-toggle" (click)="toggleDarkMode()"
+              [matTooltip]="themeService.getCurrentTheme() ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+        <span class="material-icons-outlined">
+          {{ themeService.getCurrentTheme() ? 'light_mode' : 'dark_mode' }}
+        </span>
       </button>
-
+       
       <!-- Logout Button -->
       <button class="logout-button" (click)="logout()">
         <i class="bi bi-box-arrow-right"></i>

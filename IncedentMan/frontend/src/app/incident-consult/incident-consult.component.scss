@@ -15,6 +15,7 @@ $dark-card-bg: #242837;
 $dark-text: #e0e0e0;
 $dark-border: #2f3446;
 $dark-hover: rgba(255, 255, 255, 0.05);
+$dark-text-primary: #e0e0e0;
 
 // Role Colors
 $admin-color: #8cb33f;
@@ -80,6 +81,117 @@ $dark-technician-color: #ffb732;
   scrollbar-color: rgba(255, 255, 255, 0.2) $dark-card-bg;
 }
 
+// Material Icons Outlined Styles
+.material-icons-outlined {
+  font-family: 'Material Icons Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+// Theme Toggle Button
+.theme-toggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.05)
+  );
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    border-radius: 11px;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  mat-icon, .material-icons-outlined {
+    position: relative;
+    font-size: 20px;
+    color: #5a6872;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  &:hover {
+    transform: translateY(-2px) ;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    &::before {
+      background: linear-gradient(135deg, #e9ecef, #dee2e6);
+    }
+
+    mat-icon, .material-icons-outlined {
+      transform: rotate(180deg) scale(1.1);
+      color: #00a0df;
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    mat-icon, .material-icons-outlined {
+      transform: scale(0.95);
+    }
+  }
+}
+
+// Button Styles
+button {
+  font-style: normal;
+  font-variant-ligatures: normal;
+  font-variant-caps: normal;
+  font-variant-numeric: normal;
+  font-variant-east-asian: normal;
+  font-variant-alternates: normal;
+  font-variant-position: normal;
+  font-variant-emoji: normal;
+  font-weight: normal;
+  font-stretch: normal;
+  font-size: 16px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-optical-sizing: auto;
+  font-size-adjust: none;
+  font-kerning: auto;
+  font-feature-settings: normal;
+  font-variation-settings: normal;
+  text-rendering: auto;
+  color: buttontext;
+  letter-spacing: normal;
+  word-spacing: normal;
+  line-height: normal;
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+  text-align: center;
+  cursor: pointer;
+}
+
 // Container
 .saiph-container {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -98,6 +210,39 @@ $dark-technician-color: #ffb732;
   &.dark-mode {
     background-color: $dark-bg;
     color: $dark-text;
+
+    .theme-toggle {
+      background: linear-gradient(
+        135deg,
+        rgba(0, 0, 0, 0.2),
+        rgba(0, 0, 0, 0.1)
+      );
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+
+      &::before {
+        background: linear-gradient(135deg, #242837, #1a1f2e);
+      }
+
+      mat-icon, .material-icons-outlined {
+        color: #e0e0e0;
+      }
+
+      &:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+        &::before {
+          background: linear-gradient(135deg, #2f3446, #242837);
+        }
+
+        mat-icon, .material-icons-outlined {
+          color: #32b5ec;
+        }
+      }
+
+      &:active {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+    }
 
     .saiph-header {
       background-color: $dark-card-bg;
@@ -209,29 +354,7 @@ $dark-technician-color: #ffb732;
   }
 }
 
-// Theme Toggle Button
-.theme-toggle {
-  background: transparent;
-  border: none;
-  color: inherit;
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 50%;
-  @include transition;
-
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    transform: rotate(180deg);
-  }
-
-  mat-icon {
-    font-size: 24px;
-    width: 24px;
-    height: 24px;
-  }
-}
-
-// Header
+// Header Styles
 .saiph-header {
   position: sticky;
   top: 0;
@@ -239,103 +362,85 @@ $dark-technician-color: #ffb732;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 30px;
+  padding: 16px 24px;
   background-color: white;
-  border-bottom: 2px solid $saiph-border-color;
-  @include card-shadow;
-  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  border-bottom: 1px solid $saiph-border-color;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
   .logo-container {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-
-    h1 {
-      color: $saiph-gray;
-      font-size: 2.2rem;
-      font-weight: 700;
-      margin: 0;
-      letter-spacing: 1px;
-      transition: color 0.3s ease;
-    }
-
-    .tagline {
-      color: $saiph-gray;
-      font-size: 0.85rem;
-      margin: 0;
-      font-style: italic;
-      transition: color 0.3s ease;
-    }
+    align-items: center;
+    gap: 16px;
 
     .logo-star {
       position: relative;
-      width: 36px;
-      height: 36px;
-      margin-bottom: 8px;
-
-      .star-point {
-        position: absolute;
-        transition: transform 0.3s ease;
-
-        &.star-point-1 {
-          width: 30px;
-          height: 8px;
-          top: 16px;
-          left: 0;
-          background-color: $saiph-green;
-        }
-
-        &.star-point-2 {
-          width: 8px;
-          height: 30px;
-          top: 0;
-          left: 16px;
-          background-color: $saiph-yellow;
-        }
-
-        &.star-point-3 {
-          width: 20px;
-          height: 8px;
-          top: 16px;
-          right: 0;
-          background-color: $saiph-blue;
-        }
-
-        &.star-point-4 {
-          width: 8px;
-          height: 20px;
-          bottom: 0;
-          left: 16px;
-          background-color: $saiph-gray;
-        }
-      }
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.04);
+      border-radius: 12px;
+      padding: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
 
       &:hover {
-        .star-point {
-          &.star-point-1 { transform: translateX(-2px); }
-          &.star-point-2 { transform: translateY(-2px); }
-          &.star-point-3 { transform: translateX(2px); }
-          &.star-point-4 { transform: translateY(2px); }
-        }
+        transform: scale(1.05) rotate(5deg);
       }
+
+      img {
+        width: 28px;
+        height: 28px;
+        object-fit: contain;
+      }
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin: 0;
+      background: linear-gradient(135deg, $saiph-blue, $saiph-green);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .tagline {
+      font-size: 0.875rem;
+      color: $saiph-gray;
+      margin: 0;
     }
   }
 
-  .button-group {
+  .header-actions {
     display: flex;
-    gap: 12px;
     align-items: center;
+    gap: 12px;
+  }
 
-    button {
-      @include transition;
+  button[mat-raised-button] {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    background-color: $saiph-light-gray;
+    color: $saiph-gray;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
-      mat-icon {
-        margin-right: 8px;
-      }
+    &:hover {
+      background-color: color.adjust($saiph-blue, $lightness: -5%);
+      color: white;
+      transform: translateY(-1px);
+    }
 
-      &:hover {
-        transform: translateY(-2px);
-      }
+    mat-icon {
+      margin-right: 8px;
+      font-size: 20px;
     }
   }
 }
@@ -518,10 +623,28 @@ $dark-technician-color: #ffb732;
     width: 500px;
     max-width: 90%;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
 
-    .btn-close {
+    .modal-close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 10;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 50%;
+      transition: background-color 0.2s ease;
+
       &:hover {
-        opacity: 0.8;
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+
+      mat-icon {
+        font-size: 20px;
+        height: 20px;
+        width: 20px;
       }
     }
 
@@ -550,44 +673,6 @@ $dark-technician-color: #ffb732;
     }
   }
 }
-
-// Responsive Design
-@media (max-width: 768px) {
-  .saiph-header {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 15px 20px;
-
-    .button-group {
-      margin-top: 15px;
-      width: 100%;
-      justify-content: space-between;
-    }
-  }
-
-  .content-area {
-    padding: 15px;
-    height: calc(100vh - 140px);
-  }
-
-  .incident-table-container {
-    overflow-x: auto;
-    @include custom-scrollbar;
-
-    .dark-mode & {
-      @include dark-scrollbar;
-    }
-
-    table {
-      min-width: 600px;
-    }
-
-    mat-card {
-      max-height: calc(100vh - 300px);
-    }
-  }
-}
-// Add these styles to your existing SCSS file
 
 // Empty state styling
 .empty-state {
@@ -621,68 +706,68 @@ $dark-technician-color: #ffb732;
 .incident-table {
   border-collapse: separate;
   border-spacing: 0;
-  
-  .mat-mdc-header-cell, 
+
+  .mat-mdc-header-cell,
   .mat-mdc-cell {
     padding: 16px;
     text-align: left;
     vertical-align: middle;
   }
-  
+
   .mat-mdc-header-cell {
     font-weight: 600;
     position: sticky;
     top: 0;
     z-index: 1;
   }
-  
+
   .mat-mdc-cell {
     max-width: 250px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    
+
     &:nth-child(2) { // Description column
       max-width: 300px;
     }
   }
 }
 
-// Status badge fixes - ensure consistent mapping between HTML and CSS
+// Status badge fixes
 .status-badge {
   display: inline-block;
   padding: 5px 10px;
   border-radius: 4px;
-  font-weight: 500;
+  font-weight: bold;
   text-align: center;
   min-width: 80px;
-  
+
   &.open {
     background-color: rgba($admin-color, 0.15);
     color: $admin-color;
   }
-  
+
   &.in-progress {
     background-color: rgba($technician-color, 0.15);
     color: $technician-color;
   }
-  
+
   &.closed {
     background-color: rgba($user-color, 0.15);
     color: $user-color;
   }
-  
+
   .dark-mode & {
     &.open {
       background-color: rgba($dark-admin-color, 0.2);
       color: $dark-admin-color;
     }
-    
+
     &.in-progress {
       background-color: rgba($dark-technician-color, 0.2);
       color: $dark-technician-color;
     }
-    
+
     &.closed {
       background-color: rgba($dark-user-color, 0.2);
       color: $dark-user-color;
@@ -692,33 +777,56 @@ $dark-technician-color: #ffb732;
 
 // Better mobile responsiveness
 @media (max-width: 768px) {
+  .saiph-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 15px 20px;
+
+    .button-group {
+      margin-top: 15px;
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+
+  .content-area {
+    padding: 15px;
+    height: calc(100vh - 140px);
+  }
+
   .incident-table-container {
     margin: 0 -15px;
     width: calc(100% + 30px);
-    
+    overflow-x: auto;
+    @include custom-scrollbar;
+
+    .dark-mode & {
+      @include dark-scrollbar;
+    }
+
     .incident-table {
-      .mat-mdc-header-cell, 
+      .mat-mdc-header-cell,
       .mat-mdc-cell {
         padding: 12px 8px;
         font-size: 0.9rem;
       }
-      
+
       .mat-mdc-cell:nth-child(2) { // Hide description on mobile
         display: none;
       }
-      
+
       .status-badge {
         min-width: 60px;
         padding: 4px 6px;
         font-size: 0.8rem;
       }
     }
-    
+
     .incident-actions {
       button {
         padding: 0;
         min-width: 32px;
-        
+
         mat-icon {
           font-size: 18px;
           height: 18px;
@@ -726,33 +834,35 @@ $dark-technician-color: #ffb732;
         }
       }
     }
+
+    mat-card {
+      max-height: calc(100vh - 300px);
+    }
   }
 }
-// Add this to your SCSS file to fix the white header in dark mode
 
+// Fix for white mat-card-header in dark mode
 .saiph-container {
   &.dark-mode {
-    // Fix for white mat-card-header in dark mode
     mat-card {
       mat-card-header, .mat-mdc-card-header {
-        background-color: $dark-card-bg !important; // Use !important to override Angular Material's default styles
+        background-color: $dark-card-bg !important;
         border-bottom: 1px solid $dark-border;
-        
+
         .mat-mdc-card-header-text {
           color: $dark-text;
         }
-        
+
         mat-card-title, .mat-mdc-card-title {
           color: $dark-text;
-          
+
           mat-icon {
-            color: $dark-admin-color; // Change icon color to match dark theme
+            color: $dark-admin-color;
           }
         }
       }
     }
-    
-    // Ensure the header row in the table is styled correctly
+
     .incident-table-container {
       .mat-mdc-header-row, thead tr {
         background-color: rgba($dark-card-bg, 0.8) !important;
@@ -761,58 +871,16 @@ $dark-technician-color: #ffb732;
   }
 }
 
-// General fix for mat-card-header to ensure styling is consistent
+// General fix for mat-card-header
 .mat-card-header, .mat-mdc-card-header {
   transition: background-color 0.3s ease, color 0.3s ease;
-  
+
   .mat-mdc-card-title {
     display: flex;
     align-items: center;
-    
+
     mat-icon {
       margin-right: 10px;
-    }
-  }
-}
-// Add this to your SCSS file to style the modal close button properly
-
-.modal-overlay {
-  .modal-content {
-    position: relative;
-    
-    // Style for the single close button
-    .modal-close-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      z-index: 10;
-      background-color: transparent;
-      border: none;
-      cursor: pointer;
-      padding: 8px;
-      border-radius: 50%;
-      transition: background-color 0.2s ease;
-      
-      &:hover {
-        background-color: rgba(0, 0, 0, 0.05);
-      }
-      
-      mat-icon {
-        font-size: 20px;
-        height: 20px;
-        width: 20px;
-      }
-    }
-    
-    // Dark mode styling for close button
-    .dark-mode & {
-      .modal-close-btn {
-        color: $dark-text;
-        
-        &:hover {
-          background-color: rgba(255, 255, 255, 0.1);
-        }
-      }
     }
   }
 }

@@ -11,12 +11,14 @@
       </div>
     </div>
     <div class="button-group">
-      <button mat-icon-button class="theme-toggle" (click)="toggleDarkMode()"
-             [matTooltip]="themeService.getCurrentTheme() ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
-        <mat-icon>{{ themeService.getCurrentTheme() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+      <button class="theme-toggle" (click)="toggleDarkMode()"
+              [matTooltip]="themeService.getCurrentTheme() ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+        <span class="material-icons-outlined">
+          {{ themeService.getCurrentTheme() ? 'light_mode' : 'dark_mode' }}
+        </span>
       </button>
 
-      
+      <button mat-button routerLink="/waiting-incidents">View Waiting Incidents</button>
       <button class="back-button" (click)="back()">
         <i class="icon-back"></i>
         Back

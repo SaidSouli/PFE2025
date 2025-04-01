@@ -73,7 +73,7 @@ export class SetPasswordComponent implements OnInit {
     }
   }
 
-  // Custom validator to check if passwords match
+  
   checkPasswords(group: FormGroup) {
     const newPass = group.get('newPassword')?.value;
     const confirmPass = group.get('confirmPassword')?.value;
@@ -86,7 +86,7 @@ export class SetPasswordComponent implements OnInit {
       this.isLoading = true;
       const newPassword = this.passwordForm.get('newPassword')?.value;
       
-      // Get the username from localStorage if currentUser is null
+      
       const username = this.currentUser?.username || localStorage.getItem('username');
       
       if (!username) {
@@ -103,7 +103,7 @@ export class SetPasswordComponent implements OnInit {
             this.snackBar.open('Password updated successfully', 'Close', { duration: 3000 });
             this.passwordForm.reset();
             
-            // Clear first login flag and redirect to appropriate page
+            
             this.authService.clearFirstLoginFlag();
             const role = localStorage.getItem('role') || 'user';
             this.authService.redirectBasedOnRole(role);
@@ -118,7 +118,7 @@ export class SetPasswordComponent implements OnInit {
     }
   }
 
-  // Utility function to mark all controls as touched
+  
   markFormGroupTouched(formGroup: FormGroup) {
     Object.values(formGroup.controls).forEach(control => {
       control.markAsTouched();
@@ -128,7 +128,7 @@ export class SetPasswordComponent implements OnInit {
     });
   }
 
-  // Get form control for easier access in template
+  
   get f() {
     return this.passwordForm.controls;
   }

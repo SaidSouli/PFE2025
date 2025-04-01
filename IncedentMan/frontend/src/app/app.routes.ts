@@ -9,6 +9,7 @@ import { TechnicianComponent } from './technician/technician.component';
 import { AssignedIncidentsComponent } from './assigned-incidents/assigned-incidents.component';
 import { IncidentConsultComponent } from './incident-consult/incident-consult.component';
 import { SetPasswordComponent } from './set-password/set-password.component';
+import { WaitingIncidentsComponent } from './waiting-incidents/waiting-incidents.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -21,5 +22,6 @@ export const routes: Routes = [
   {path: 'technician', component:TechnicianComponent },
   {path:'assigned-incidents',component:AssignedIncidentsComponent},
   {path:'incident-consult',component:IncidentConsultComponent},
-  {path:'set-password',component : SetPasswordComponent}
+  {path:'set-password',component : SetPasswordComponent},
+  {path:'waiting-incidents',component:WaitingIncidentsComponent}
 ];

@@ -11,5 +11,5 @@ import com.saiph.incident_management.model.Solution;
 public interface SolutionRepository extends MongoRepository<Solution, String> {
     Solution findByIncidentId(String incidentId);
     List<Solution> findByCreatorId(String creatorId);
-    List<Solution> findAll();
+    
 }
