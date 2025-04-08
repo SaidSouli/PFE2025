@@ -40,12 +40,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 export class WaitingIncidentsComponent implements OnInit {
   incidents: Incident[] = [];
   filteredIncidents: Incident[] = [];
-  solutions: { [key: string]: Solution } = {}; // Dictionnaire pour stocker les solutions par incidentId
+  solutions: { [key: string]: Solution } = {}; 
   username: string | null = null;
 
   constructor(
     private incidentService: IncidentService,
-    private solutionService: SolutionService, // Injecter le service de solution
+    private solutionService: SolutionService, 
     private router: Router,
     private lss: LocalStorageService,
     public themeService: ThemeService,
@@ -72,7 +72,7 @@ export class WaitingIncidentsComponent implements OnInit {
         (data: Incident[]) => {
           this.incidents = data;
           this.filterIncidents();
-          this.loadSolutions(); // Charger les solutions après avoir filtré les incidents
+          this.loadSolutions(); 
         },
         (error) => {
           console.error('Error fetching incidents:', error);
@@ -82,16 +82,16 @@ export class WaitingIncidentsComponent implements OnInit {
   }
 
   filterIncidents(): void {
-    // Filtrer les incidents où le statut est "Waiting"
+    
     this.filteredIncidents = this.incidents.filter(incident => incident.status === 'Waiting');
   }
 
   loadSolutions(): void {
     this.filteredIncidents.forEach(incident => {
-        if (incident.id) { // Vérifiez si l'ID est défini
+        if (incident.id) { 
             this.solutionService.getSolutionByIncidentId(incident.id).subscribe(
                 (solution: Solution) => {
-                    this.solutions[incident.id!] = solution; // Stocke la solution par incidentId
+                    this.solutions[incident.id!] = solution; 
                 },
                 (error) => {
                     console.error(`Error fetching solution for incident ${incident.id}:`, error);
@@ -104,44 +104,44 @@ export class WaitingIncidentsComponent implements OnInit {
 }
 
 modifySolution(incident: Incident): void {
-  const solution = this.solutions[incident.id!]; // Récupérer la solution associée à l'incident
+  const solution = this.solutions[incident.id!];
   if (!solution || !solution.id) {
-    alert("Aucune solution trouvée pour cet incident ou l'ID de la solution est manquant.");
+    alert("No solution found for this incident or the solution ID is missing.");
     return;
   }
 
-  const newDescription = prompt("Entrez la nouvelle description de la solution :");
+  const newDescription = prompt("Enter the new solution description :");
   if (newDescription) {
     this.solutionService.updateSolution(solution.id, newDescription).subscribe(
       (updatedSolution: Solution) => {
-        this.solutions[incident.id!] = updatedSolution; // Mettre à jour la solution dans le dictionnaire
-        alert("Solution mise à jour avec succès !");
+        this.solutions[incident.id!] = updatedSolution; 
+        alert("Solution successfully updated !");
       },
       (error) => {
-        console.error(`Erreur lors de la mise à jour de la solution :`, error);
-        alert("Erreur lors de la mise à jour de la solution.");
+        console.error(`Error updating the solution:`, error);
+        alert("Error updating the solution.");
       }
     );
   }
 }
 
 deleteSolution(incident: Incident): void {
-  const solution = this.solutions[incident.id!]; // Récupérer la solution associée à l'incident
+  const solution = this.solutions[incident.id!]; 
   if (!solution || !solution.id) {
-    alert("Aucune solution trouvée pour cet incident ou l'ID de la solution est manquant.");
+    alert("No solution found for this incident or the solution ID is missing.");
     return;
   }
 
-  if (confirm("Êtes-vous sûr de vouloir supprimer cette solution ?")) {
+  if (confirm("are you sure you want to delete ?")) {
     this.solutionService.deletesolution(solution.id).subscribe(
       () => {
-        delete this.solutions[incident.id!]; // Supprimer la solution du dictionnaire
-        alert("Solution supprimée avec succès !");
-        this.loadIncidents(); // Recharger les incidents si nécessaire
+        delete this.solutions[incident.id!]; 
+        alert("Solution have been deleted !");
+        this.loadIncidents(); 
       },
       (error) => {
-        console.error(`Erreur lors de la suppression de la solution :`, error);
-        alert("Erreur lors de la suppression de la solution.");
+        console.error(`Error deleting the solution:`, error);
+        alert("Error deleting the solution.");
       }
     );
   }

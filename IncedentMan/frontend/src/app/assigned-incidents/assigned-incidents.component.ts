@@ -20,6 +20,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ThemeService } from '../services/theme.service';
+import { AiSuggestionService } from '../services/aiServices.service';
+import { response } from 'express';
 @Component({
   selector: 'app-assigned-incidents',
   imports: [NgFor, NgIf, NgClass, FormsModule,MatFormFieldModule, MatInputModule, MatSelectModule,
@@ -36,6 +38,9 @@ export class AssignedIncidentsComponent implements OnInit {
   solutionText: { [key: string]: string } = {}; // To store solution text for each incident
   isSubmitting: { [key: string]: boolean } = {}; // Track submission status
   submissionError: { [key: string]: string } = {}; // Track error messages
+  isFetchingSuggestion : {[key:string]:boolean} = {}
+  suggestedSolutions : {[key:string]: string} = {}
+
 
   constructor(
     private incidentService: IncidentService,
@@ -43,7 +48,8 @@ export class AssignedIncidentsComponent implements OnInit {
     private router: Router,
     public themeService:ThemeService,
     @Inject(PLATFORM_ID) private platformId: object ,
-    private lss:LocalStorageService
+    private lss:LocalStorageService,
+    private aiService : AiSuggestionService
   ) {
 
     const savedTheme = localStorage.getItem('theme');
@@ -101,6 +107,36 @@ export class AssignedIncidentsComponent implements OnInit {
     this.filteredIncidents = this.incidents.filter(incident => incident.status ==='In progress');
   }
 
+  getSuggestion(incident:any):void {
+    if (!incident.id) return
+
+    this.isFetchingSuggestion[incident.id]=true
+
+    this.aiService.getSolutionSuggestion(incident).subscribe({
+      next: response => {
+        if (response.success && response.suggestion){
+          this.suggestedSolutions[incident.id] = response.suggestion.description
+        } else {
+          this.suggestedSolutions[incident.id] = 'no Solution suggestion found .'
+        }
+        this.isFetchingSuggestion[incident.id] = false
+      },
+      error:(err)=>{
+        console.error('error fetching solutions',err)
+        this.suggestedSolutions[incident.id] = 'Failed to get AI suggestion'
+        this.isFetchingSuggestion[incident.id] = false
+      }
+        
+      
+    })
+  }
+  
+  applySuggestion(incidentId :string): void {
+    if (this.suggestedSolutions[incidentId]) {
+      this.solutionText[incidentId]=this.suggestedSolutions[incidentId]
+    }
+  }
+  
   submitSolution(incident: Incident): void {
     if (!incident.id || !this.username) return;
     
@@ -145,6 +181,9 @@ export class AssignedIncidentsComponent implements OnInit {
     );
   }
 
+  
+  
+  
   back() {
     this.router.navigate(['/technician']);
   }

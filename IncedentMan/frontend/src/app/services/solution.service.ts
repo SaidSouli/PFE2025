@@ -26,5 +26,6 @@ export class SolutionService {
   updateSolution(id: string, description: string): Observable<Solution> {
     return this.http.put<Solution>(`${this.apiUrl}/${id}`, { description });
   }
+  
 }
 

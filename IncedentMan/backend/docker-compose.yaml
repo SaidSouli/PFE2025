@@ -21,6 +21,10 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
       ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_AUTH_DATABASE: admin
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/admin
+      ME_CONFIG_BASICAUTH_USERNAME: root
+      ME_CONFIG_BASICAUTH_PASSWORD: example
     depends_on:
       - mongo
     networks:
@@ -37,15 +41,36 @@ services:
       - user-network
     environment:
       SPRING_DATA_MONGODB_URI: mongodb://root:example@mongo:27017/usersdb?authSource=admin
-      AI_SERVICE_URL: http://ai-service:5000
+      INCIDENT_CLASSIFIER_URL: http://incident-classifier:5000
+      SOLUTION_SUGGEST_URL: http://solution-suggest:5001
 
-  ai-service:
-    image: ai-service  
-    container_name: ai-service
+  incident-classifier:
+    build:
+      context: ../ai
+      dockerfile: dockerfile
+    container_name: incident-classifier
     ports:
       - "5000:5000"
+    volumes:
+      - ../ai/models:/app/models
     networks:
       - user-network
+    command: ["python", "app.py"]
+
+  solution-suggest:
+    build: 
+      context: ../ai
+      dockerfile: dockerfile
+    container_name: solution-suggest
+    ports:
+      - "5001:5001"
+    depends_on:
+      - mongo
+    networks:
+      - user-network
+    environment:
+      MONGO_URI: mongodb://root:example@mongo:27017/usersdb?authSource=admin
+    command: ["python", "solution_suggest.py"]
 
 networks:
   user-network:

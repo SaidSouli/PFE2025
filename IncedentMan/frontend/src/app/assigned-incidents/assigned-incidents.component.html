@@ -65,28 +65,51 @@
         </div>
             
         <!-- Solution Area -->
-        <div class="solution-area">
-          <h4>Solution</h4>
-          <textarea
-            placeholder="Enter your solution here..."
-            rows="4"
-            [(ngModel)]="solutionText[incident.id!]"
-            [disabled]="isSubmitting[incident.id!]"
-          ></textarea>
-          
-          <div class="error-message" *ngIf="submissionError[incident.id!]">
-            {{ submissionError[incident.id!] }}
-          </div>
-          
-          <button 
-            class="submit-button" 
-            [disabled]="isSubmitting[incident.id!]"
-            (click)="submitSolution(incident)"
-          >
-            <span *ngIf="!isSubmitting[incident.id!]">Submit Solution</span>
-            <span *ngIf="isSubmitting[incident.id!]">Submitting...</span>
-          </button>
-        </div>
+        <!-- Solution Area -->
+<div class="solution-area">
+  <h4>Solution</h4>
+  
+  <!-- AI Suggestion Section -->
+  <div class="ai-suggestion-container" *ngIf="!isSubmitting[incident.id!]">
+    <button 
+      class="suggestion-button" 
+      (click)="getSuggestion(incident)"
+      [disabled]="isFetchingSuggestion[incident.id!]"
+    >
+      <span class="material-icons-outlined">psychology</span>
+      <span *ngIf="!isFetchingSuggestion[incident.id!]">Get AI Suggestion</span>
+      <span *ngIf="isFetchingSuggestion[incident.id!]">Loading suggestion...</span>
+    </button>
+    
+    <div class="suggestion-result" *ngIf="suggestedSolutions[incident.id!]">
+      <h5>AI Suggested Solution:</h5>
+      <p>{{ suggestedSolutions[incident.id!] }}</p>
+      <button class="apply-button" (click)="applySuggestion(incident.id!)">
+        Apply Suggestion
+      </button>
+    </div>
+  </div>
+  
+  <textarea
+    placeholder="Enter your solution here..."
+    rows="4"
+    [(ngModel)]="solutionText[incident.id!]"
+    [disabled]="isSubmitting[incident.id!]"
+  ></textarea>
+  
+  <div class="error-message" *ngIf="submissionError[incident.id!]">
+    {{ submissionError[incident.id!] }}
+  </div>
+  
+  <button 
+    class="submit-button"
+    [disabled]="isSubmitting[incident.id!]"
+    (click)="submitSolution(incident)"
+  >
+    <span *ngIf="!isSubmitting[incident.id!]">Submit Solution</span>
+    <span *ngIf="isSubmitting[incident.id!]">Submitting...</span>
+  </button>
+</div>
       </div>
     </div>
       

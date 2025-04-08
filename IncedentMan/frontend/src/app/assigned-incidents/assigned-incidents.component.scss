@@ -1022,3 +1022,67 @@ $transition-ease: ease;
     }
   }
 }
+.ai-suggestion-container {
+  margin-bottom: 15px;
+  border-radius: 6px;
+  
+  .suggestion-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #5c6bc0;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    
+    &:hover {
+      background-color: #3f51b5;
+    }
+    
+    &:disabled {
+      background-color: #9fa8da;
+      cursor: not-allowed;
+    }
+    
+    .material-icons-outlined {
+      font-size: 18px;
+    }
+  }
+  
+  .suggestion-result {
+    margin-top: 12px;
+    padding: 12px;
+    background-color: var(--background-lighter);
+    border-left: 4px solid #5c6bc0;
+    border-radius: 0 4px 4px 0;
+    
+    h5 {
+      margin-top: 0;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    
+    p {
+      margin: 8px 0;
+      white-space: pre-wrap;
+    }
+    
+    .apply-button {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+      
+      &:hover {
+        background-color: #43a047;
+      }
+    }
+  }
+}
+
